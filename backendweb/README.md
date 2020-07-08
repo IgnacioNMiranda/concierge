@@ -7,6 +7,26 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
+## Initialization
+
+On a terminal, for installing the required dependencies:
+
+    composer install
+
+Create a new Application Key for the project:
+
+    php artisan key:generate
+
+Create a new empty DB file in the `database` folder called `database.sqlite` 
+
+Then, copy the .env.example file to .env and modify the `DB_DATABASE`
+variable so that it directs to an absolute path to the DB file
+
+Finally, for running a development server execute
+
+    php artisan serve
+
+ 
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
