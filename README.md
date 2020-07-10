@@ -2,7 +2,7 @@
 - **Class**: DAIS-00706 "Proyecto de Desarrollo de Software Basado en Plataformas".
 - **Semester**: 202010.
 - **Career**: "Ingeniería Civil en Computación e Informática".
-## Tecnologies
+## Technologies
 - Java:
   - JDK v9.
   - Jetbrains Intellij 2020 2 EAP.
