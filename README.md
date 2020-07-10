@@ -1,8 +1,8 @@
 # Concierge Project
-- **Asignatura**: DAIS-00706 Proyecto de Desarrollo de Software Basado en Plataformas.
-- **Semestre**: 202010.
-- **Carrera**: Ingeniería Civil en Computación e Informática.
-## Tecnologías
+- **Class**: DAIS-00706 "Proyecto de Desarrollo de Software Basado en Plataformas".
+- **Semester**: 202010.
+- **Career**: "Ingeniería Civil en Computación e Informática".
+## Tecnologies
 - Java:
   - JDK v9.
   - Jetbrains Intellij 2020 2 EAP.
