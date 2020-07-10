@@ -8,8 +8,17 @@ use App\Http\Requests\UserStoreRequest;
 use App\User;
 use Illuminate\Http\Request;
 
+/**
+ * Class AuthController
+ * @package App\Http\Controllers\Api
+ */
 class AuthController extends Controller
 {
+    /**
+     * Register a user into the system.
+     * @param UserStoreRequest $request
+     * @return \Illuminate\Http\Response
+     */
     public function register(UserStoreRequest $request)
     {
         /*$validator = new EmailValidator();
@@ -32,6 +41,11 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Do the login, returning the access token.
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function login(Request $request) {
         $data = $request->all();
 
