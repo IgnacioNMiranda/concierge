@@ -7,6 +7,7 @@ use App\Http\Requests\UserStoreRequest;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class AuthController
@@ -31,6 +32,7 @@ class AuthController extends Controller
 
         $data['password'] = bcrypt($request->password);
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $user = User::create($data);
 
         $accessToken = $user->createToken('authToken')->accessToken;
@@ -56,7 +58,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'error' => $validator->error(),
+                'error' => $validator->errors(),
                 'message' => 'validation error',
             ]);
         }
@@ -67,6 +69,7 @@ class AuthController extends Controller
             ]);
         }
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
         return response([
