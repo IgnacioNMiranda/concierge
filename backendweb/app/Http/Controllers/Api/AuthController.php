@@ -35,11 +35,12 @@ class AuthController extends Controller
         /** @noinspection PhpUndefinedMethodInspection */
         $user = User::create($data);
 
-        $accessToken = $user->createToken('authToken')->accessToken;
+        $authToken = $user->createToken('authToken');
 
         return response([
             'user' => $user,
-            'accessToken' => $accessToken,
+            'token' => $authToken->accessToken,
+            'token_expires_at' => $authToken->token->expires_at,
         ]);
     }
 
@@ -52,29 +53,45 @@ class AuthController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'email' => 'email|required',
+            'email' => 'email:rfc,dns|min:8|max:255|required',
             'password' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response([
-                'error' => $validator->errors(),
-                'message' => 'validation error',
-            ]);
+                'error' => 'Validation error',
+                'message' => $validator->errors(),
+            ], 412);
         }
 
         if (!auth()->attempt($data)) {
             return response([
-                'message' => 'Invalid credentials',
-            ]);
+                'error' => 'Invalid credentials',
+                'message' => 'Unauthorized, wrong email or password',
+            ], 401);
         }
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $accessToken = auth()->user()->createToken('authToken')->accessToken;
+        $authToken = auth()->user()->createToken('authToken');
 
         return response([
             'user' => auth()->user(),
-            'access_token' =>$accessToken,
+            'token' =>$authToken->accessToken,
+            'token_expires_at' => $authToken->token->expires_at,
+        ]);
+    }
+
+    /**
+     * Logout user (revoke token).
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+
+        return response([
+            'message' => 'Successfully logged out'
         ]);
     }
 
