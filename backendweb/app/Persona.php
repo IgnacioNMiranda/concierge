@@ -12,6 +12,6 @@ class Persona extends Model
      * @var array
      */
     protected $fillable = [
-        'rut', 'nombre', 'fono' ,'email',
+        'rut', 'name', 'phone' ,'email',
     ];
 }

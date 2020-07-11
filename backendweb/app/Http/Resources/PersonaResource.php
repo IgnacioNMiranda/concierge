@@ -17,8 +17,8 @@ class PersonaResource extends JsonResource
         return [
             'id' => $this->id,
             'rut' => $this->rut,
-            'nombre' => $this->nombre,
-            'fono' => $this->fono,
+            'name' => $this->name,
+            'phone' => $this->phone,
             'email' => $this->email,
         ];
     }
