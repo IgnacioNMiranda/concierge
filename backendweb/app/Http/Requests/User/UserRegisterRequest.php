@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserStoreRequest extends FormRequest
+class UserRegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,7 +30,13 @@ class UserStoreRequest extends FormRequest
         ];
     }
 
-    public function messages(){
+    /**
+     * Get the validation messages that apply to the request.
+     *
+     * @return array
+     */
+    public function messages()
+    {
         return [
             'name.required' => 'El campo nombre es obligatorio.',
             'name.min' => 'El campo nombre debe tener mínimo 3 caracteres.',

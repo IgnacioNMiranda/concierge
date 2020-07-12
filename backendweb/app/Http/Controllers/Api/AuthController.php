@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserStoreRequest;
-
+use App\Http\Requests\User\UserLoginRequest;
+use App\Http\Requests\User\UserRegisterRequest;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Class AuthController
@@ -17,17 +16,11 @@ class AuthController extends Controller
 {
     /**
      * Register a user into the system.
-     * @param UserStoreRequest $request
+     * @param UserRegisterRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function register(UserStoreRequest $request)
+    public function register(UserRegisterRequest $request)
     {
-        /*$validator = new EmailValidator();
-        $result = $validator->isValid($request->email, new RFCValidation());
-        if(!$result){
-            return back()->withErrors(['Formato de email inválido.']);
-        }*/
-
         $data = $request->all();
 
         $data['password'] = bcrypt($request->password);
@@ -46,23 +39,11 @@ class AuthController extends Controller
 
     /**
      * Do the login, returning the access token.
-     * @param Request $request
+     * @param UserLoginRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request) {
+    public function login(UserLoginRequest $request) {
         $data = $request->all();
-
-        $validator = Validator::make($data, [
-            'email' => 'email:rfc,dns|min:8|max:255|required',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response([
-                'error' => 'Validation error',
-                'message' => $validator->errors(),
-            ], 412);
-        }
 
         if (!auth()->attempt($data)) {
             return response([

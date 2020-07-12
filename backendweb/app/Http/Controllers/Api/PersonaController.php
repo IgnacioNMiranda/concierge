@@ -91,12 +91,12 @@ class PersonaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Persona  $persona
+     * @param \App\Persona $persona
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Persona $persona)
     {
-        // TODO: Exception
         $persona->delete();
 
         return response([
