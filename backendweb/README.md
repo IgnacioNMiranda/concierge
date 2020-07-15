@@ -16,6 +16,10 @@ On a terminal, for installing the required dependencies:
 Create a new Application Key for the project:
 
     php artisan key:generate
+    
+Also execute the next command to create your own keys and user for access tokens creation:
+
+    php artisan passport:install
 
 Create a new empty DB file in the `database` folder called `database.sqlite` 
 
