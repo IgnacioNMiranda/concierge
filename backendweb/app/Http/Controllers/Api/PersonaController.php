@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Persona\PersonaStoreRequest;
+use App\Http\Requests\Persona\PersonaUpdateRequest;
 use App\Http\Resources\PersonaResource;
 use App\Persona;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
 
 class PersonaController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -26,26 +27,12 @@ class PersonaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PersonaStoreRequest $request
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(PersonaStoreRequest $request)
     {
         $data = $request->all();
-
-        $validator = Validator::make($data, [
-            'rut' => 'required|max:50',
-            'name' => 'required|max:255',
-            'phone' => 'max:50',
-            'email' => 'email:rfc,dns|required|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return response([
-                'message' => 'Validation Error',
-                'error' => $validator->errors(),
-            ], 412);
-        }
 
         /** @noinspection PhpUndefinedMethodInspection */
         $persona = Persona::create($data);
@@ -59,8 +46,8 @@ class PersonaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Persona  $persona
-     * @return \Illuminate\Http\Response
+     * @param Persona $persona
+     * @return Response
      */
     public function show(Persona $persona)
     {
@@ -73,11 +60,11 @@ class PersonaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Persona  $persona
-     * @return \Illuminate\Http\Response
+     * @param  PersonaUpdateRequest  $request
+     * @param Persona $persona
+     * @return Response
      */
-    public function update(Request $request, Persona $persona)
+    public function update(PersonaUpdateRequest $request, Persona $persona)
     {
         // TODO: validate, only phone and email can be updated
         $persona->update($request->all());
@@ -91,8 +78,8 @@ class PersonaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Persona $persona
-     * @return \Illuminate\Http\Response
+     * @param Persona $persona
+     * @return Response
      * @throws \Exception
      */
     public function destroy(Persona $persona)
