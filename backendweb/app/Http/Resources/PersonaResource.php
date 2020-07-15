@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PersonaResource extends JsonResource
@@ -9,16 +10,17 @@ class PersonaResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         return [
             'id' => $this->id,
             'rut' => $this->rut,
-            'name' => $this->name,
-            'phone' => $this->phone,
+            'name' => $this->nombre,
+            'phone' => $this->telefono,
             'email' => $this->email,
         ];
     }
