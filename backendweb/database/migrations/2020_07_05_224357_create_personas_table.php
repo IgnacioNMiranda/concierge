@@ -19,6 +19,13 @@ class CreatePersonasTable extends Migration
             $table->string('nombre');
             $table->string('telefono');
             $table->string('email')->unique();
+
+            $table->bigInteger('departamento_id')->unsigned()->nullable();
+
+            $table->foreign('departamento_id')->references('id')->on('departamentos')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->timestamps();
         });
     }

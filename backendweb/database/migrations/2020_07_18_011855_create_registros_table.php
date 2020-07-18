@@ -16,6 +16,13 @@ class CreateRegistrosTable extends Migration
         Schema::create('registros', function (Blueprint $table) {
             $table->id();
             $table->date('fecha');
+
+            $table->bigInteger('departamento_id')->unsigned();
+
+            $table->foreign('departamento_id')->references('id')->on('departamentos')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->timestamps();
 
         });

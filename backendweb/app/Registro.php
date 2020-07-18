@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Registro extends Model
 {
@@ -15,7 +16,11 @@ class Registro extends Model
         'fecha'
     ];
 
-    public function roles()
+    /**
+     * 1-n database relation with Persona.
+     * @return BelongsToMany
+     */
+    public function people()
     {
         return $this->belongsToMany('App\Persona');
     }

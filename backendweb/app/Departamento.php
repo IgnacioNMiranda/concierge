@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Departamento extends Model
 {
@@ -15,10 +16,12 @@ class Departamento extends Model
         'numero'
     ];
 
-    public function personas (){
-
+    /**
+     * 1-n database relation with Persona.
+     * @return HasMany
+     */
+    public function people()
+    {
         return $this->hasMany(Persona::class);
-
     }
-
 }
