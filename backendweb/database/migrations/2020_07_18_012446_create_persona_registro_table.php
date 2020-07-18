@@ -19,8 +19,8 @@ class CreatePersonaRegistroTable extends Migration
             $table->enum('parentesco',['Familiar','Externo', 'Empresa'])->default('Externo');
             $table->boolean('empresaEntrega')->nullable();
 
-            $table->unsignedBigInteger('persona_id')->unsigned();
-            $table->unsignedBigInteger('registro_id')->unsigned();
+            $table->unsignedBigInteger('persona_id');
+            $table->unsignedBigInteger('registro_id');
 
             $table->foreign('persona_id')->references('id')->on('personas')
                 ->onDelete('cascade')
