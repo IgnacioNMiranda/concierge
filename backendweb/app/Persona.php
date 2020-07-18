@@ -14,23 +14,23 @@ class Persona extends Model
      * @var array
      */
     protected $fillable = [
-        'rut', 'nombre', 'telefono' ,'email',
+        'rut', 'nombre', 'telefono' ,'email', 'departamento_id'
     ];
 
     /**
      * n-n database relation with Registro.
      * @return BelongsToMany
      */
-    public function registers()
+    public function registros()
     {
-        return $this->belongsToMany('App\Registro');
+        return $this->belongsToMany('App\Registro')->withTimestamps();
     }
 
     /**
      * 1-n database relation with Departamento.
      * @return BelongsTo
      */
-    public function apartment()
+    public function departamento()
     {
         return $this->belongsTo('App\Departamento');
     }

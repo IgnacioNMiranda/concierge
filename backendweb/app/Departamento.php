@@ -20,8 +20,18 @@ class Departamento extends Model
      * 1-n database relation with Persona.
      * @return HasMany
      */
-    public function people()
+    public function personas()
     {
         return $this->hasMany(Persona::class);
+    }
+
+    /**
+     * 1-n database relation with Registro.
+     * Registro model has the foreign key linked to Departamento model id's.
+     * @return HasMany
+     */
+    public function registro()
+    {
+        return $this->hasMany('App\Registro');
     }
 }

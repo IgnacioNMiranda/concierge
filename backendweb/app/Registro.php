@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Registro extends Model
@@ -13,15 +14,25 @@ class Registro extends Model
      * @var array
      */
     protected $fillable = [
-        'fecha'
+        'fecha', 'departamento_id'
     ];
 
     /**
-     * 1-n database relation with Persona.
+     * n-n database relation with Persona.
      * @return BelongsToMany
      */
-    public function people()
+    public function personas()
     {
-        return $this->belongsToMany('App\Persona');
+        return $this->belongsToMany('App\Persona')->withTimestamps();
+    }
+
+    /**
+     * 1-n database relation with Departamento.
+     * Registro model has the foreign key linked to Departamento model id's.
+     * @return BelongsTo
+     */
+    public function departamento()
+    {
+        return $this->belongsTo('App\Departamento');
     }
 }
