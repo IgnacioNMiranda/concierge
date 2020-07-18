@@ -34,6 +34,8 @@ class PersonaController extends Controller
     {
         $data = $request->all();
 
+        // TODO: Validation of RUT.
+
         /** @noinspection PhpUndefinedMethodInspection */
         $persona = Persona::create($data);
 
