@@ -17,7 +17,7 @@ class CreateRegistrosTable extends Migration
             $table->id();
             $table->date('fecha');
 
-            $table->bigInteger('departamento_id')->unsigned();
+            $table->unsignedBigInteger('departamento_id')->unsigned();
 
             $table->foreign('departamento_id')->references('id')->on('departamentos')
                 ->onDelete('cascade')
