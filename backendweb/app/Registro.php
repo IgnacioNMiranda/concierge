@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Registro extends Model
 {
@@ -14,16 +13,16 @@ class Registro extends Model
      * @var array
      */
     protected $fillable = [
-        'fecha', 'departamento_id'
+        'fecha', 'parentesco', 'empresaEntrega', 'persona_id', 'departamento_id'
     ];
 
     /**
-     * n-n database relation with Persona.
-     * @return BelongsToMany
+     * 1-n database relation with Persona.
+     * @return BelongsTo
      */
     public function personas()
     {
-        return $this->belongsToMany('App\Persona')->withTimestamps();
+        return $this->belongsTo('App\Persona');
     }
 
     /**
