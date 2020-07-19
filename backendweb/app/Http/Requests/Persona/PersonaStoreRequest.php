@@ -24,7 +24,7 @@ class PersonaStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'rut' => 'required|min:8|max:9|unique:personas,rut',
+            'rut' => 'required|cl_rut|min:8|max:9|unique:personas,rut',
             'nombre' => 'required|min:3|max:255',
             'telefono' => 'max:50',
             'email' => 'email:rfc,dns|required|max:255|unique:personas,email',
@@ -40,6 +40,7 @@ class PersonaStoreRequest extends FormRequest
     {
         return [
             'rut.required' => 'El campo rut es obligatorio.',
+            'rut.cl_rut' => 'El rut ingresado no es valido.',
             'rut.min' => 'El campo rut debe tener mínimo 8 caracteres.',
             'rut.max' => 'EL campo rut no debe tener más de 9 caracteres.',
             'rut.unique' => 'Este rut ya se encuentra registrado.',
@@ -51,5 +52,19 @@ class PersonaStoreRequest extends FormRequest
             'email.required' => 'El campo email es obligatorio.',
             'email.unique' => 'Ya existe una persona con este correo.',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     * This overrides the method from ValidatesWhenResolvedTrait.
+     * It executes before the rules validation.
+     * source: https://sampo.co.uk/blog/manipulating-request-data-before-performing-validation-in-laravel.
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'rut' => strtolower($this->rut),
+        ]);
     }
 }

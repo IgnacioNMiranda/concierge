@@ -34,8 +34,6 @@ class PersonaController extends Controller
     {
         $data = $request->all();
 
-        // TODO: Validation of RUT.
-
         /** @noinspection PhpUndefinedMethodInspection */
         $persona = Persona::create($data);
 
@@ -68,8 +66,7 @@ class PersonaController extends Controller
      */
     public function update(PersonaUpdateRequest $request, Persona $persona)
     {
-        // TODO: validate, only phone and email can be updated
-        $persona->update($request->all());
+        $persona->update($request->only('telefono', 'email'));
 
         return response([
             'message' => 'Updated Successfully',
