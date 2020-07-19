@@ -2,8 +2,9 @@
 
 @startuml
 class Departamento {
-    -numDepto: int
-    +methods(type): type
+    -numero: int
+    +personas(): Collection<Persona>
+    +registro(): Registro
 }
 
 class Persona {
@@ -11,22 +12,19 @@ class Persona {
     -nombre: String
     -telefono: String
     -email: String
-    +methods(type): type
+    +registros(): Collection<Registro>
+    +departamento(): Departamento
 }
 
 class Registro {
     -fecha: Date
-    +methods(type): type
+    +personas(): Collection<Persona>
+    +departamento(): Departamento
 }
 
-class PersonaRegistro {
-    -parentesco: Enumerator
-    -empresaEntrega: bool
-    +methods(type): type
-}
+note top of Registro : Las visitas pueden hacerlas\nfamiliares, externos o empresas.\nLas empresas pueden ser de \nentrega/encomiendas.
 
-Persona "1" --> "*" Departamento
-Departamento "1" --> "*" Registro
-Persona "*" --> "*" PersonaRegistro
-Registro "*" --> "*" PersonaRegistro
+Persona "1" --> "*" Departamento : pertenece
+Registro "*" --> "1" Departamento : se visita
+Registro "*" --> "*" Persona : realizado por 
 @enduml
