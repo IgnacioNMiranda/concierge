@@ -3,8 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\hasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Persona extends Model
 {
@@ -14,16 +14,16 @@ class Persona extends Model
      * @var array
      */
     protected $fillable = [
-        'rut', 'nombre', 'telefono' ,'email', 'departamento_id'
+        'rut', 'nombre', 'telefono', 'email', 'departamento_id'
     ];
 
     /**
-     * n-n database relation with Registro.
-     * @return BelongsToMany
+     * 1-n database relation with Registro.
+     * @return hasMany
      */
     public function registros()
     {
-        return $this->belongsToMany('App\Registro')->withTimestamps();
+        return $this->hasMany('App\Registro');
     }
 
     /**
