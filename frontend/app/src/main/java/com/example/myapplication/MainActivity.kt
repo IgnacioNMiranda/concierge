@@ -30,20 +30,26 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun NewsStory() {
     val image = imageResource(R.drawable.concierge2)
-    Column(
-            modifier = Modifier.padding(16.dp)
-    ) {
-        val imageModifier = Modifier
-                .preferredHeightIn(maxHeight = 180.dp)
-                .fillMaxWidth()
+    MaterialTheme {
+        val typography = MaterialTheme.typography
+        Column(
+                modifier = Modifier.padding(16.dp)
+        ) {
+            val imageModifier = Modifier
+                    .preferredHeightIn(maxHeight = 180.dp)
+                    .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(4.dp))
 
-        Image(image, modifier = imageModifier,
-                contentScale = ContentScale.Crop)
-        Spacer(Modifier.preferredHeight(16.dp))
+            Image(image, modifier = imageModifier)
+            Spacer(Modifier.preferredHeight(16.dp))
 
-        Text("A day in Shark Fin Cove")
-        Text("Davenport, California")
-        Text("December 2018")
+            Text("System of Concierge ",
+                    style = typography.h6,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis)
+            Text("Semestre 1 - 2020",
+                    style = typography.body2)
+        }
     }
 }
 
