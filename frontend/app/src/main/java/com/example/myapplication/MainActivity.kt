@@ -29,9 +29,18 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun NewsStory() {
+    val image = imageResource(R.drawable.concierge2)
     Column(
             modifier = Modifier.padding(16.dp)
     ) {
+        val imageModifier = Modifier
+                .preferredHeightIn(maxHeight = 180.dp)
+                .fillMaxWidth()
+
+        Image(image, modifier = imageModifier,
+                contentScale = ContentScale.Crop)
+        Spacer(Modifier.preferredHeight(16.dp))
+
         Text("A day in Shark Fin Cove")
         Text("Davenport, California")
         Text("December 2018")
