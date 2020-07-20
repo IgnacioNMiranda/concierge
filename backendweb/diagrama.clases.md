@@ -18,7 +18,9 @@ class Persona {
 
 class Registro {
     -fecha: Date
-    +personas(): Collection<Persona>
+    -parentesco: Enum
+    -empresaEntrega: bool
+    +persona(): Persona
     +departamento(): Departamento
 }
 
@@ -26,5 +28,5 @@ note top of Registro : Las visitas pueden hacerlas\nfamiliares, externos o empre
 
 Persona "1" --> "*" Departamento : pertenece
 Registro "*" --> "1" Departamento : se visita
-Registro "*" --> "*" Persona : realizado por 
+Registro "*" --> "1" Persona : se registra
 @enduml

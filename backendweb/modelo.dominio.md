@@ -14,11 +14,13 @@ object Persona {
 
 object Registro {
     fecha
+    parentesco
+    empresaEntrega
 }
 
 note top of Registro : Las visitas pueden hacerlas\nfamiliares, externos o empresas.\nLas empresas pueden ser de \nentrega/encomiendas.
 
 Persona "1" --> "*" Departamento : pertenece
-Registro "*" --> "*" Persona : realizado por 
+Registro "*" --> "1" Persona : se registra 
 Registro "*" --> "1" Departamento : se visita
 @enduml
