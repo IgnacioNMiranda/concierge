@@ -20,7 +20,7 @@ class Registro extends Model
      * 1-n database relation with Persona.
      * @return BelongsTo
      */
-    public function personas()
+    public function persona()
     {
         return $this->belongsTo('App\Persona');
     }
