@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Departamento;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RegistroResource;
+use App\Persona;
 use App\Registro;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,13 +19,11 @@ class RegistroController extends Controller
      */
     public function index()
     {
-        // TODO: Missing implementation (http://conserjeria.cl/api/registro).
         $registers = Registro::orderBy('fecha', 'ASC')->get();
 
-        //$apartment = $register->departamento()->get();
-
         return response([
-            'registros' =>  $registers,
+            'message' => 'Retrieved Successfully',
+            'registros' => RegistroResource::collection($registers),
         ]);
     }
 
@@ -44,24 +44,28 @@ class RegistroController extends Controller
 
         // Creates the relation 1-n with the apartment.
         $register->departamento()->associate($apartment);
-        $register->save();
+
+        // Searches the apartment based on the id received on Request.
+        $apartment = Persona::find($request->get('persona_id'));
 
         // Creates the relation n-n with the people that visits the apartment.
-        $register->personas()->attach($request->get('personas'));
+        $register->persona()->associate($apartment);
+
+        $register->save();
 
         return response([
             'message' => "Visit registered successfully",
-            'register' => $register,
+            'register' => new RegistroResource($register),
         ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $departamento_id
      * @return Response
      */
-    public function show($id)
+    public function show($departamento_id)
     {
         // TODO (http://conserjeria.cl/api/registro/{numerodecasa/departamento}).
     }

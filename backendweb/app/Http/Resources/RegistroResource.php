@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
 
 namespace App\Http\Resources;
 
@@ -17,8 +17,10 @@ class RegistroResource extends JsonResource
     {
         /** @noinspection PhpUndefinedFieldInspection */
         return [
-            'id' => $this->id,
             'fecha' => $this->fecha,
+            'parentesco' => $this->parentesco,
+            'empresaEntrega' => $this->when($this->parentesco == "Empresa", $this->empresaEntrega),
+            'persona' => PersonaResource::make($this->persona),
         ];
     }
 }
