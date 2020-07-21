@@ -67,7 +67,7 @@ class RegistroController extends Controller
      */
     public function show($departamento_id)
     {
-        $dept = Departamento::where('id', $departamento_id)->get();
+        $dept = Departamento::find($departamento_id);
 
         $registros = $dept->registros()->get();
         return response([
@@ -85,14 +85,20 @@ class RegistroController extends Controller
      */
     public function update(RegistroRequest $request, $id)
     {
-        $registro = Registro::where('id', $id)->get();
+        $registro = Registro::find($id);
 
-        $registro->update($request->only('parentesco', 'empresaEntrega'));
+        if ($registro != null) {
+            $registro->update($request->only('parentesco', 'empresaEntrega'));
+
+            return response([
+                'message' => 'Updated Successfully',
+                'registro' => new RegistroResource($registro),
+            ], 202);
+        }
 
         return response([
-            'message' => 'Updated Successfully',
-            'registro' => new RegistroResource($registro),
-        ], 202);
+            'message' => 'Updated cancelled. It does not exist the entered register.'
+        ], 404);
 
     }
 
