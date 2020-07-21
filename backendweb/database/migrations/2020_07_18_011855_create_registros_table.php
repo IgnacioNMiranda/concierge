@@ -17,7 +17,7 @@ class CreateRegistrosTable extends Migration
             $table->id();
 
             $table->date('fecha');
-            $table->enum('parentesco',['Familiar','Externo', 'Empresa'])->default('Externo');
+            $table->string('parentesco')->default('Externo');
             $table->boolean('empresaEntrega')->nullable();
 
             $table->unsignedBigInteger('persona_id');
