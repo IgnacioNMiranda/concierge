@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Departamento;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegistroRequest;
 use App\Http\Resources\RegistroResource;
 use App\Persona;
 use App\Registro;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class RegistroController extends Controller
@@ -30,10 +30,10 @@ class RegistroController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param RegistroRequest $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(RegistroRequest $request)
     {
         $datos = $request->all();
 
@@ -79,11 +79,11 @@ class RegistroController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param RegistroRequest $request
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(RegistroRequest $request, $id)
     {
         $registro = Registro::where('id', $id)->get();
 
