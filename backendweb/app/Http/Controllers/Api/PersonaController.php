@@ -77,13 +77,12 @@ class PersonaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Persona $persona
+     * @param  int $id
      * @return Response
-     * @throws \Exception
      */
-    public function destroy(Persona $persona)
+    public function destroy($id)
     {
-        $persona->delete();
+        Persona::destroy($id);
 
         return response([
             'message' => 'Deleted Successfully',
