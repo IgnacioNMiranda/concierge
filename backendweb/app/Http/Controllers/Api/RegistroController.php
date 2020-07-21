@@ -19,11 +19,11 @@ class RegistroController extends Controller
      */
     public function index()
     {
-        $registers = Registro::orderBy('fecha', 'ASC')->get();
+        $registros = Registro::orderBy('fecha', 'ASC')->get();
 
         return response([
             'message' => 'Retrieved Successfully',
-            'registros' => RegistroResource::collection($registers),
+            'registros' => RegistroResource::collection($registros),
         ]);
     }
 
@@ -35,27 +35,27 @@ class RegistroController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $datos = $request->all();
 
-        $register = Registro::create($data);
+        $registro = Registro::create($datos);
 
         // Searches the apartment based on the id received on Request.
-        $apartment = Departamento::find($request->get('departamento_id'));
+        $dept = Departamento::find($request->get('departamento_id'));
 
         // Creates the relation 1-n with the apartment.
-        $register->departamento()->associate($apartment);
+        $registro->departamento()->associate($dept);
 
         // Searches the apartment based on the id received on Request.
-        $apartment = Persona::find($request->get('persona_id'));
+        $dept = Persona::find($request->get('persona_id'));
 
         // Creates the relation n-n with the people that visits the apartment.
-        $register->persona()->associate($apartment);
+        $registro->persona()->associate($dept);
 
-        $register->save();
+        $registro->save();
 
         return response([
             'message' => "Visit registered successfully",
-            'register' => new RegistroResource($register),
+            'register' => new RegistroResource($registro),
         ]);
     }
 
@@ -67,7 +67,13 @@ class RegistroController extends Controller
      */
     public function show($departamento_id)
     {
-        // TODO (http://conserjeria.cl/api/registro/{numerodecasa/departamento}).
+        $dept = Departamento::where('id', $departamento_id)->get();
+
+        $registros = $dept->registros()->get();
+        return response([
+            'message' => 'Retrieved Successfully',
+            'registros' => RegistroResource::collection($registros),
+        ]);
     }
 
     /**
@@ -79,7 +85,15 @@ class RegistroController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // TODO
+        $registro = Registro::where('id', $id)->get();
+
+        $registro->update($request->only('parentesco', 'empresaEntrega'));
+
+        return response([
+            'message' => 'Updated Successfully',
+            'registro' => new RegistroResource($registro),
+        ], 202);
+
     }
 
     /**
@@ -90,6 +104,10 @@ class RegistroController extends Controller
      */
     public function destroy($id)
     {
-        // TODO
+        Registro::destroy($id);
+
+        return response([
+            'message' => 'Visit deleted successfully',
+        ], 202);
     }
 }
