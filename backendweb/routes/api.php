@@ -25,4 +25,3 @@ Route::get('/logout', 'Api\AuthController@logout')->middleware('auth:api');
 
 Route::apiResource('/persona', 'Api\PersonaController')->middleware('auth:api');
 Route::apiResource('/registro', 'Api\RegistroController')->middleware('auth:api');
-

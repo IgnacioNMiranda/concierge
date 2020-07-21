@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Persona\PersonaStoreRequest;
-use App\Http\Requests\Persona\PersonaUpdateRequest;
+use App\Http\Requests\PersonaRequest;
 use App\Http\Resources\PersonaResource;
 use App\Persona;
 use Illuminate\Http\Response;
@@ -27,10 +26,10 @@ class PersonaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param PersonaStoreRequest $request
+     * @param PersonaRequest $request
      * @return Response
      */
-    public function store(PersonaStoreRequest $request)
+    public function store(PersonaRequest $request)
     {
         $data = $request->all();
 
@@ -60,29 +59,31 @@ class PersonaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  PersonaUpdateRequest  $request
+     * @param PersonaRequest $request
      * @param Persona $persona
      * @return Response
      */
-    public function update(PersonaUpdateRequest $request, Persona $persona)
+    public function update(PersonaRequest $request, Persona $persona)
     {
-        $persona->update($request->only('telefono', 'email'));
+        $persona->update($request->only('telefono', 'email', 'departamento_id'));
 
         return response([
             'message' => 'Updated Successfully',
             'persona' => new PersonaResource($persona),
+            'method' => $request->method(),
         ], 202);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Persona $persona
      * @return Response
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Persona $persona)
     {
-        Persona::destroy($id);
+        $persona->delete();
 
         return response([
             'message' => 'Deleted Successfully',

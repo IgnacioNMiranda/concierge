@@ -1,10 +1,10 @@
-<?php
+<?php /** @noinspection PhpUndefinedFieldInspection */
 
-namespace App\Http\Requests\Persona;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PersonaStoreRequest extends FormRequest
+class PersonaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +23,28 @@ class PersonaStoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'rut' => 'required|cl_rut|min:8|max:9|unique:personas,rut',
-            'nombre' => 'required|min:3|max:255',
-            'telefono' => 'max:50',
-            'email' => 'email:rfc,dns|required|max:255|unique:personas,email',
-            'departamento_id' => 'exists:departamentos,id',
-        ];
+        $method = $this->method();
+
+        switch ($method){
+            case "POST":
+                return [
+                    'rut' => 'required|cl_rut|min:8|max:9|unique:personas,rut',
+                    'nombre' => 'required|min:3|max:255',
+                    'telefono' => 'max:50',
+                    'email' => 'email:rfc,dns|required|max:255|unique:personas,email',
+                    'departamento_id' => 'exists:departamentos,id',
+                ];
+            case "PATCH":
+                return [
+                    'rut' => 'required|cl_rut|min:8|max:9|unique:personas,rut,' . $this->persona->id,
+                    'nombre' => 'required|min:3|max:255',
+                    'telefono' => 'max:50',
+                    'email' => 'email:rfc,dns|required|max:255|unique:personas,email,' . $this->persona->id,
+                    'departamento_id' => 'exists:departamentos,id',
+                ];
+        }
+
+        return [];
     }
 
     /**
