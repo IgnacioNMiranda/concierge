@@ -28,6 +28,7 @@ class PersonaStoreRequest extends FormRequest
             'nombre' => 'required|min:3|max:255',
             'telefono' => 'max:50',
             'email' => 'email:rfc,dns|required|max:255|unique:personas,email',
+            'departamento_id' => 'exists:departamentos,id',
         ];
     }
 
@@ -51,6 +52,7 @@ class PersonaStoreRequest extends FormRequest
             'email.email' => 'El campo email debe ser válido.',
             'email.required' => 'El campo email es obligatorio.',
             'email.unique' => 'Ya existe una persona con este correo.',
+            'departamento_id.exists' => 'El departamento ingresado no existe.',
         ];
     }
 
