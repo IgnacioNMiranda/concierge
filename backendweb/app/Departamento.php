@@ -30,7 +30,7 @@ class Departamento extends Model
      * Registro model has the foreign key linked to Departamento model id's.
      * @return HasMany
      */
-    public function registro()
+    public function registros()
     {
         return $this->hasMany('App\Registro');
     }
