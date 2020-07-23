@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Departamento;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DepartamentoRequest;
 use App\Http\Resources\DepartamentoResource;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Http\Response;
 
 class DepartamentoController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -27,7 +28,7 @@ class DepartamentoController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  DepartamentoRequest $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(DepartamentoRequest $request)
     {
@@ -46,7 +47,7 @@ class DepartamentoController extends Controller
      * Display the specified resource.
      *
      * @param  Departamento  $departamento
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Departamento $departamento)
     {
@@ -59,23 +60,35 @@ class DepartamentoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Departamento  $departamento
-     * @return \Illuminate\Http\Response
+     * @param DepartamentoRequest $request
+     * @param  Departamento  $departamento
+     * @return Response
      */
-    public function update(Request $request, Departamento $departamento)
+    public function update(DepartamentoRequest $request, Departamento $departamento)
     {
-        //
+        $data = $request->all();
+
+        $departamento->update($data);
+
+        return response([
+            'message' => 'Updated Successfully',
+            'departamento' => new DepartamentoResource($departamento),
+        ], 202);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Departamento  $departamento
-     * @return \Illuminate\Http\Response
+     * @param Departamento $departamento
+     * @return Response
+     * @throws Exception
      */
     public function destroy(Departamento $departamento)
     {
-        //
+        $departamento->delete();
+
+        return response([
+            'message' => 'Deleted successfully',
+        ], 202);
     }
 }
