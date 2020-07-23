@@ -36,7 +36,7 @@ class Persona extends Model
     }
 
     /**
-     * 1-n database relation with DepartamentoResource.
+     * 1-n database relation with Departamento.
      * @return BelongsTo
      */
     public function departamento()
