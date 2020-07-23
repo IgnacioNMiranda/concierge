@@ -21,6 +21,7 @@ class PersonaResource extends JsonResource
             'name' => $this->nombre,
             'phone' => $this->telefono,
             'email' => $this->email,
+            'departamento' => $this->when($this->departamento != null, DepartamentoResource::make($this->departamento)),
         ];
     }
 }

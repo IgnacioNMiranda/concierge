@@ -70,7 +70,6 @@ class PersonaController extends Controller
         return response([
             'message' => 'Updated Successfully',
             'persona' => new PersonaResource($persona),
-            'method' => $request->method(),
         ], 202);
     }
 
