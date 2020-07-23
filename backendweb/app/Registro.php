@@ -26,8 +26,8 @@ class Registro extends Model
     }
 
     /**
-     * 1-n database relation with Departamento.
-     * Registro model has the foreign key linked to Departamento model id's.
+     * 1-n database relation with DepartamentoResource.
+     * Registro model has the foreign key linked to DepartamentoResource model id's.
      * @return BelongsTo
      */
     public function departamento()

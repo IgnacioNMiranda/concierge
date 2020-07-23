@@ -27,7 +27,7 @@ class Departamento extends Model
 
     /**
      * 1-n database relation with Registro.
-     * Registro model has the foreign key linked to Departamento model id's.
+     * Registro model has the foreign key linked to DepartamentoResource model id's.
      * @return HasMany
      */
     public function registros()
