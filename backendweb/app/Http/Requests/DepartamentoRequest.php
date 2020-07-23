@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Http\Requests;
 
@@ -23,9 +23,20 @@ class DepartamentoRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'numero' => 'required|unique:departamentos,numero',
-        ];
+        $method = $this->method();
+
+        switch ($method){
+            case "POST":
+                return [
+                    'numero' => 'required|unique:departamentos,numero',
+                ];
+            case "PATCH":
+                return [
+                    'numero' => 'required|unique:departamentos,numero,' . $this->departamento->id,
+                ];
+        }
+
+        return [];
     }
 
     /**
@@ -36,8 +47,8 @@ class DepartamentoRequest extends FormRequest
     public function messages()
     {
         return [
-            'departamento.required' => 'El campo numero de departamento es obligatorio.',
-            'departamento.unique' => 'Este numero de departamento ya esta registrado.',
+            'numero.required' => 'El campo numero de departamento es obligatorio.',
+            'numero.unique' => 'Este numero de departamento ya esta registrado.',
         ];
     }
 }
