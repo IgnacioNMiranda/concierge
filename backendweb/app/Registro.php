@@ -3,10 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\hasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Persona extends Model
+class Registro extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -14,29 +13,21 @@ class Persona extends Model
      * @var array
      */
     protected $fillable = [
-        'rut', 'nombre', 'telefono', 'email', 'departamento_id'
+        'fecha', 'parentesco', 'empresaEntrega', 'persona_id', 'departamento_id'
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * 1-n database relation with Persona.
+     * @return BelongsTo
      */
-    protected $hidden = [
-        'updated_at', 'created_at', 'id'
-    ];
-
-    /**
-     * 1-n database relation with Registro.
-     * @return hasMany
-     */
-    public function registros()
+    public function persona()
     {
-        return $this->hasMany('App\Registro');
+        return $this->belongsTo('App\Persona');
     }
 
     /**
      * 1-n database relation with Departamento.
+     * Registro model has the foreign key linked to Departamento model id's.
      * @return BelongsTo
      */
     public function departamento()

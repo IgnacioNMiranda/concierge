@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Request;
 
-class PersonaResource extends JsonResource
+class DepartamentoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,7 @@ class PersonaResource extends JsonResource
     {
         /** @noinspection PhpUndefinedFieldInspection */
         return [
-            'rut' => $this->rut,
-            'name' => $this->nombre,
-            'phone' => $this->telefono,
-            'email' => $this->email,
-            'departamento' => $this->when($this->departamento != null, DepartamentoResource::make($this->departamento)),
+            'numero' => $this->numero,
         ];
     }
 }
