@@ -18,11 +18,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Auth routes.
 Route::post('/register', 'Api\AuthController@register');
 Route::post('/login', 'Api\AuthController@login');
-
 Route::get('/logout', 'Api\AuthController@logout')->middleware('auth:api');
 
-Route::apiResource('/persona', 'Api\PersonaController')->middleware('auth:api');
-Route::apiResource('/registro', 'Api\RegistroController')->middleware('auth:api');
-Route::apiResource('/departamento', 'Api\DepartamentoController')->middleware('auth:api');
+// Api routes.
+Route::middleware(['auth:api'])->group(function () {
+    Route::apiResources([
+        'persona' => 'Api\PersonaController',
+        'registro' => 'Api\RegistroController',
+        'departamento' => 'Api\DepartamentoController'
+    ]);
+});
+
+// When it wants to test http request use this to avoid the middleware and comment the Route:middleware above.
+/*
+Route::apiResources([
+    'persona' => 'Api\PersonaController',
+    'registro' => 'Api\RegistroController',
+    'departamento' => 'Api\DepartamentoController'
+]);
+*/

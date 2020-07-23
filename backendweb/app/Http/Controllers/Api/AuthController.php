@@ -7,6 +7,7 @@ use App\Http\Requests\User\UserLoginRequest;
 use App\Http\Requests\User\UserRegisterRequest;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class AuthController
@@ -17,7 +18,7 @@ class AuthController extends Controller
     /**
      * Register a user into the system.
      * @param UserRegisterRequest $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function register(UserRegisterRequest $request)
     {
@@ -40,7 +41,7 @@ class AuthController extends Controller
     /**
      * Do the login, returning the access token.
      * @param UserLoginRequest $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function login(UserLoginRequest $request) {
         $data = $request->all();
@@ -65,7 +66,7 @@ class AuthController extends Controller
     /**
      * Logout user (revoke token).
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function logout(Request $request)
     {
