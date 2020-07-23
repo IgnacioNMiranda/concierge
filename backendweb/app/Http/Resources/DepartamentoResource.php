@@ -9,11 +9,14 @@ class DepartamentoResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        /** @noinspection PhpUndefinedFieldInspection */
+        return [
+            'numero' => $this->numero,
+        ];
     }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Departamento;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DepartamentoRequest;
+use App\Http\Resources\DepartamentoResource;
 use Illuminate\Http\Request;
 
 class DepartamentoController extends Controller
@@ -15,29 +17,43 @@ class DepartamentoController extends Controller
      */
     public function index()
     {
-        //
+        return response ([
+            'message' => 'Retrieved Successfully',
+            'departamentos' => DepartamentoResource::collection(Departamento::all()),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  DepartamentoRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DepartamentoRequest $request)
     {
-        //
+        $data = $request->all();
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $departamento = Departamento::create($data);
+
+        return response([
+            'message' => 'Created Successfully',
+            'departamento' => new DepartamentoResource($departamento),
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Departamento  $departamento
+     * @param  Departamento  $departamento
      * @return \Illuminate\Http\Response
      */
     public function show(Departamento $departamento)
     {
-        //
+        return response([
+            'message' => 'Retrieved Successfully',
+            'departamento' => new DepartamentoResource($departamento),
+        ]);
     }
 
     /**

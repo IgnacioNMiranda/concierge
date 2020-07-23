@@ -13,7 +13,7 @@ class DepartamentoRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class DepartamentoRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'numero' => 'required|unique:departamentos,numero',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'departamento.required' => 'El campo numero de departamento es obligatorio.',
+            'departamento.unique' => 'Este numero de departamento ya esta registrado.',
         ];
     }
 }
