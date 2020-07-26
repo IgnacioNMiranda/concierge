@@ -13,6 +13,6 @@ $factory->define(Persona::class, function (Faker $faker) {
         'nombre' => $faker->name,
         'telefono' => rand(00000000,99999999),
         'email' => $faker->unique()->safeEmail,
-        'departamento_id' => $faker->unique()->numberBetween(1, 40),
+        'departamento_id' => rand(1, 40),
     ];
 });

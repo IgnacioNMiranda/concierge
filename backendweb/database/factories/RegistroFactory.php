@@ -12,8 +12,8 @@ $factory->define(Registro::class, function (Faker $faker) {
     return [
         'fecha' => $faker->date(),
         'parentesco' => $parentescos[rand(0,1)],
-        'empresaEntrega' => $faker->text,
-        'persona_id' => $faker->unique()->numberBetween(1, 20),
-        'departamento_id' => $faker->unique()->numberBetween(1,40),
+        'empresaEntrega' => $faker->boolean,
+        'persona_id' => rand(1, 20),
+        'departamento_id' => rand(1,40),
     ];
 });
