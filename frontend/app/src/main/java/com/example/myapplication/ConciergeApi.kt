@@ -23,7 +23,6 @@ interface ConciergeApi {
     /**
      * Create a [Registro].
      *
-     * @param id The ID of the [Registro]
      * @return a [Response] with a [Registro].
      */
     @POST("/api/registro")
