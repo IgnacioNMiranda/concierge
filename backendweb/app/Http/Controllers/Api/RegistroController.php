@@ -55,7 +55,7 @@ class RegistroController extends Controller
 
         return response([
             'message' => "Visit registered successfully",
-            'register' => new RegistroResource($registro),
+            'registro' => new RegistroResource($registro),
         ]);
     }
 

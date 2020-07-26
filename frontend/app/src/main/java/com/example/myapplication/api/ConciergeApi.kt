@@ -1,5 +1,6 @@
-package com.example.myapplication
+package com.example.myapplication.api
 
+import com.example.myapplication.model.Registro
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -18,7 +19,7 @@ interface ConciergeApi {
      * @return a [Response] with a Collection of [Registro].
      */
     @GET("/api/registro")
-    suspend fun registros(): Response<Collection<Registro>>
+    suspend fun fetchRegistros(): Response<Collection<Registro>>
 
     /**
      * Create a [Registro].
