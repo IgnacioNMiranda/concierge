@@ -18,8 +18,8 @@ class PersonaResource extends JsonResource
         /** @noinspection PhpUndefinedFieldInspection */
         return [
             'rut' => $this->rut,
-            'name' => $this->nombre,
-            'phone' => $this->telefono,
+            'nombre' => $this->nombre,
+            'telefono' => $this->telefono,
             'email' => $this->email,
             'departamento' => $this->when($this->departamento != null, DepartamentoResource::make($this->departamento)),
         ];
