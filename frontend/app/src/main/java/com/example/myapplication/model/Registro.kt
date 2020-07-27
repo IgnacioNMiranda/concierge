@@ -1,6 +1,7 @@
 package com.example.myapplication.model
 
 import androidx.annotation.Keep
+import java.util.*
 
 /**
  * Registro class that represents the Registro model used in Api rest.
@@ -9,19 +10,29 @@ import androidx.annotation.Keep
 class Registro {
 
     /**
-     * message of the http response.
+     * The date.
      */
-    var message: String? = null
+    var fecha: Date? = null
 
     /**
-     * Registro object send from the http response.
+     * The relationship between the visit and the Apartment owner.
      */
-    var registro: String? = null
+    var parentesco: String? = null
 
     /**
-     * Registro collection send from the htpp response.
+     * Indicates if it is a delivery business.
      */
-    var registros: String? = null
+    var empresaEntrega: Boolean? = null
+
+    /**
+     * Relation with the visitor that does the visit.
+     */
+    var persona_id: Int? = null
+
+    /**
+     * Relation with the visited apartment.
+     */
+    var departamento_id: Int? = null
 
 
 }
