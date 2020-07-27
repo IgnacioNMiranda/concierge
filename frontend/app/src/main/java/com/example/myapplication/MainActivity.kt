@@ -4,10 +4,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
-import androidx.ui.core.ContentScale
-import androidx.ui.core.Modifier
-import androidx.ui.core.clip
-import androidx.ui.core.setContent
 import androidx.ui.foundation.Image
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.contentColor
@@ -19,6 +15,7 @@ import androidx.ui.res.imageResource
 import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
+import androidx.ui.core.*
 import com.example.myapplication.api.ApiAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -29,7 +26,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NewsStory()
+            DefaultPreview()
         }
     }
 }
@@ -61,23 +58,29 @@ fun NewsStory() {
                 style = typography.body2
             )
 
+            /*
             Button(onClick = {
                 MainScope().launch(Dispatchers.Main) {
+
+                    val context = ContextAmbient.current
+
                     // Try catch block to handle exceptions when calling the API.
                     try {
                         val response = ApiAdapter.apiClient.fetchRegistros()
                         // Check if response was successful.
                         if (response.isSuccessful && response.body() != null) {
                             val data = response.body()
+
                             // Check for null safety.
-                            response.message().let { imageUrl ->
+                            /*response.message().let { imageUrl ->
                                 // Load URL into the ImageView using Coil.
                                 iv_dog_image.load(imageUrl)
-                            }
+                            }*/
                         } else {
+
                             // Show API error.
                             Toast.makeText(
-                                this@MainActivity,
+                                context,
                                 "Error Occurred: ${response.message()}",
                                 Toast.LENGTH_LONG
                             ).show()
@@ -85,7 +88,7 @@ fun NewsStory() {
                     } catch (e: Exception) {
                         // Show API error. This is the error raised by the client.
                         Toast.makeText(
-                            this@MainActivity,
+                            context,
                             "Error Occurred: ${e.message}",
                             Toast.LENGTH_LONG
                         ).show()
@@ -95,7 +98,7 @@ fun NewsStory() {
                 Text(
                     text = "Button"
                 )
-            }
+            }*/
         }
 
     }
