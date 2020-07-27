@@ -8,10 +8,16 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Retrofit instance that allows the connection with the api rest.
  */
 object ApiAdapter {
-    val apiClient: ConciergeApi = Retrofit.Builder()
-        .baseUrl("https://localhost:7000")
-        .client(OkHttpClient())
+
+    private val client = OkHttpClient.Builder().build()
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("http://10.0.2.2:8000/api/")
         .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
         .build()
-        .create(ConciergeApi::class.java)
+
+    fun <T> buildService(service: Class<T>): T {
+        return retrofit.create(service)
+    }
 }

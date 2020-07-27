@@ -1,7 +1,9 @@
 package com.example.myapplication.api
 
 import com.example.myapplication.model.Registro
+import com.example.myapplication.modelResponse.RegistroResponse
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -18,16 +20,16 @@ interface ConciergeApi {
      *
      * @return a [Response] with a Collection of [Registro].
      */
-    @GET("/api/registro")
-    suspend fun fetchRegistros(): Response<Collection<Registro>>
+    @GET("registro")
+    fun fetchRegistros(): Call<RegistroResponse>
 
     /**
      * Create a [Registro].
      *
      * @return a [Response] with a [Registro].
      */
-    @POST("/api/registro")
-    suspend fun createRegistro(@Body registro: Registro): Response<Registro>
+    @POST("registro")
+    fun createRegistro(@Body registro: Registro): Call<RegistroResponse>
 
     /**
      * Get a [Registro] with its associated ID of [Departamento].
@@ -35,8 +37,8 @@ interface ConciergeApi {
      * @param id The ID of the [Departamento].
      * @return a [Response] with a [Registro].
      */
-    @GET("/api/registro/{departamento_id}")
-    suspend fun readRegistro(@Path("departamento_id") id: Long): Response<Registro>
+    @GET("registro/{departamento_id}")
+    fun readRegistro(@Path("departamento_id") id: Long): Call<RegistroResponse>
 
     /**
      * Update a [Registro].
@@ -45,11 +47,11 @@ interface ConciergeApi {
      * @param registro The [Registro] to update.
      * @return a [Response] with a [Registro].
      */
-    @PUT("/api/registro/{registro}")
-    suspend fun updateRegistro(
+    @PUT("registro/{registro}")
+    fun updateRegistro(
         @Path("registro") id: Long,
         @Body registro: Registro
-    ): Response<Registro>
+    ): Call<RegistroResponse>
 
     /**
      * Delete a [Registro].
@@ -57,7 +59,7 @@ interface ConciergeApi {
      * @param id The ID of the [Registro].
      * @return a [Response] with a message.
      */
-    @DELETE("/api/registro/{registro}")
-    suspend fun deleteRegistro(@Path("registro") id: Long): Response<ResponseBody>
+    @DELETE("registro/{registro}")
+    fun deleteRegistro(@Path("registro") id: Long): Call<RegistroResponse>
 
 }
