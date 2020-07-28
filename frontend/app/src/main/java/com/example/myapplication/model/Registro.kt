@@ -1,13 +1,14 @@
 package com.example.myapplication.model
 
 import androidx.annotation.Keep
+import java.time.LocalDateTime
 import java.util.*
 
 /**
  * Registro class that represents the Registro model used in Api rest.
  */
 @Keep
-class Registro {
+class Registro(fecha: Date, parentesco: String, empresaEntrega: Boolean, persona_id: Int, departamento_id: Int) {
 
     /**
      * The date.
@@ -34,5 +35,12 @@ class Registro {
      */
     var departamento_id: Int? = null
 
+    init {
+        this.fecha = fecha
+        this.parentesco = parentesco
+        this.empresaEntrega = empresaEntrega
+        this.persona_id = persona_id
+        this.departamento_id = departamento_id
+    }
 
 }

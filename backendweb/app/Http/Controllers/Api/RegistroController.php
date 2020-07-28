@@ -24,7 +24,7 @@ class RegistroController extends Controller
         return response([
             'message' => 'Retrieved Successfully',
             'registros' => RegistroResource::collection($registros),
-        ]);
+        ], 200);
     }
 
     /**
@@ -56,11 +56,11 @@ class RegistroController extends Controller
         return response([
             'message' => "Visit registered successfully",
             'registro' => new RegistroResource($registro),
-        ]);
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Obtains the visits to an specific apartment.
      *
      * @param  int  $departamento_id
      * @return Response
@@ -73,7 +73,7 @@ class RegistroController extends Controller
         return response([
             'message' => 'Retrieved Successfully',
             'registros' => RegistroResource::collection($registros),
-        ]);
+        ], 200);
     }
 
     /**
