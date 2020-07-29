@@ -21,6 +21,7 @@ import androidx.ui.material.ListItem
 import androidx.ui.text.font.FontStyle
 import androidx.ui.unit.Dp
 import com.example.myapplication.api.ApiAdapter
+import com.example.myapplication.api.ApiConnection
 import com.example.myapplication.api.ConciergeApi
 import com.example.myapplication.model.Registro
 import com.example.myapplication.modelResponse.RegistroResponse
@@ -72,34 +73,10 @@ fun NewsStory() {
             )
 
             Button(onClick = {
-                val request = ApiAdapter.buildService(ConciergeApi::class.java)
-                val call = request.fetchRegistros()
-
-                call.enqueue(object : Callback<RegistroResponse> {
-                    override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
-                        if (response.isSuccessful) {
-
-                            val registros = response.body()?.registros?.toList()
-
-                            if (registros != null) {
-                                AdapterList(data = registros) { registro ->
-                                    ListItem(
-                                        text = registro.fecha.toString(),
-                                        secondaryText = registro.parentesco
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
-
-
-                    }
-                })
+                ApiConnection.fetchRegistros()
             }, border = Border(2.dp, Color.White)) {
                 Text(
-                    text = "Button"
+                    text = "Obtener registros"
                 )
             }
         }
