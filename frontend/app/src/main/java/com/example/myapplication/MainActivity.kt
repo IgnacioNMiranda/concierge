@@ -1,12 +1,10 @@
 package com.example.myapplication
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
-import androidx.ui.foundation.Image
-import androidx.ui.foundation.Text
-import androidx.ui.foundation.contentColor
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.layout.*
 import androidx.ui.material.Button
@@ -16,11 +14,24 @@ import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import androidx.ui.core.*
+import androidx.ui.foundation.*
+import androidx.ui.graphics.Brush
+import androidx.ui.graphics.Color
+import androidx.ui.material.ListItem
+import androidx.ui.text.font.FontStyle
+import androidx.ui.unit.Dp
 import com.example.myapplication.api.ApiAdapter
+import com.example.myapplication.api.ConciergeApi
+import com.example.myapplication.model.Registro
+import com.example.myapplication.modelResponse.RegistroResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,56 +62,47 @@ fun NewsStory() {
                 "System of Concierge ",
                 style = typography.h6,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = Color(255,255,255)
             )
             Text(
                 "Semestre 1 - 2020",
-                style = typography.body2
+                style = typography.body2,
+                color = Color(255,255,255)
             )
 
-            /*
             Button(onClick = {
-                MainScope().launch(Dispatchers.Main) {
+                val request = ApiAdapter.buildService(ConciergeApi::class.java)
+                val call = request.fetchRegistros()
 
-                    val context = ContextAmbient.current
+                call.enqueue(object : Callback<RegistroResponse> {
+                    override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
+                        if (response.isSuccessful) {
 
-                    // Try catch block to handle exceptions when calling the API.
-                    try {
-                        val response = ApiAdapter.apiClient.fetchRegistros()
-                        // Check if response was successful.
-                        if (response.isSuccessful && response.body() != null) {
-                            val data = response.body()
+                            val registros = response.body()?.registros?.toList()
 
-                            // Check for null safety.
-                            /*response.message().let { imageUrl ->
-                                // Load URL into the ImageView using Coil.
-                                iv_dog_image.load(imageUrl)
-                            }*/
-                        } else {
-
-                            // Show API error.
-                            Toast.makeText(
-                                context,
-                                "Error Occurred: ${response.message()}",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            if (registros != null) {
+                                AdapterList(data = registros) { registro ->
+                                    ListItem(
+                                        text = registro.fecha.toString(),
+                                        secondaryText = registro.parentesco
+                                    )
+                                }
+                            }
                         }
-                    } catch (e: Exception) {
-                        // Show API error. This is the error raised by the client.
-                        Toast.makeText(
-                            context,
-                            "Error Occurred: ${e.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
                     }
-                }
-            }) {
+
+                    override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
+
+
+                    }
+                })
+            }, border = Border(2.dp, Color.White)) {
                 Text(
                     text = "Button"
                 )
-            }*/
+            }
         }
-
     }
 }
 
