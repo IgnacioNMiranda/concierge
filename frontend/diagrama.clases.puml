@@ -1,0 +1,38 @@
+@startuml
+
+Class ApiAdapter << (S,#FF7700) Singleton >> {
+    - client: OKHttpClient
+    - retrofit: Retrofit
+    + buildService(service: T): T
+}
+
+class Registro {
+    - fecha: Date
+    - parentesco: String
+    - empresaEntrega: Boolean
+    - persona_id: int
+    - departamento_id: int
+
+    + Registro(fecha: Date, parentesco: String, empresaEntrega: Boolean,
+    persona_id: int, departamento_id: int)
+}
+
+class RegistroResponse {
+    - message: String
+    - registro: Registro
+    - registros: Collection<Registro>
+}
+
+interface ConciergeApi {
+    + fetchRegistros(): Call<RegistroResponse>
+    + createRegistro(registro: Registro): Call<RegistroResponse>
+    + readRegistro(Departamento_id: Long): Call<RegistroResponse>
+    + updateRegistro(id: Long, registro: Registro): Call<RegistroResponse>
+    + deleteRegistro(id: Long): Call<RegistroResponse>
+}
+
+ConciergeApi -down-> ApiAdapter : connected to
+ConciergeApi -left-> RegistroResponse : returns a call of
+RegistroResponse -down-> Registro : has
+
+@enduml
