@@ -11,8 +11,8 @@ class Registro(
     fecha: Date,
     parentesco: String,
     empresaEntrega: Boolean,
-    persona: Persona,
-    departamento: Departamento,
+    persona: Persona? = null,
+    departamento: Departamento? = null,
     persona_id: Long,
     departamento_id: Long
 ) {

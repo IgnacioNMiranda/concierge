@@ -16,7 +16,6 @@ class ApiConnection {
             val call = request.fetchRegistros()
 
             val thread = Thread(Runnable {
-                Log.e("tag", response.toString())
                 response = call.execute()
             })
 

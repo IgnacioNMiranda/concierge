@@ -71,7 +71,6 @@ Registro -down-> RegistroResponse : calls
 Registro -right-> Departamento: has
 Registro -down-> Persona: has
 DepartamentoResponse -down-> ApiConnection : returns message
-PersonaResponse -right- RegistroResponse
 RegistroResponse -right-> ApiConnection : returns message
 
 @enduml

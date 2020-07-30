@@ -23,9 +23,8 @@ class RestfulApiConsumingTest {
         Log.i("... restfulApi consuming testing ...", "... restfulApi consuming testing ...")
         val request = ApiAdapter.buildService(ConciergeApi::class.java)
 
-        val registro = Registro(Calendar.getInstance().time, "Empresa", true, 1, 1)
+        val registro = Registro(Calendar.getInstance().time, "Empresa", true, null, null, 1, 1)
         var call = request.createRegistro(registro)
-
 
         call.enqueue(object : Callback<RegistroResponse> {
             override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
@@ -36,7 +35,7 @@ class RestfulApiConsumingTest {
                     // Registro response must to be not null
                     Assert.assertNotNull(response.body()?.registro)
 
-                    // Response message has to be OK
+                    // Response message has to be Created
                     Assert.assertEquals("Created", response.message())
 
                     // Attributes from the response's registro has to be equal to the created registro's ones.
@@ -63,6 +62,8 @@ class RestfulApiConsumingTest {
 
                     // Registro response must to be not null
                     Assert.assertNotNull(response.body()?.registros)
+
+                    Log.e("tag", response.body()?.registros?.toString()!!)
 
                     // Response message has to be OK
                     Assert.assertEquals("OK", response.message())
