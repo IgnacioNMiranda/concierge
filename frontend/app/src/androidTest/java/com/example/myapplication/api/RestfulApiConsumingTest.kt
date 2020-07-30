@@ -20,11 +20,12 @@ class RestfulApiConsumingTest {
      */
     @Test
     fun registroApiConnection() {
-        Log.d("... restfulApi consuming testing ...", "... restfulApi consuming testing ...")
+        Log.i("... restfulApi consuming testing ...", "... restfulApi consuming testing ...")
         val request = ApiAdapter.buildService(ConciergeApi::class.java)
 
         val registro = Registro(Calendar.getInstance().time, "Empresa", true, 1, 1)
-        val call = request.createRegistro(registro)
+        var call = request.createRegistro(registro)
+
 
         call.enqueue(object : Callback<RegistroResponse> {
             override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
@@ -53,6 +54,28 @@ class RestfulApiConsumingTest {
             }
         })
 
-        Log.d("restfulApi consuming testing", "... restfulApi consuming testing finishing...")
+        call = request.fetchRegistros()
+        call.enqueue(object : Callback<RegistroResponse> {
+            override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
+
+                // It checks if status ~ 200
+                if (response.isSuccessful) {
+
+                    // Registro response must to be not null
+                    Assert.assertNotNull(response.body()?.registros)
+
+                    // Response message has to be OK
+                    Assert.assertEquals("OK", response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
+                //Assert.assertFalse(call.isCanceled)
+                // no supe qué hacer aqui, me tiraba test pass de cualquier forma
+            }
+        })
+
+
+        Log.i("restfulApi consuming testing", "... restfulApi consuming testing finishing...")
     }
 }
