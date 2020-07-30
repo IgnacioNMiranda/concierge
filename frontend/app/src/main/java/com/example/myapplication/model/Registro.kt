@@ -5,10 +5,15 @@ import java.time.LocalDateTime
 import java.util.*
 
 /**
- * Registro class that represents the Registro model used in Api rest.
+ * Registro class that represents the Registro model used in the RESTful API.
  */
 @Keep
-class Registro(fecha: Date, parentesco: String, empresaEntrega: Boolean, persona_id: Int, departamento_id: Int) {
+class Registro(
+    fecha: Date,
+    parentesco: String,
+    empresaEntrega: Boolean,
+    persona: Persona,
+    departamento: Departamento) {
 
     /**
      * The date.
@@ -28,19 +33,19 @@ class Registro(fecha: Date, parentesco: String, empresaEntrega: Boolean, persona
     /**
      * Relation with the visitor that does the visit.
      */
-    var persona_id: Int? = null
+    var persona: Persona? = null
 
     /**
      * Relation with the visited apartment.
      */
-    var departamento_id: Int? = null
+    var departamento: Departamento? = null
 
     init {
         this.fecha = fecha
         this.parentesco = parentesco
         this.empresaEntrega = empresaEntrega
-        this.persona_id = persona_id
-        this.departamento_id = departamento_id
+        this.persona = persona
+        this.departamento = departamento
     }
 
 }
