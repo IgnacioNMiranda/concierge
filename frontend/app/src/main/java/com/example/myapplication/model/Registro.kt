@@ -1,7 +1,6 @@
 package com.example.myapplication.model
 
 import androidx.annotation.Keep
-import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -13,7 +12,10 @@ class Registro(
     parentesco: String,
     empresaEntrega: Boolean,
     persona: Persona,
-    departamento: Departamento) {
+    departamento: Departamento,
+    persona_id: Long,
+    departamento_id: Long
+) {
 
     /**
      * The date.
@@ -36,16 +38,27 @@ class Registro(
     var persona: Persona? = null
 
     /**
+     * Relation with the visitor ID that does the visit.
+     */
+    var persona_id: Long? = null
+
+    /**
      * Relation with the visited apartment.
      */
     var departamento: Departamento? = null
+
+    /**
+     * Relation with the visited apartment ID.
+     */
+    var departamento_id: Long? = null
 
     init {
         this.fecha = fecha
         this.parentesco = parentesco
         this.empresaEntrega = empresaEntrega
         this.persona = persona
+        this.persona_id = persona_id
         this.departamento = departamento
+        this.departamento_id = departamento_id
     }
-
 }
