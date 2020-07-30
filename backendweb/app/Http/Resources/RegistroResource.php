@@ -21,6 +21,7 @@ class RegistroResource extends JsonResource
             'parentesco' => $this->parentesco,
             'empresaEntrega' => $this->when($this->parentesco == "Empresa", $this->empresaEntrega),
             'persona' => PersonaResource::make($this->persona),
+            'departamento' => DepartamentoResource::make($this->departamento),
         ];
     }
 }
