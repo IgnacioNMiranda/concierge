@@ -28,5 +28,5 @@ note top of Registro : Las visitas pueden hacerlas\nfamiliares, externos o empre
 
 Persona "1" --> "*" Departamento : pertenece
 Registro "*" --> "1" Departamento : se visita
-Registro "*" --> "1" Persona : se registra
+Registro "*" -right-> "1" Persona : se registra
 @enduml
