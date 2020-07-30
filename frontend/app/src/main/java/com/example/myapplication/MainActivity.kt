@@ -1,15 +1,15 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
+import androidx.compose.frames.ModelList
+import androidx.compose.frames.modelListOf
 import androidx.ui.core.Modifier
 import androidx.ui.core.clip
 import androidx.ui.core.setContent
-import androidx.ui.foundation.AdapterList
-import androidx.ui.foundation.Border
-import androidx.ui.foundation.Image
-import androidx.ui.foundation.Text
+import androidx.ui.foundation.*
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
@@ -22,8 +22,9 @@ import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
 import com.example.myapplication.model.Registro
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,23 +65,31 @@ fun NewsStory() {
                 modifier = Modifier.absolutePadding(0.dp, 8.dp, 0.dp, 8.dp)
             )
 
-            var registros: List<Registro>? = emptyList()
+            var registros: MutableList<Registro> = mutableListOf()
+            Log.e("launch", registros.toString())
             Button(onClick = {
-                registros = ApiConnection.fetchRegistros()!!
+                runBlocking {
+                    registros =
+                        withContext(Dispatchers.Default) { ApiConnection.fetchRegistros() }!!
+                }
+
+                Log.e("UI", registros.toString())
             }, border = Border(2.dp, Color.White)) {
                 Text(
                     text = "Obtener registros"
                 )
             }
 
-            registros?.let {
-                AdapterList(data = it) { registro ->
+            AdapterList(
+                data = registros,
+                modifier = Modifier.padding(0.dp),
+                itemCallback = { registro ->
                     ListItem(
                         text = registro.fecha.toString(),
                         secondaryText = registro.parentesco
                     )
                 }
-            }
+            )
 
         }
     }
@@ -90,4 +99,14 @@ fun NewsStory() {
 @Composable
 fun DefaultPreview() {
     NewsStory()
+}
+
+@Composable
+fun updateRegistrosList(registros: MutableList<Registro>) {
+    return AdapterList(data = registros) { registro ->
+        ListItem(
+            text = registro.fecha.toString(),
+            secondaryText = registro.parentesco
+        )
+    }
 }

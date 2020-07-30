@@ -1,9 +1,8 @@
 package com.example.myapplication.api
 
-import android.util.Log
-import com.example.myapplication.model.Registro
-import com.example.myapplication.modelResponse.RegistroResponse
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class ApiConnection {
 
@@ -11,20 +10,16 @@ class ApiConnection {
 
         private val request = ApiAdapter.buildService(ConciergeApi::class.java)
 
-        fun fetchRegistros(): List<Registro>? {
-            var response: Response<RegistroResponse>? = null
+        fun fetchRegistros() = runBlocking {
             val call = request.fetchRegistros()
 
-            val thread = Thread(Runnable {
-                response = call.execute()
-            })
+            val response = withContext(Dispatchers.Default) {
+                call.execute()
+            }
 
-            thread.join()
-
-            Log.d("tag", response.toString())
-
-            return response?.body()?.registros?.toList()
+            return@runBlocking response.body()?.registros?.toMutableList()
         }
+
     }
 
 }
