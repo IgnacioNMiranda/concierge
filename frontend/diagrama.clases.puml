@@ -1,0 +1,76 @@
+@startuml
+
+class Departamento {
+    - numero: int
+    + Departamento(numero: int)
+}
+
+class DepartamentoResponse {
+    - message: String
+    - departamento: Departamento
+    - departamentos: Collection<Departamento>
+}
+
+class Persona {
+    - rut: String
+    - nombre: String
+    - telefono: String
+    - email: String
+    - departamento: Departamento
+}
+
+class PersonaResponse {
+    - message: String
+    - persona: Persona
+    - personas: Collection<Persona>
+}
+
+class Registro {
+    - fecha: Date
+    - parentesco: String
+    - empresaEntrega: Boolean
+    - persona: Persona
+    - departamento: Departamento
+    - persona_id: Long
+    - departamento_id: Long
+
+    + Registro(fecha: Date, parentesco: String, empresaEntrega: Boolean, persona: Persona,
+     departamento: Departamento, persona_id: Long, departamento_id: Long)
+}
+
+class RegistroResponse {
+    - message: String
+    - registro: Registro
+    - registros: Collection<Registro>
+}
+
+Class ApiAdapter << (S,#FF7700) Singleton >> {
+    - client: OKHttpClient
+    - retrofit: Retrofit
+    + buildService(service: T): T
+}
+
+Class ApiConnection implements ConciergeApi {
+    - request: ApiAdapter
+    + fetchRegistros(): Call<RegistroResponse>
+}
+
+interface ConciergeApi {
+    + fetchRegistros(): Call<RegistroResponse>
+    + createRegistro(registro: Registro): Call<RegistroResponse>
+    + readRegistro(Departamento_id: Long): Call<RegistroResponse>
+    + updateRegistro(id: Long, registro: Registro): Call<RegistroResponse>
+    + deleteRegistro(id: Long): Call<RegistroResponse>
+}
+
+ApiConnection -right-> ApiAdapter : connected to
+ApiConnection -left-> Registro : use
+Departamento -right-> DepartamentoResponse: calls
+Persona -right-> PersonaResponse: calls
+Registro -down-> RegistroResponse : calls
+Registro -right-> Departamento: has
+Registro -down-> Persona: has
+DepartamentoResponse -down-> ApiConnection : returns message
+RegistroResponse -right-> ApiConnection : returns message
+
+@enduml
