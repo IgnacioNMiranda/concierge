@@ -1,26 +1,58 @@
 @startuml
 
-Class ApiAdapter << (S,#FF7700) Singleton >> {
-    - client: OKHttpClient
-    - retrofit: Retrofit
-    + buildService(service: T): T
+class Departamento {
+    - numero: int
+    + Departamento(numero: int)
+}
+
+class DepartamentoResponse {
+    - message: String
+    - departamento: Departamento
+    - departamentos: Collection<Departamento>
+}
+
+class Persona {
+    - rut: String
+    - nombre: String
+    - telefono: String
+    - email: String
+    - departamento: Departamento
+}
+
+class PersonaResponse {
+    - message: String
+    - persona: Persona
+    - personas: Collection<Persona>
 }
 
 class Registro {
     - fecha: Date
     - parentesco: String
     - empresaEntrega: Boolean
-    - persona_id: int
-    - departamento_id: int
+    - persona: Persona
+    - departamento: Departamento
+    - persona_id: Long
+    - departamento_id: Long
 
-    + Registro(fecha: Date, parentesco: String, empresaEntrega: Boolean,
-    persona_id: int, departamento_id: int)
+    + Registro(fecha: Date, parentesco: String, empresaEntrega: Boolean, persona: Persona,
+     departamento: Departamento, persona_id: Long, departamento_id: Long)
 }
 
 class RegistroResponse {
     - message: String
     - registro: Registro
     - registros: Collection<Registro>
+}
+
+Class ApiAdapter << (S,#FF7700) Singleton >> {
+    - client: OKHttpClient
+    - retrofit: Retrofit
+    + buildService(service: T): T
+}
+
+Class ApiConnection implements ConciergeApi {
+    - request: ApiAdapter
+    + fetchRegistros(): Call<RegistroResponse>
 }
 
 interface ConciergeApi {
@@ -31,8 +63,15 @@ interface ConciergeApi {
     + deleteRegistro(id: Long): Call<RegistroResponse>
 }
 
-ConciergeApi -down-> ApiAdapter : connected to
-ConciergeApi -left-> RegistroResponse : returns a call of
-RegistroResponse -down-> Registro : has
+ApiConnection -right-> ApiAdapter : connected to
+ApiConnection -left-> Registro : use
+Departamento -right-> DepartamentoResponse: calls
+Persona -right-> PersonaResponse: calls
+Registro -down-> RegistroResponse : calls
+Registro -right-> Departamento: has
+Registro -down-> Persona: has
+DepartamentoResponse -down-> ApiConnection : returns message
+PersonaResponse -right- RegistroResponse
+RegistroResponse -right-> ApiConnection : returns message
 
 @enduml
