@@ -17,6 +17,7 @@ class DepartamentoResource extends JsonResource
     {
         /** @noinspection PhpUndefinedFieldInspection */
         return [
+            'id' => $this->id,
             'numero' => $this->numero,
         ];
     }

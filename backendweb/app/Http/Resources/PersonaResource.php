@@ -17,6 +17,7 @@ class PersonaResource extends JsonResource
     {
         /** @noinspection PhpUndefinedFieldInspection */
         return [
+            'id' => $this->id,
             'rut' => $this->rut,
             'nombre' => $this->nombre,
             'telefono' => $this->telefono,
