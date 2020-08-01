@@ -1,37 +1,41 @@
 package com.example.myapplication.api
 
 
-import android.app.Activity
-import android.app.Application
-import android.content.Context
-import android.widget.Toast
-import com.example.myapplication.MainActivity
-import com.example.myapplication.model.Registro
+import android.util.Log
 import com.example.myapplication.modelResponse.RegistroResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 
 class ApiConnection {
 
+    @Suppress("SpellCheckingInspection")
     companion object {
 
         private val request = ApiAdapter.buildService(ConciergeApi::class.java)
 
-        fun fetchRegistros(): Response<RegistroResponse>? = runBlocking {
-            var response: Response<RegistroResponse>?
+        fun fetchRegistros(callback: RegistroCallback) {
+            var respuestaRegistros: Response<RegistroResponse>? = null
             val call = request.fetchRegistros()
 
-            try {
-                response = withContext(Dispatchers.Default) {
-                    call.execute()
+            call.enqueue(object : Callback<RegistroResponse> {
+                override fun onResponse(
+                    call: Call<RegistroResponse>,
+                    response: Response<RegistroResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        callback.fetchRegistros(response)
+                    }
                 }
-                return@runBlocking response
-            } catch (e: Exception) {
-                return@runBlocking null
-            }
+
+                override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
+                    callback.fetchRegistros(null)
+                }
+            })
+
+            Log.e("responseBeforeReturn", respuestaRegistros.toString())
+
         }
     }
 }

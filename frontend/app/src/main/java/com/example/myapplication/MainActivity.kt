@@ -1,14 +1,10 @@
 package com.example.myapplication
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.MutableState
-import androidx.compose.frames.ModelList
-import androidx.compose.frames.modelListOf
 import androidx.compose.state
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.Modifier
@@ -27,12 +23,11 @@ import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
+import com.example.myapplication.api.RegistroCallback
 import com.example.myapplication.model.Registro
 import com.example.myapplication.modelResponse.RegistroResponse
 import kotlinx.coroutines.*
 import retrofit2.Response
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,29 +63,31 @@ fun NewsStory() {
                 color = Color.Black,
                 modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
             )
-            /*Text(
-                "Semestre 1 - 2020",
-                style = typography.body2,
-                color = Color.Black,
-                modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
-            )*/
 
             var registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
             Button(
                 onClick = {
                     runBlocking {
-                        val response = (withContext(Dispatchers.Default) {
-                            ApiConnection.fetchRegistros()
-                        })
+                        withContext(Dispatchers.Default) {
+                            ApiConnection.fetchRegistros(object : RegistroCallback {
+                                override fun fetchRegistros(response: Response<RegistroResponse>?) {
+                                    if (response != null && response.isSuccessful) {
+                                        registros.value = response.body()?.registros?.toList()!!
 
-                        if (response != null && response.isSuccessful) {
-                            registros.value = response.body()?.registros?.toList()!!
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "No se pudo recuperar los registros",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                                        Toast.makeText(
+                                            context,
+                                            "Registros recuperados!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "No se pudo recuperar los registros :(",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            })
                         }
                     }
                 },
