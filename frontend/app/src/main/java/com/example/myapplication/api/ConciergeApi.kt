@@ -1,8 +1,10 @@
 package com.example.myapplication.api
 
 import com.example.myapplication.model.Departamento
+import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
 import com.example.myapplication.modelResponse.DepartamentoResponse
+import com.example.myapplication.modelResponse.PersonaResponse
 import com.example.myapplication.modelResponse.RegistroResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -110,4 +112,52 @@ interface ConciergeApi {
      */
     @DELETE("departamento/{departamento}")
     fun deleteDepartamento(@Path("departamento") id: Long): Call<DepartamentoResponse>
+
+    /**
+     * Get a list of all [Persona]s.
+     *
+     * @return a [Call] that can be used to retrieve a [PersonaResponse].
+     */
+    @GET("persona")
+    fun fetchPersonas(): Call<PersonaResponse>
+
+    /**
+     * Create a [Persona].
+     *
+     * @param persona The [Persona] to add.
+     * @return a [Call] that can be used to retrieve a [PersonaResponse].
+     */
+    @POST("persona")
+    fun createPersona(@Body persona: Persona): Call<PersonaResponse>
+
+    /**
+     * Get a [Persona] from the backend.
+     *
+     * @param id The ID of the [Persona] to retrieve.
+     * @return a [Call] that can be used to retrieve a [PersonaResponse].
+     */
+    @GET("persona/{persona}")
+    fun readPersona(@Path("persona") id: Long): Call<PersonaResponse>
+
+    /**
+     * Update a [Persona] in the backend.
+     *
+     * @param id The ID of the [Persona] to update.
+     * @param persona The data to update.
+     * @return a [Call] that can be used to retrieve a [PersonaResponse].
+     */
+    @PUT("persona/{persona}")
+    fun updatePersona(
+        @Path("persona") id: Long,
+        @Body persona: Persona
+    ): Call<PersonaResponse>
+
+    /**
+     * Delete a [Persona] from the backend.
+     *
+     * @param id The ID of the [Persona] to remove.
+     * @return a [Call] that can be used to retrieve a [PersonaResponse].
+     */
+    @DELETE("persona/{persona}")
+    fun deletePersona(@Path("persona") id: Long): Call<PersonaResponse>
 }
