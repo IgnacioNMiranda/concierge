@@ -13,5 +13,6 @@ data class Persona(
     var nombre: String? = null,
     var telefono: String? = null,
     var email: String? = null,
+    var departamento_id: Long? = null,
     var departamento: Departamento? = null
 )

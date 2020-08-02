@@ -4,67 +4,16 @@ import androidx.annotation.Keep
 import java.util.*
 
 /**
- * Registro class that represents the Registro model used in the RESTful API.
+ * Registro that saves information about a visit to the building.
  */
 @Keep
-class Registro(
-    id: Long,
-    fecha: Date,
-    parentesco: String,
-    empresaEntrega: Boolean,
-    persona: Persona? = null,
-    departamento: Departamento? = null,
-    persona_id: Long,
-    departamento_id: Long
-) {
-
-    /**
-     * The ID.
-     */
-    val id: Long? = null
-
-    /**
-     * The date.
-     */
-    var fecha: Date? = null
-
-    /**
-     * The relationship between the visit and the Apartment owner.
-     */
-    var parentesco: String? = null
-
-    /**
-     * Indicates if it is a delivery business.
-     */
-    var empresaEntrega: Boolean? = null
-
-    /**
-     * Relation with the visitor that does the visit.
-     */
-    var persona: Persona? = null
-
-    /**
-     * Relation with the visitor ID that does the visit.
-     */
-    var persona_id: Long? = null
-
-    /**
-     * Relation with the visited apartment.
-     */
+data class Registro(
+    val id: Long? = null,
+    var fecha: Date? = null,
+    var parentesco: String? = null,
+    var empresaEntrega: Boolean? = null,
+    var persona_id: Long? = null,
+    var departamento_id: Long? = null,
+    var persona: Persona? = null,
     var departamento: Departamento? = null
-
-    /**
-     * Relation with the visited apartment ID.
-     */
-    var departamento_id: Long? = null
-
-    init {
-        this.fecha = fecha
-        this.parentesco = parentesco
-        this.empresaEntrega = empresaEntrega
-        this.persona = persona
-        this.persona_id = persona_id
-        this.departamento = departamento
-        this.departamento_id = departamento_id
-    }
-}
+)
