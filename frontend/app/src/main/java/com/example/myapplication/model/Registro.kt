@@ -8,6 +8,7 @@ import java.util.*
  */
 @Keep
 class Registro(
+    id: Long,
     fecha: Date,
     parentesco: String,
     empresaEntrega: Boolean,
@@ -16,6 +17,11 @@ class Registro(
     persona_id: Long,
     departamento_id: Long
 ) {
+
+    /**
+     * The ID.
+     */
+    val id: Long? = null
 
     /**
      * The date.
