@@ -1,10 +1,10 @@
 package com.example.myapplication.api
 
+import com.example.myapplication.model.Departamento
 import com.example.myapplication.model.Registro
+import com.example.myapplication.modelResponse.DepartamentoResponse
 import com.example.myapplication.modelResponse.RegistroResponse
-import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.*
 
 /**
@@ -18,7 +18,7 @@ interface ConciergeApi {
     /**
      * Get a list of all [Registro]s.
      *
-     * @return a [Response] with a Collection of [Registro].
+     * @return a [Call] that can be used to retrieve a [RegistroResponse].
      */
     @GET("registro")
     fun fetchRegistros(): Call<RegistroResponse>
@@ -26,7 +26,8 @@ interface ConciergeApi {
     /**
      * Create a [Registro].
      *
-     * @return a [Response] with a [Registro].
+     * @param registro The [Registro] to insert.
+     * @return a [Call] that can be used to retrieve a [RegistroResponse].
      */
     @POST("registro")
     fun createRegistro(@Body registro: Registro): Call<RegistroResponse>
@@ -35,7 +36,7 @@ interface ConciergeApi {
      * Get a [Registro] with its associated ID of [Departamento].
      *
      * @param id The ID of the [Departamento].
-     * @return a [Response] with a [Registro].
+     * @return a [Call] that can be used to retrieve a [RegistroResponse].
      */
     @GET("registro/{departamento_id}")
     fun readRegistro(@Path("departamento_id") id: Long): Call<RegistroResponse>
@@ -45,7 +46,7 @@ interface ConciergeApi {
      *
      * @param id The ID of the [Registro].
      * @param registro The [Registro] to update.
-     * @return a [Response] with a [Registro].
+     * @return a [Call] that can be used to retrieve a [RegistroResponse].
      */
     @PUT("registro/{registro}")
     fun updateRegistro(
@@ -57,9 +58,56 @@ interface ConciergeApi {
      * Delete a [Registro].
      *
      * @param id The ID of the [Registro].
-     * @return a [Response] with a message.
+     * @return a [Call] that can be used to retrieve a [RegistroResponse].
      */
     @DELETE("registro/{registro}")
     fun deleteRegistro(@Path("registro") id: Long): Call<RegistroResponse>
 
+    /**
+     * Get a list of all [Departamento]s.
+     *
+     * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
+     */
+    @GET("departamento")
+    fun fetchDepartamentos(): Call<DepartamentoResponse>
+
+    /**
+     * Create a [Departamento].
+     *
+     * @param departamento The [Departamento] to insert.
+     * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
+     */
+    @POST("departamento")
+    fun createDepartamento(@Body departamento: Departamento): Call<DepartamentoResponse>
+
+    /**
+     * Retrieve a [Departamento] from the backend.
+     *
+     * @param id The ID of the [Departamento] to get.
+     * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
+     */
+    @GET("departamento/{departamento}")
+    fun readDepartamento(@Path("departamento") id: Long): Call<DepartamentoResponse>
+
+    /**
+     * Update a [Departamento] in the backend.
+     *
+     * @param id The [Departamento]'s ID.
+     * @param departamento The data to update.
+     * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
+     */
+    @PUT("departamento/{departamento}")
+    fun updateDepartamento(
+        @Path("departamento") id: Long,
+        @Body departamento: Departamento
+    ): Call<DepartamentoResponse>
+
+    /**
+     * Remove a [Departamento] from the backend.
+     *
+     * @param id The ID of the [Departamento] to remove.
+     * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
+     */
+    @DELETE("departamento/{departamento}")
+    fun deleteDepartamento(@Path("departamento") id: Long): Call<DepartamentoResponse>
 }
