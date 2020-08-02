@@ -11,7 +11,19 @@ import com.example.myapplication.model.Departamento
  * is called.
  */
 data class DepartamentoResponse(
+
+    /**
+     * message of the http response.
+     */
     var message: String? = null,
+
+    /**
+     * Departamento object received from the http response.
+     */
     var departamento: Departamento? = null,
+
+    /**
+     * Departamento collection received from the http response.
+     */
     var departamentos: Collection<Departamento>? = null
 )

@@ -7,17 +7,29 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * Makes async connection with restful api.
+ */
 class ApiConnection {
 
+    /**
+     * Singleton instances to avoid multiple api connection paths.
+     */
     @Suppress("SpellCheckingInspection")
     companion object {
 
+        /**
+         * Singleton that allows the connection with restful api.
+         */
         private val request = ApiAdapter.buildService(ConciergeApi::class.java)
 
+        /**
+         * Retrieves all the database 'registros' asynchronously.
+         */
         fun fetchRegistros(callback: RegistroCallback) {
-            var respuestaRegistros: Response<RegistroResponse>? = null
             val call = request.fetchRegistros()
 
+            /** Async call */
             call.enqueue(object : Callback<RegistroResponse> {
                 override fun onResponse(
                     call: Call<RegistroResponse>,
@@ -33,9 +45,6 @@ class ApiConnection {
                     callback.fetchRegistros(null)
                 }
             })
-
-            Log.e("responseBeforeReturn", respuestaRegistros.toString())
-
         }
     }
 }

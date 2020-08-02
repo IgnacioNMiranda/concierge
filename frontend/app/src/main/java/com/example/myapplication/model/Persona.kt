@@ -8,11 +8,39 @@ package com.example.myapplication.model
  * to the backend ID.
  */
 data class Persona(
+
+    /**
+     * Backend's id.
+     */
     val id: Long? = null,
+
+    /**
+     * The rut of the [Persona].
+     */
     val rut: String? = null,
+
+    /**
+     * Name of the [Persona].
+     */
     var nombre: String? = null,
+
+    /**
+     * Phone of the [Persona].
+     */
     var telefono: String? = null,
+
+    /**
+     * Email belonged to the [Persona].
+     */
     var email: String? = null,
+
+    /**
+     * Backend's own apartment id.
+     */
     var departamento_id: Long? = null,
+
+    /**
+     * Backend's own apartment reference.
+     */
     var departamento: Departamento? = null
 )
