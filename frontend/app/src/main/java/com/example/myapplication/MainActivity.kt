@@ -1,23 +1,15 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.Composable
-import androidx.compose.MutableState
-import androidx.compose.state
-import androidx.ui.core.ContextAmbient
-import androidx.ui.core.Modifier
-import androidx.ui.core.clip
-import androidx.ui.core.setContent
+import androidx.compose.*
+import androidx.ui.core.*
 import androidx.ui.foundation.*
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
-import androidx.ui.material.Button
-import androidx.ui.material.ListItem
-import androidx.ui.material.MaterialTheme
+import androidx.ui.material.*
 import androidx.ui.res.imageResource
 import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
@@ -41,7 +33,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 @Composable
 fun NewsStory() {
     val image = imageResource(R.drawable.concierge2)
-    val context = ContextAmbient.current
     MaterialTheme {
         val typography = MaterialTheme.typography
         Column(
@@ -56,7 +47,7 @@ fun NewsStory() {
             Spacer(Modifier.preferredHeight(16.dp))
 
             Text(
-                "Concerjería",
+                "Conserjería",
                 style = typography.h6,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -65,26 +56,24 @@ fun NewsStory() {
             )
 
             var registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
+            var showPopup by state { false }
+            var registrosResponse by state { false }
+            var obtainingData by state { false }
             Button(
                 onClick = {
+                    showPopup = true
+                    registrosResponse = false
+                    obtainingData = true
                     runBlocking {
                         withContext(Dispatchers.Default) {
                             ApiConnection.fetchRegistros(object : RegistroCallback {
                                 override fun fetchRegistros(response: Response<RegistroResponse>?) {
                                     if (response != null && response.isSuccessful) {
+                                        registrosResponse = true
+                                        obtainingData = false
                                         registros.value = response.body()?.registros?.toList()!!
-
-                                        Toast.makeText(
-                                            context,
-                                            "Registros recuperados!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
                                     } else {
-                                        Toast.makeText(
-                                            context,
-                                            "No se pudo recuperar los registros :(",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        obtainingData = false
                                     }
                                 }
                             })
@@ -98,6 +87,9 @@ fun NewsStory() {
                     text = "Obtener registros"
                 )
             }
+
+            val onPopupDismissed = { showPopup = false }
+            LoadingComponent(showPopup, onPopupDismissed, obtainingData, registrosResponse)
 
             LazyColumnItems(items = registros.value,
                 modifier = Modifier.padding(0.dp),
@@ -117,4 +109,68 @@ fun NewsStory() {
 @Composable
 fun DefaultPreview() {
     NewsStory()
+}
+
+@Suppress("CascadeIf")
+@Composable
+fun LoadingComponent(
+    showPopup: Boolean,
+    onPopupDismissed: () -> Unit,
+    obtainingData: Boolean,
+    registrosResponse: Boolean
+) {
+    if (showPopup) {
+        if (obtainingData) {
+            AlertDialog(
+                onCloseRequest = onPopupDismissed,
+                text = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalGravity = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.absolutePadding(
+                                0.dp,
+                                0.dp,
+                                10.dp,
+                                0.dp
+                            )
+                        )
+                        Text("Obteniendo datos...")
+                    }
+                },
+                confirmButton = { }
+            )
+        } else if (!registrosResponse) {
+            AlertDialog(
+                onCloseRequest = onPopupDismissed,
+                text = {
+                    Text("Fallo del servidor. No se pudo recuperar los registros ):")
+                },
+                confirmButton = {
+                    Button(
+                        onClick = onPopupDismissed,
+                        text = {
+                            Text("OK")
+                        }
+                    )
+                }
+            )
+        } else {
+            AlertDialog(
+                onCloseRequest = onPopupDismissed,
+                text = {
+                    Text("Datos recuperados :D")
+                },
+                confirmButton = {
+                    Button(
+                        onClick = onPopupDismissed,
+                        text = {
+                            Text("OK")
+                        }
+                    )
+                }
+            )
+        }
+    }
 }
