@@ -120,6 +120,7 @@ fun LoadingComponent(
     registrosResponse: Boolean
 ) {
     if (showPopup) {
+        var text: String
         if (obtainingData) {
             AlertDialog(
                 onCloseRequest = onPopupDismissed,
@@ -141,36 +142,26 @@ fun LoadingComponent(
                 },
                 confirmButton = { }
             )
+            return
         } else if (!registrosResponse) {
-            AlertDialog(
-                onCloseRequest = onPopupDismissed,
-                text = {
-                    Text("Fallo del servidor. No se pudo recuperar los registros ):")
-                },
-                confirmButton = {
-                    Button(
-                        onClick = onPopupDismissed,
-                        text = {
-                            Text("OK")
-                        }
-                    )
-                }
-            )
+            text = "Fallo del servidor. No se pudo recuperar los registros ):"
         } else {
-            AlertDialog(
-                onCloseRequest = onPopupDismissed,
-                text = {
-                    Text("Datos recuperados :D")
-                },
-                confirmButton = {
-                    Button(
-                        onClick = onPopupDismissed,
-                        text = {
-                            Text("OK")
-                        }
-                    )
-                }
-            )
+            text = "Datos recuperados :D"
         }
+
+        AlertDialog(
+            onCloseRequest = onPopupDismissed,
+            text = { 
+                Text(text)
+            },
+            confirmButton = {
+                Button(
+                    onClick = onPopupDismissed,
+                    text = {
+                        Text("OK")
+                    }
+                )
+            }
+        )
     }
 }
