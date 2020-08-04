@@ -2,6 +2,9 @@ package com.example.myapplication.api
 
 
 import android.util.Log
+import androidx.compose.MutableState
+import androidx.compose.State
+import com.example.myapplication.model.Registro
 import com.example.myapplication.modelResponse.RegistroResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,7 +29,11 @@ class ApiConnection {
         /**
          * Retrieves all the database 'registros' asynchronously.
          */
-        fun fetchRegistros(callback: RegistroCallback) {
+        fun fetchRegistros(
+            registros: MutableState<List<Registro>>,
+            registrosResponse: MutableState<Boolean>,
+            obtainingData: MutableState<Boolean>
+        ) {
             val call = request.fetchRegistros()
 
             /** Async call */
@@ -37,14 +44,45 @@ class ApiConnection {
                 ) {
                     // It checks if status ~ 200
                     if (response.isSuccessful) {
-                        callback.fetchRegistros(response)
+                        obtainingData.value = false
+                        registrosResponse.value = true
+                        registros.value = response.body()?.registros?.toList()!!
                     }
                 }
 
                 override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
-                    callback.fetchRegistros(null)
+                    obtainingData.value = false
+                    registrosResponse.value = false
                 }
             })
         }
+
+
+        fun createRegistro(
+            registroResponse: MutableState<Boolean>,
+            obtainingData: MutableState<Boolean>
+        ) {
+            val call = request.createRegistro()
+
+            /** Async call */
+            call.enqueue(object : Callback<RegistroResponse> {
+                override fun onResponse(
+                    call: Call<RegistroResponse>,
+                    response: Response<RegistroResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        obtainingData.value = false
+                        registroResponse.value = true
+                    }
+                }
+
+                override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
+                    obtainingData.value = false
+                    registroResponse.value = false
+                }
+            })
+        }
+
     }
 }
