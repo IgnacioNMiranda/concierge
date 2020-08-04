@@ -109,6 +109,37 @@ class ConciergeApiTest {
         Log.i("The testing of get RegistroTest ...", "The testing of get RegistroTest ...")
     }
 
+    /**
+     * Test updating a [Registro] in the backend
+     */
+    @Test
+    fun updateRegistroTest() {
+        Log.i("The testing of updateRegistroTest ...", "The testing of updateRegistroTest ...")
+        // Modified attributes
+        registro.parentesco = "Empresa"
+        registro.empresaEntrega = true
+        call = request.updateRegistro(registro.id, registro)
+
+        call.enqueue(object : Callback<RegistroResponse> {
+            override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
+                if (response.isSuccessful) {
+
+                    Log.e("Comparation", response.body()?.registro?.toString())
+                    Assert.assertEquals("Updated", response.message())
+
+                    Assert.assertEquals(registro.parentesco, response.body()?.registro?.parentesco)
+                    Assert.assertEquals(registro.empresaEntrega, response.body()?.registro?.empresaEntrega)
+                }
+            }
+
+            override fun onFailure(call: Call<RegistroResponse>, t: Throwable) {
+                Assert.fail("... updateRegistroTest failed!")
+            }
+        })
+
+        Log.i("The testing of updateRegistroTest ...", "The testing of updateRegistroTest ...")
+    }
+
 
 
 }
