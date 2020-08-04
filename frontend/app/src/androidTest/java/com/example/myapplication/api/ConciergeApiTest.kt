@@ -10,6 +10,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
+/**
+ * RESTful API for Concierge backend.
+ *
+ * This class implement the methods of the interface
+ * the exposed API in the Concierge system
+ * and is used by the Retrofit client.
+ */
 class ConciergeApiTest {
 
     /**
@@ -52,6 +59,56 @@ class ConciergeApiTest {
 
     }
 
-    
+    /**
+     * Test creating a [Registro] in the backend
+     */
+    @Test
+    fun storeGetRegistroTest() {
+        Log.i("The testing of store RegistroTest ...", "The testing of store RegistroTest ...")
+
+        call.enqueue(object : Callback<RegistroResponse> {
+            override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
+                if (response.isSuccessful) {
+
+                    Log.e("Comparation", response.body()?.registro?.toString())
+                    Assert.assertEquals("Created", response.message())
+
+                    Assert.assertEquals(registro.fecha, response.body()?.registro?.fecha)
+                    Assert.assertEquals(registro.parentesco, response.body()?.registro?.parentesco)
+                    Assert.assertEquals(registro.empresaEntrega, response.body()?.registro?.empresaEntrega)
+                    Assert.assertEquals(registro.persona_id, response.body()?.registro?.persona_id)
+                    Assert.assertEquals(registro.departamento_id, response.body()?.registro?.departamento_id)
+                }
+            }
+
+            override fun onFailure(call: Call<RegistroResponse>, t: Throwable) {
+                Assert.fail("... store RegistroTest failed!")
+            }
+        })
+
+        Log.i("The testing of store RegistroTest ...", "The testing of store RegistroTest ...")
+
+        Log.i("The testing of get RegistroTest ...", "The testing of get RegistroTest ...")
+
+        call = request.readRegistro(registro.departamento_id)
+
+        call.enqueue(object : Callback<RegistroResponse> {
+            override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
+                if(response.isSuccessful) {
+
+                    Assert.assertEquals("Getted", response.message())
+
+                    Assert.assertEquals(registro.id, response.body()?.registro?.id)
+                }
+            }
+
+            override fun onFailure(call: Call<RegistroResponse>, t: Throwable) {
+                Assert.fail("... get RegistroTest failed!")
+            }
+        })
+        Log.i("The testing of get RegistroTest ...", "The testing of get RegistroTest ...")
+    }
+
+
 
 }
