@@ -140,6 +140,31 @@ class ConciergeApiTest {
         Log.i("The testing of updateRegistroTest ...", "The testing of updateRegistroTest ...")
     }
 
+    /**
+     * Test deleting a [Registro] from backend
+     */
+    @Test
+    fun deleteRegistroTest () {
+        Log.i("The testing of deleteRegistroTest ...", "The testing of deleteRegistroTest ...")
+        call = request.deleteRegistro(registro.id)
 
+        call.enqueue(object : Callback<RegistroResponse> {
+            override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
+                if (response.isSuccessful) {
+
+                    Log.e("Verified", response.body()?.registros?.toString())
+                    Assert.assertEquals("Deleted", response.message())
+
+                    Assert.assertEquals(0, response.body()?.registros?.size)
+                }
+            }
+
+            override fun onFailure(call: Call<RegistroResponse>, t: Throwable) {
+                Assert.fail("... deleteRegistroTest failed!")
+            }
+        })
+
+        Log.i("The testing of deleteRegistroTest ...", "The testing of deleteRegistroTest ...")
+    }
 
 }
