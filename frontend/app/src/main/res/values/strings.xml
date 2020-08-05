@@ -14,5 +14,5 @@
     <string name="fetch_registers_btn">Fetch registers</string>
 
     <string name="post_register_btn">Create register</string>
-
+    <string name="title_activity_delete_registro">Delete a registro</string>
 </resources>

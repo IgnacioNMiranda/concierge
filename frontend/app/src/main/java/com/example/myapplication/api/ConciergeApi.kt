@@ -41,7 +41,7 @@ interface ConciergeApi {
      * @return a [Call] that can be used to retrieve a [RegistroResponse].
      */
     @GET("registro/{departamento_id}")
-    fun readRegistro(@Path("departamento_id") id: Long): Call<RegistroResponse>
+    fun readRegistro(@Path("departamento_id") id: Long? = null): Call<RegistroResponse>
 
     /**
      * Update a [Registro].
@@ -52,7 +52,7 @@ interface ConciergeApi {
      */
     @PUT("registro/{registro}")
     fun updateRegistro(
-        @Path("registro") id: Long,
+        @Path("registro") id: Long? = null,
         @Body registro: Registro
     ): Call<RegistroResponse>
 
@@ -63,7 +63,7 @@ interface ConciergeApi {
      * @return a [Call] that can be used to retrieve a [RegistroResponse].
      */
     @DELETE("registro/{registro}")
-    fun deleteRegistro(@Path("registro") id: Long): Call<RegistroResponse>
+    fun deleteRegistro(@Path("registro") id: Long? = null): Call<RegistroResponse>
 
     /**
      * Get a list of all [Departamento]s.
@@ -89,7 +89,7 @@ interface ConciergeApi {
      * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
      */
     @GET("departamento/{departamento}")
-    fun readDepartamento(@Path("departamento") id: Long): Call<DepartamentoResponse>
+    fun readDepartamento(@Path("departamento") id: Long? = null): Call<DepartamentoResponse>
 
     /**
      * Update a [Departamento] in the backend.
@@ -100,7 +100,7 @@ interface ConciergeApi {
      */
     @PUT("departamento/{departamento}")
     fun updateDepartamento(
-        @Path("departamento") id: Long,
+        @Path("departamento") id: Long? = null,
         @Body departamento: Departamento
     ): Call<DepartamentoResponse>
 
@@ -111,7 +111,7 @@ interface ConciergeApi {
      * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
      */
     @DELETE("departamento/{departamento}")
-    fun deleteDepartamento(@Path("departamento") id: Long): Call<DepartamentoResponse>
+    fun deleteDepartamento(@Path("departamento") id: Long? = null): Call<DepartamentoResponse>
 
     /**
      * Get a list of all [Persona]s.
@@ -137,7 +137,7 @@ interface ConciergeApi {
      * @return a [Call] that can be used to retrieve a [PersonaResponse].
      */
     @GET("persona/{persona}")
-    fun readPersona(@Path("persona") id: Long): Call<PersonaResponse>
+    fun readPersona(@Path("persona") id: Long? = null): Call<PersonaResponse>
 
     /**
      * Update a [Persona] in the backend.
@@ -148,7 +148,7 @@ interface ConciergeApi {
      */
     @PUT("persona/{persona}")
     fun updatePersona(
-        @Path("persona") id: Long,
+        @Path("persona") id: Long? = null,
         @Body persona: Persona
     ): Call<PersonaResponse>
 
@@ -159,5 +159,5 @@ interface ConciergeApi {
      * @return a [Call] that can be used to retrieve a [PersonaResponse].
      */
     @DELETE("persona/{persona}")
-    fun deletePersona(@Path("persona") id: Long): Call<PersonaResponse>
+    fun deletePersona(@Path("persona") id: Long? = null): Call<PersonaResponse>
 }
