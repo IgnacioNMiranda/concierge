@@ -3,41 +3,52 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.*
-import androidx.ui.core.*
+import androidx.ui.core.Alignment
+import androidx.ui.core.ContextAmbient
+import androidx.ui.core.Modifier
+import androidx.ui.core.setContent
 import androidx.ui.foundation.Border
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.TextField
 import androidx.ui.graphics.Color
 import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.*
-import androidx.ui.material.*
+import androidx.ui.material.Button
+import androidx.ui.material.Divider
+import androidx.ui.material.MaterialTheme
+import androidx.ui.material.Surface
 import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
-import kotlinx.coroutines.*
+import com.example.myapplication.ui.MyApplicationTheme
 
-class PostRegistro : AppCompatActivity(), CoroutineScope by MainScope() {
+class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DefaultPreview2()
+            MyApplicationTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(color = MaterialTheme.colors.background) {
+                    LoginPreview()
+                }
+            }
         }
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun PostRegistros() {
-    val context = ContextAmbient.current
-
+fun LoginPreview() {
     MaterialTheme {
         val typography = MaterialTheme.typography
+        val context = ContextAmbient.current
         Column(
             modifier = Modifier.padding(16.dp) + Modifier.fillMaxWidth() + Modifier.fillMaxHeight(),
             horizontalGravity = Alignment.CenterHorizontally
         ) {
             Text(
-                text = context.resources.getString(R.string.post_register),
+                text = context.resources.getString(R.string.title_activity_login),
                 style = typography.h6,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -84,10 +95,4 @@ fun PostRegistros() {
 
         }
     }
-}
-
-@Preview
-@Composable
-fun DefaultPreview2() {
-    PostRegistros()
 }

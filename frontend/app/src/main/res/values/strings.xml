@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Concierge</string>
+    <string name="title_activity_login">Login</string>
     <string name="title_activity_post_registros">Register post</string>
 
     <string name="app_title">Concierge service</string>
@@ -11,6 +12,7 @@
     <string name="server_connection_success">The operation was completed successfully.</string>
 
     <string name="fetch_registers_btn">Fetch registers</string>
-    
+
     <string name="post_register_btn">Create register</string>
+
 </resources>

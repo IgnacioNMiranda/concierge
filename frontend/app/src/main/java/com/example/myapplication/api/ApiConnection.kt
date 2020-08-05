@@ -62,6 +62,7 @@ class ApiConnection {
             registroResponse: MutableState<Boolean>,
             obtainingData: MutableState<Boolean>
         ) {
+            /*
             val call = request.createRegistro()
 
             /** Async call */
@@ -82,6 +83,7 @@ class ApiConnection {
                     registroResponse.value = false
                 }
             })
+            */
         }
 
     }
