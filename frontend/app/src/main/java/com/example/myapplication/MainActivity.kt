@@ -3,17 +3,30 @@
 package com.example.myapplication
 
 import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.*
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColor
 import androidx.ui.core.*
 import androidx.ui.foundation.*
 import androidx.ui.foundation.lazy.LazyColumnItems
+import androidx.ui.foundation.selection.selectable
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
+import androidx.ui.graphics.ImageAsset
+import androidx.ui.graphics.SolidColor
+import androidx.ui.graphics.imageFromResource
 import androidx.ui.layout.*
 import androidx.ui.material.*
+import androidx.ui.material.icons.Icons
+import androidx.ui.material.icons.filled.Edit
+import androidx.ui.material.icons.filled.Favorite
 import androidx.ui.res.imageResource
+import androidx.ui.res.loadImageResource
 import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
@@ -30,8 +43,14 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 }
 
+@Preview
 @Composable
-fun NewsStory() {
+fun DefaultPreview() {
+    indexRegisters()
+}
+
+@Composable
+fun indexRegisters() {
 
     val context = ContextAmbient.current
 
@@ -84,81 +103,29 @@ fun NewsStory() {
                 )
             }
 
+            Divider(color = Color.Black)
+
             val onPopupDismissed = { showPopUp.value = false }
-            LoadingComponent(showPopUp, onPopupDismissed, obtainingData, registrosResponse, context)
+            Utility.LoadingComponent(showPopUp, onPopupDismissed, obtainingData, registrosResponse, context)
 
             LazyColumnItems(items = registros.value,
                 modifier = Modifier.padding(0.dp),
                 itemContent = { registro ->
-                    ListItem(
-                        text = registro.fecha.toString(),
-                        secondaryText = registro.parentesco + " - rut: " + registro.persona?.rut + " - departamento: " + registro.departamento?.numero
-                    )
+                    Card(
+                        shape = RoundedCornerShape(8.dp),
+                        border = Border(
+                            1.dp,
+                            Color.Magenta
+                        ),
+                        modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
+                    ) {
+                        ListItem(
+                            text = registro.fecha.toString(),
+                            secondaryText = "${registro.parentesco} - rut: ${registro.persona?.rut} - numero: ${registro.departamento?.numero}"
+                        )
+                    }
                 }
             )
-
         }
-    }
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    NewsStory()
-}
-
-@Suppress("CascadeIf")
-@Composable
-fun LoadingComponent(
-    showPopup: MutableState<Boolean>,
-    onPopupDismissed: () -> Unit,
-    obtainingData: MutableState<Boolean>,
-    registrosResponse: MutableState<Boolean>,
-    context: Context
-) {
-    var text: String
-    if (showPopup.value) {
-        if (obtainingData.value) {
-            AlertDialog(
-                onCloseRequest = onPopupDismissed,
-                text = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalGravity = Alignment.CenterVertically
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.absolutePadding(
-                                0.dp,
-                                0.dp,
-                                10.dp,
-                                0.dp
-                            )
-                        )
-                        Text(text = context.resources.getString(R.string.obtaining_data_ph))
-                    }
-                },
-                confirmButton = { }
-            )
-            return
-        } else if (!registrosResponse.value) {
-            text = context.resources.getString(R.string.server_connection_failed)
-        } else {
-            text = context.resources.getString(R.string.server_connection_success)
-        }
-
-        AlertDialog(
-            onCloseRequest = onPopupDismissed,
-            text = {
-                Text(text)
-            },
-            confirmButton = {
-                Button(
-                    onClick = onPopupDismissed,
-                    text = {
-                        Text("OK")
-                    }
-                )
-            }
-        )
     }
 }
