@@ -4,61 +4,52 @@ import androidx.annotation.Keep
 import java.util.*
 
 /**
- * Registro class that represents the Registro model used in the RESTful API.
+ * Registro represents a visit to an apartment.
+ *
+ * The visit is made on a [fecha], visitor [persona] has a [parentesco] with the apartment's owner
+ * and it can be a delivery business ([empresaEntrega]). The registro's [id], [persona_id] and
+ * [departamento_id] refers to the backend ID's.
  */
 @Keep
-class Registro(
-    fecha: Date,
-    parentesco: String,
-    empresaEntrega: Boolean,
-    persona: Persona? = null,
-    departamento: Departamento? = null,
-    persona_id: Long,
-    departamento_id: Long
-) {
+data class Registro(
 
     /**
-     * The date.
+     * Backend's id.
      */
-    var fecha: Date? = null
+    val id: Long? = null,
 
     /**
-     * The relationship between the visit and the Apartment owner.
+     * Date of the [Registro].
      */
-    var parentesco: String? = null
+    var fecha: Date? = null,
 
     /**
-     * Indicates if it is a delivery business.
+     * Relationship between the visitor and the apartment's owner.
      */
-    var empresaEntrega: Boolean? = null
+    var parentesco: String? = null,
 
     /**
-     * Relation with the visitor that does the visit.
+     * Represents if the visitor is a delivery business.
      */
-    var persona: Persona? = null
+    var empresaEntrega: Boolean? = null,
 
     /**
-     * Relation with the visitor ID that does the visit.
+     * References the backend's visitor id.
      */
-    var persona_id: Long? = null
+    var persona_id: Long? = null,
 
     /**
-     * Relation with the visited apartment.
+     * References the backend's apartment id.
+     */
+    var departamento_id: Long? = null,
+
+    /**
+     * Backend's visitor reference.
+     */
+    var persona: Persona? = null,
+
+    /**
+     * Backend's apartment reference.
      */
     var departamento: Departamento? = null
-
-    /**
-     * Relation with the visited apartment ID.
-     */
-    var departamento_id: Long? = null
-
-    init {
-        this.fecha = fecha
-        this.parentesco = parentesco
-        this.empresaEntrega = empresaEntrega
-        this.persona = persona
-        this.persona_id = persona_id
-        this.departamento = departamento
-        this.departamento_id = departamento_id
-    }
-}
+)

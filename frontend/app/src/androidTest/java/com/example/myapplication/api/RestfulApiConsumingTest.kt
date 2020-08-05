@@ -23,11 +23,15 @@ class RestfulApiConsumingTest {
         Log.i("... restfulApi consuming testing ...", "... restfulApi consuming testing ...")
         val request = ApiAdapter.buildService(ConciergeApi::class.java)
 
-        val registro = Registro(Calendar.getInstance().time, "Empresa", true, null, null, 1, 1)
+        val registro =
+            Registro(null, Calendar.getInstance().time, "Empresa", true, 1, 1, null, null)
         var call = request.createRegistro(registro)
 
         call.enqueue(object : Callback<RegistroResponse> {
-            override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
+            override fun onResponse(
+                call: Call<RegistroResponse>,
+                response: Response<RegistroResponse>
+            ) {
 
                 // It checks if status ~ 200
                 if (response.isSuccessful) {
@@ -41,9 +45,15 @@ class RestfulApiConsumingTest {
                     // Attributes from the response's registro has to be equal to the created registro's ones.
                     Assert.assertEquals(registro.fecha, response.body()?.registro?.fecha)
                     Assert.assertEquals(registro.parentesco, response.body()?.registro?.parentesco)
-                    Assert.assertEquals(registro.empresaEntrega, response.body()?.registro?.empresaEntrega)
+                    Assert.assertEquals(
+                        registro.empresaEntrega,
+                        response.body()?.registro?.empresaEntrega
+                    )
                     Assert.assertEquals(registro.persona_id, response.body()?.registro?.persona_id)
-                    Assert.assertEquals(registro.departamento_id, response.body()?.registro?.departamento_id)
+                    Assert.assertEquals(
+                        registro.departamento_id,
+                        response.body()?.registro?.departamento_id
+                    )
                 }
             }
 
@@ -55,7 +65,10 @@ class RestfulApiConsumingTest {
 
         call = request.fetchRegistros()
         call.enqueue(object : Callback<RegistroResponse> {
-            override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
+            override fun onResponse(
+                call: Call<RegistroResponse>,
+                response: Response<RegistroResponse>
+            ) {
 
                 // It checks if status ~ 200
                 if (response.isSuccessful) {

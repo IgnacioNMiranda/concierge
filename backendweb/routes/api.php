@@ -24,7 +24,6 @@ Route::post('/login', 'Api\AuthController@login');
 Route::get('/logout', 'Api\AuthController@logout')->middleware('auth:api');
 
 // Api routes.
-/*
 Route::middleware(['auth:api'])->group(function () {
     Route::apiResources([
         'persona' => 'Api\PersonaController',
@@ -32,12 +31,12 @@ Route::middleware(['auth:api'])->group(function () {
         'departamento' => 'Api\DepartamentoController'
     ]);
 });
-*/
-// When it wants to test http request use this to avoid the middleware and comment the Route:middleware above.
 
+// When it wants to test http request use this to avoid the middleware and comment the Route:middleware above.
+/*
 Route::apiResources([
     'persona' => 'Api\PersonaController',
     'registro' => 'Api\RegistroController',
     'departamento' => 'Api\DepartamentoController'
 ]);
-
+*/

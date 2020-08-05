@@ -17,6 +17,7 @@ class RegistroResource extends JsonResource
     {
         /** @noinspection PhpUndefinedFieldInspection */
         return [
+            'id' => $this->id,
             'fecha' => $this->fecha,
             'parentesco' => $this->parentesco,
             'empresaEntrega' => $this->when($this->parentesco == "Empresa", $this->empresaEntrega),

@@ -1,29 +1,38 @@
+@file:Suppress("CanBeVal")
+
 package com.example.myapplication
 
+import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.Composable
-import androidx.ui.core.Modifier
-import androidx.ui.core.clip
-import androidx.ui.core.setContent
-import androidx.ui.foundation.AdapterList
-import androidx.ui.foundation.Border
-import androidx.ui.foundation.Image
-import androidx.ui.foundation.Text
+import androidx.compose.*
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColor
+import androidx.ui.core.*
+import androidx.ui.foundation.*
+import androidx.ui.foundation.lazy.LazyColumnItems
+import androidx.ui.foundation.selection.selectable
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
+import androidx.ui.graphics.ImageAsset
+import androidx.ui.graphics.SolidColor
+import androidx.ui.graphics.imageFromResource
 import androidx.ui.layout.*
-import androidx.ui.material.Button
-import androidx.ui.material.ListItem
-import androidx.ui.material.MaterialTheme
+import androidx.ui.material.*
+import androidx.ui.material.icons.Icons
+import androidx.ui.material.icons.filled.Edit
+import androidx.ui.material.icons.filled.Favorite
 import androidx.ui.res.imageResource
+import androidx.ui.res.loadImageResource
 import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
 import com.example.myapplication.model.Registro
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,8 +43,17 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 }
 
+@Preview
 @Composable
-fun NewsStory() {
+fun DefaultPreview() {
+    indexRegisters()
+}
+
+@Composable
+fun indexRegisters() {
+
+    val context = ContextAmbient.current
+
     val image = imageResource(R.drawable.concierge2)
     MaterialTheme {
         val typography = MaterialTheme.typography
@@ -51,43 +69,63 @@ fun NewsStory() {
             Spacer(Modifier.preferredHeight(16.dp))
 
             Text(
-                "System of Concierge ",
+                text = context.resources.getString(R.string.app_title),
                 style = typography.h6,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                color = Color(255, 255, 255)
-            )
-            Text(
-                "Semestre 1 - 2020",
-                style = typography.body2,
-                color = Color(255, 255, 255),
-                modifier = Modifier.absolutePadding(0.dp, 8.dp, 0.dp, 8.dp)
+                color = Color.Black,
+                modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
             )
 
-            var registros: List<Registro>? = emptyList()
-            Button(onClick = {
-                registros = ApiConnection.fetchRegistros()!!
-            }, border = Border(2.dp, Color.White)) {
+            var registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
+            var baseState by state { emptyList<Registro>() }
+            var showPopUp: MutableState<Boolean> = state { false }
+            var registrosResponse: MutableState<Boolean> = state { false }
+            var obtainingData: MutableState<Boolean> = state { false }
+            Button(
+                onClick = {
+                    registros.value = baseState
+                    showPopUp.value = true
+                    registrosResponse.value = false
+                    obtainingData.value = true
+
+                    ApiConnection.fetchRegistros(
+                        registros,
+                        registrosResponse,
+                        obtainingData
+                    )
+                },
+                border = Border(2.dp, Color.Magenta),
+                modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
+            ) {
                 Text(
-                    text = "Obtener registros"
+                    text = context.resources.getString(R.string.fetch_registers_btn)
                 )
             }
 
-            registros?.let {
-                AdapterList(data = it) { registro ->
-                    ListItem(
-                        text = registro.fecha.toString(),
-                        secondaryText = registro.parentesco
-                    )
-                }
-            }
+            Divider(color = Color.Black)
 
+            val onPopupDismissed = { showPopUp.value = false }
+            Utility.LoadingComponent(showPopUp, onPopupDismissed, obtainingData, registrosResponse, context)
+
+            LazyColumnItems(items = registros.value,
+                modifier = Modifier.padding(0.dp),
+                itemContent = { registro ->
+                    Card(
+                        shape = RoundedCornerShape(8.dp),
+                        border = Border(
+                            1.dp,
+                            Color.Magenta
+                        ),
+                        modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
+                    ) {
+                        ListItem(
+                            text = registro.fecha.toString(),
+                            secondaryText = "${registro.parentesco} - rut: ${registro.persona?.rut} - numero: ${registro.departamento?.numero}"
+                        )
+                    }
+                }
+            )
         }
     }
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    NewsStory()
 }

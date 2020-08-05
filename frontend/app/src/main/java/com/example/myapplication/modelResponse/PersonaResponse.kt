@@ -11,7 +11,19 @@ import com.example.myapplication.model.Persona
  * is called.
  */
 data class PersonaResponse(
+
+    /**
+     * message of the http response.
+     */
     var message: String? = null,
+
+    /**
+     * Persona object received from the http response.
+     */
     var persona: Persona? = null,
+
+    /**
+     * Persona collection received from the http response.
+     */
     var personas: Collection<Persona>? = null
 )

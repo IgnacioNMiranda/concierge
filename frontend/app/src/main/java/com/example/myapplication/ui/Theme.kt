@@ -7,17 +7,21 @@ import androidx.ui.material.darkColorPalette
 import androidx.ui.material.lightColorPalette
 
 private val DarkColorPalette = darkColorPalette(
-        primary = purple200,
-        primaryVariant = purple700,
-        secondary = teal200
+    primary = primaryDarkColor,
+    secondary = secondaryDarkColor,
+    onPrimary = primaryTextColor,
+    onSecondary = secondaryTextColor
 )
 
 private val LightColorPalette = lightColorPalette(
-        primary = purple500,
-        primaryVariant = purple700,
-        secondary = teal200
+    primary = primaryColor,
+    primaryVariant = primaryLightColor,
+    secondary = secondaryColor,
+    secondaryVariant = secondaryLightColor,
+    onPrimary = primaryTextColor,
+    onSecondary = secondaryTextColor
 
-        /* Other default colors to override
+    /* Other default colors to override
     background = Color.White,
     surface = Color.White,
     onPrimary = Color.White,
@@ -28,7 +32,10 @@ private val LightColorPalette = lightColorPalette(
 )
 
 @Composable
-fun MyApplicationTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
+fun MyApplicationTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
+) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
@@ -36,9 +43,9 @@ fun MyApplicationTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Com
     }
 
     MaterialTheme(
-            colors = colors,
-            typography = typography,
-            shapes = shapes,
-            content = content
+        colors = colors,
+        typography = typography,
+        shapes = shapes,
+        content = content
     )
 }

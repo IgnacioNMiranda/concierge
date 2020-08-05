@@ -1,3 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Concierge</string>
+    <string name="app_title">Concierge service</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_post_registros">Create register</string>
+    <string name="title_activity_delete_registro">Delete register</string>
+
+    <!-- LoadingComponent string resources -->
+    <string name="obtaining_data_ph">Obtaining data…</string>
+    <string name="server_connection_failed">Connection to server failed. Try again.</string>
+    <string name="server_connection_success">The operation was completed successfully.</string>
+
+    <!-- Auth string resources -->
+    <string name="email_input_label">Enter your email</string>
+    <string name="password_input_label">Enter your password</string>
+    <string name="login_button">Login</string>
+
+    <!-- CRUD buttons string resources -->
+    <string name="fetch_registers_btn">Fetch registers</string>
+    <string name="post_register_btn">Create register</string>
+
 </resources>

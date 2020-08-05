@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Concierge</string>
+    <string name="app_title">Conserjería</string>
+    <string name="title_activity_login">Iniciar sesión</string>
+    <string name="title_activity_post_registros">Crear registro</string>
+    <string name="title_activity_delete_registro">Borrar registro</string>
+
+    <!-- LoadingComponent string resources -->
+    <string name="obtaining_data_ph">Obteniendo datos…</string>
+    <string name="server_connection_failed">Fallo del servidor. Intente nuevamente.</string>
+    <string name="server_connection_success">Operación realizada exitosamente.</string>
+
+    <!-- Auth string resources -->
+    <string name="email_input_label">Ingresa tu email</string>
+    <string name="password_input_label">Ingresa tu contraseña</string>
+    <string name="login_button">Iniciar sesión</string>
+
+    <!-- CRUD buttons string resources -->
+    <string name="fetch_registers_btn">Obtener registros</string>
+    <string name="post_register_btn">Registrar visita</string>
+
+</resources>
