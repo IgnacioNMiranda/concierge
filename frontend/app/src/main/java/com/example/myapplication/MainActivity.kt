@@ -77,11 +77,11 @@ fun indexRegisters() {
                 modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
             )
 
-            var registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
-            var baseState by state { emptyList<Registro>() }
-            var showPopUp: MutableState<Boolean> = state { false }
-            var registrosResponse: MutableState<Boolean> = state { false }
-            var obtainingData: MutableState<Boolean> = state { false }
+            val registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
+            val baseState by state { emptyList<Registro>() }
+            val showPopUp: MutableState<Boolean> = state { false }
+            val registrosResponse: MutableState<Boolean> = state { false }
+            val obtainingData: MutableState<Boolean> = state { false }
             Button(
                 onClick = {
                     registros.value = baseState
@@ -106,7 +106,13 @@ fun indexRegisters() {
             Divider(color = Color.Black)
 
             val onPopupDismissed = { showPopUp.value = false }
-            Utility.LoadingComponent(showPopUp, onPopupDismissed, obtainingData, registrosResponse, context)
+            Utility.LoadingComponent(
+                showPopUp,
+                onPopupDismissed,
+                obtainingData,
+                registrosResponse,
+                context
+            )
 
             LazyColumnItems(items = registros.value,
                 modifier = Modifier.padding(0.dp),

@@ -1,9 +1,11 @@
 package com.example.myapplication.api
 
 
-import android.util.Log
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import androidx.compose.MutableState
-import androidx.compose.State
+import com.example.myapplication.MainActivity
 import com.example.myapplication.model.Registro
 import com.example.myapplication.model.User
 import com.example.myapplication.modelResponse.AuthResponse
@@ -11,6 +13,7 @@ import com.example.myapplication.modelResponse.RegistroResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 /**
  * Makes async connection with restful api.
@@ -36,6 +39,7 @@ class ApiConnection {
             registrosResponse: MutableState<Boolean>,
             obtainingData: MutableState<Boolean>
         ) {
+
             val call = request.fetchRegistros()
 
             /** Async call */
@@ -49,6 +53,9 @@ class ApiConnection {
                         obtainingData.value = false
                         registrosResponse.value = true
                         registros.value = response.body()?.registros?.toList()!!
+                    } else {
+                        obtainingData.value = false
+                        registrosResponse.value = false
                     }
                 }
 
@@ -89,11 +96,11 @@ class ApiConnection {
         }
 
         fun login(
+            context: Context,
             loginResponse: MutableState<Boolean>,
             sendingData: MutableState<Boolean>,
             email: String,
-            password: String,
-            backendUser: MutableState<User>
+            password: String
         ) {
             val user = User(null, email, password)
             val call = request.login(user)
@@ -108,7 +115,16 @@ class ApiConnection {
                     if (response.isSuccessful) {
                         sendingData.value = false
                         loginResponse.value = true
-                        backendUser.value = response.body()?.user!!
+
+                        /* Stores the authToken on SharedPreferences */
+                        val prefs: SharedPreferences =
+                            context.getSharedPreferences("CONCIERGE_APP", Context.MODE_PRIVATE)
+                        prefs.edit().apply {
+                            putString("AUTH_TOKEN", response.body()?.token)
+                        }.apply()
+
+                        val intent = Intent(context, MainActivity::class.java)
+                        context.startActivity(intent)
                     }
                 }
 
