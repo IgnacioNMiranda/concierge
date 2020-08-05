@@ -3,6 +3,8 @@ package com.example.myapplication.api
 import com.example.myapplication.model.Departamento
 import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
+import com.example.myapplication.model.User
+import com.example.myapplication.modelResponse.AuthResponse
 import com.example.myapplication.modelResponse.DepartamentoResponse
 import com.example.myapplication.modelResponse.PersonaResponse
 import com.example.myapplication.modelResponse.RegistroResponse
@@ -16,6 +18,12 @@ import retrofit2.http.*
  * and is used by the Retrofit client.
  */
 interface ConciergeApi {
+
+    /**
+     * Does the login of an specific [user] and returns auth token.
+     */
+    @POST("login")
+    fun login(@Body user: User): Call<AuthResponse>
 
     /**
      * Get a list of all [Registro]s.

@@ -70,7 +70,7 @@ class ConciergeApiTest {
             override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
                 if (response.isSuccessful) {
 
-                    Log.e("Comparation", response.body()?.registro?.toString())
+                    Log.e("Comparation", response.body()?.registro?.toString()!!)
                     Assert.assertEquals("Created", response.message())
 
                     Assert.assertEquals(registro.fecha, response.body()?.registro?.fecha)
@@ -124,7 +124,7 @@ class ConciergeApiTest {
             override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
                 if (response.isSuccessful) {
 
-                    Log.e("Comparation", response.body()?.registro?.toString())
+                    Log.e("Comparation", response.body()?.registro?.toString()!!)
                     Assert.assertEquals("Updated", response.message())
 
                     Assert.assertEquals(registro.parentesco, response.body()?.registro?.parentesco)
@@ -144,7 +144,7 @@ class ConciergeApiTest {
      * Test deleting a [Registro] from backend
      */
     @Test
-    fun deleteRegistroTest () {
+    fun deleteRegistroTest() {
         Log.i("The testing of deleteRegistroTest ...", "The testing of deleteRegistroTest ...")
         call = request.deleteRegistro(registro.id)
 
@@ -152,7 +152,7 @@ class ConciergeApiTest {
             override fun onResponse(call: Call<RegistroResponse>, response: Response<RegistroResponse>) {
                 if (response.isSuccessful) {
 
-                    Log.e("Verified", response.body()?.registros?.toString())
+                    Log.e("Verified", response.body()?.registros?.toString()!!)
                     Assert.assertEquals("Deleted", response.message())
 
                     Assert.assertEquals(0, response.body()?.registros?.size)

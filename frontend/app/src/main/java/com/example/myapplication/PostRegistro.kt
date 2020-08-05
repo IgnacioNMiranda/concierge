@@ -37,7 +37,7 @@ fun PostRegistros() {
             horizontalGravity = Alignment.CenterHorizontally
         ) {
             Text(
-                text = context.resources.getString(R.string.post_register),
+                text = context.resources.getString(R.string.title_activity_post_registros),
                 style = typography.h6,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,

@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.compose.MutableState
 import androidx.compose.State
 import com.example.myapplication.model.Registro
+import com.example.myapplication.model.User
+import com.example.myapplication.modelResponse.AuthResponse
 import com.example.myapplication.modelResponse.RegistroResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -84,6 +86,37 @@ class ApiConnection {
                 }
             })
             */
+        }
+
+        fun login(
+            loginResponse: MutableState<Boolean>,
+            sendingData: MutableState<Boolean>,
+            email: String,
+            password: String,
+            backendUser: MutableState<User>
+        ) {
+            val user = User(null, email, password)
+            val call = request.login(user)
+
+            /** Async call */
+            call.enqueue(object : Callback<AuthResponse> {
+                override fun onResponse(
+                    call: Call<AuthResponse>,
+                    response: Response<AuthResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        sendingData.value = false
+                        loginResponse.value = true
+                        backendUser.value = response.body()?.user!!
+                    }
+                }
+
+                override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    sendingData.value = false
+                    loginResponse.value = false
+                }
+            })
         }
 
     }
