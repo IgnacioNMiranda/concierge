@@ -95,6 +95,26 @@ class ApiConnection {
             */
         }
 
+        fun deleteRegistro(id: Long?) {
+            val call = request.deleteRegistro(id)
+
+            call.enqueue(object : Callback<RegistroResponse> {
+                override fun onResponse(
+                    call: Call<RegistroResponse>,
+                    response: Response<RegistroResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        //TODO: set bool
+                    }
+                }
+
+                override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
+                    throw Exception(e)
+                }
+            })
+        }
+
         fun login(
             context: Context,
             loginResponse: MutableState<Boolean>,
@@ -131,6 +151,28 @@ class ApiConnection {
                 override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
                     sendingData.value = false
                     loginResponse.value = false
+                }
+            })
+        }
+
+        fun updateRegistro(registro: Registro) {
+            val call = request.updateRegistro(registro.id, registro)
+
+            call.enqueue(object : Callback<RegistroResponse> {
+                override fun onResponse(
+                    call: Call<RegistroResponse>,
+                    response: Response<RegistroResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        // TODO: set bool
+                    } else if (response.code() == 404) {
+                        throw Exception("404 Not found")
+                    }
+                }
+
+                override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
+                    throw Exception(e)
                 }
             })
         }
