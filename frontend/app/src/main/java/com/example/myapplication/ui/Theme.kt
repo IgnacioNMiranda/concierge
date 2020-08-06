@@ -8,6 +8,7 @@ import androidx.ui.material.lightColorPalette
 
 private val DarkColorPalette = darkColorPalette(
     primary = primaryDarkColor,
+    primaryVariant = primaryDarkColor,
     secondary = secondaryDarkColor,
     onPrimary = primaryTextColor,
     onSecondary = secondaryTextColor
