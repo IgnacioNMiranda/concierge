@@ -19,5 +19,14 @@
     <!-- CRUD buttons string resources -->
     <string name="fetch_registers_btn">Fetch registers</string>
     <string name="post_register_btn">Create register</string>
+    <string name="delete_registro_dialog">Remove the selected register?</string>
+    <string name="confirm">Yes</string>
+    <string name="cancel">No</string>
+    <string name="relation_family">Family</string>
+    <string name="relation_ext">External</string>
+    <string name="relation_company">Company</string>
+    <string name="is_shipping_company">is shipping company</string>
+    <string name="update">Update</string>
+    <string name="not_update">Abort</string>
 
 </resources>

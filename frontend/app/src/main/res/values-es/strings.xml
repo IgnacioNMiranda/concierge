@@ -19,5 +19,14 @@
     <!-- CRUD buttons string resources -->
     <string name="fetch_registers_btn">Obtener registros</string>
     <string name="post_register_btn">Registrar visita</string>
+    <string name="delete_registro_dialog">Borrar el registro?</string>
+    <string name="confirm">Sí</string>
+    <string name="cancel">No</string>
+    <string name="relation_family">Familiar</string>
+    <string name="relation_ext">Externo</string>
+    <string name="relation_company">Empresa</string>
+    <string name="is_shipping_company">Es empresa de encomiendas</string>
+    <string name="update">Actualizar</string>
+    <string name="not_update">Cancelar</string>
 
 </resources>
