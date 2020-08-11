@@ -43,6 +43,11 @@ class Login : AppCompatActivity() {
 
         ApiAdapter.setContext(applicationContext)
 
+        /*applicationContext.getSharedPreferences(
+            "CONCIERGE_APP",
+            Context.MODE_PRIVATE
+        ).edit().clear().apply()*/
+
         val authToken = applicationContext.getSharedPreferences(
             "CONCIERGE_APP",
             Context.MODE_PRIVATE
@@ -51,6 +56,7 @@ class Login : AppCompatActivity() {
         if (authToken != null) {
             val intent = Intent(applicationContext, MainActivity::class.java)
             applicationContext.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            finish()
         }
     }
 }
@@ -59,7 +65,6 @@ class Login : AppCompatActivity() {
 @Composable
 fun LoginPreview() {
 
-    val typography = MaterialTheme.typography
     val context = ContextAmbient.current
 
     Column(
@@ -121,11 +126,13 @@ fun LoginPreview() {
 
         val onPopupDismissed = { showPopUp.value = false }
         Utility.LoadingComponent(
+            context.resources.getString(R.string.login_placeholder),
             showPopUp,
             onPopupDismissed,
             sendingData,
             loginResponse,
             context
         )
+
     }
 }

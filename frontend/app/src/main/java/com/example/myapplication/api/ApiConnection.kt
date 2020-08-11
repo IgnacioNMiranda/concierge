@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.compose.MutableState
+import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
 import com.example.myapplication.model.Registro
 import com.example.myapplication.model.User
@@ -30,6 +31,94 @@ class ApiConnection {
          * Singleton that allows the connection with restful api.
          */
         private val request = ApiAdapter.buildService(ConciergeApi::class.java)
+
+        /**
+         * Makes the login of a user, generates the auth token and storages it.
+         */
+        fun login(
+            context: Context,
+            loginResponse: MutableState<Boolean>,
+            sendingData: MutableState<Boolean>,
+            email: String,
+            password: String
+        ) {
+            val user = User(null, email, password)
+            val call = request.login(user)
+
+            /** Async call */
+            call.enqueue(object : Callback<AuthResponse> {
+                override fun onResponse(
+                    call: Call<AuthResponse>,
+                    response: Response<AuthResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        sendingData.value = false
+                        loginResponse.value = true
+
+                        /* Stores the authToken on SharedPreferences */
+                        val prefs: SharedPreferences =
+                            context.getSharedPreferences("CONCIERGE_APP", Context.MODE_PRIVATE)
+                        prefs.edit().apply {
+                            putString("AUTH_TOKEN", response.body()?.token)
+                        }.apply()
+
+                        /* Calls the main activity after login. */
+                        val intent = Intent(context, MainActivity::class.java)
+                        context.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+                    }
+                }
+
+                override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    sendingData.value = false
+                    loginResponse.value = false
+                }
+            })
+        }
+
+        fun logout(
+            context: Context,
+            logoutResponse: MutableState<Boolean>,
+            sendingData: MutableState<Boolean>
+        ) {
+            /* Obtains the authToken. */
+            val authToken = context.getSharedPreferences(
+                "CONCIERGE_APP",
+                Context.MODE_PRIVATE
+            ).getString("AUTH_TOKEN", null)!!
+
+            val call = request.logout()
+
+            /** Async call of logout*/
+            call.enqueue(object : Callback<AuthResponse> {
+                override fun onResponse(
+                    call: Call<AuthResponse>,
+                    response: Response<AuthResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        sendingData.value = false
+                        logoutResponse.value = true
+
+                        /* Deletes the authToken from SharedPreferences */
+                        val prefs: SharedPreferences =
+                            context.getSharedPreferences("CONCIERGE_APP", Context.MODE_PRIVATE)
+                        prefs.edit().apply {
+                            putString("AUTH_TOKEN", null)
+                        }.apply()
+
+                        /* Returns to login activity. */
+                        val intent = Intent(context, Login::class.java)
+                        context.startActivity(intent)
+                    }
+                }
+
+                override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    sendingData.value = false
+                    logoutResponse.value = false
+                }
+            })
+        }
 
         /**
          * Retrieves all the database 'registros' asynchronously.
@@ -111,46 +200,6 @@ class ApiConnection {
 
                 override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
                     throw Exception(e)
-                }
-            })
-        }
-
-        fun login(
-            context: Context,
-            loginResponse: MutableState<Boolean>,
-            sendingData: MutableState<Boolean>,
-            email: String,
-            password: String
-        ) {
-            val user = User(null, email, password)
-            val call = request.login(user)
-
-            /** Async call */
-            call.enqueue(object : Callback<AuthResponse> {
-                override fun onResponse(
-                    call: Call<AuthResponse>,
-                    response: Response<AuthResponse>
-                ) {
-                    // It checks if status ~ 200
-                    if (response.isSuccessful) {
-                        sendingData.value = false
-                        loginResponse.value = true
-
-                        /* Stores the authToken on SharedPreferences */
-                        val prefs: SharedPreferences =
-                            context.getSharedPreferences("CONCIERGE_APP", Context.MODE_PRIVATE)
-                        prefs.edit().apply {
-                            putString("AUTH_TOKEN", response.body()?.token)
-                        }.apply()
-
-                        val intent = Intent(context, MainActivity::class.java)
-                        context.startActivity(intent)
-                    }
-                }
-
-                override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
-                    sendingData.value = false
-                    loginResponse.value = false
                 }
             })
         }

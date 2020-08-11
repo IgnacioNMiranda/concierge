@@ -5,6 +5,7 @@ package com.example.myapplication
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -56,19 +57,21 @@ fun App() {
 @Composable
 fun indexRegisters() {
 
-
     val context = ContextAmbient.current
+    var popUpStringContent = ""
+
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
 
         val registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
-        val baseState by state { emptyList<Registro>() }
+        val baseState by state { mutableListOf<Registro>() }
         val showPopUp: MutableState<Boolean> = state { false }
         val registrosResponse: MutableState<Boolean> = state { false }
         val obtainingData: MutableState<Boolean> = state { false }
         Button(
             onClick = {
+                popUpStringContent = context.resources.getString(R.string.obtaining_data_ph)
                 registros.value = baseState
                 showPopUp.value = true
                 registrosResponse.value = false
@@ -87,10 +90,34 @@ fun indexRegisters() {
             )
         }
 
+        val showPopUpLogout: MutableState<Boolean> = state { false }
+        val logoutResponse: MutableState<Boolean> = state { false }
+        val logoutState: MutableState<Boolean> = state { false }
+        Button(
+            onClick = {
+                popUpStringContent = context.resources.getString(R.string.logout_placeholder)
+                showPopUpLogout.value = true
+                logoutResponse.value = false
+                logoutState.value = true
+
+                ApiConnection.logout(
+                    context,
+                    logoutResponse,
+                    logoutState
+                )
+            },
+            modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
+        ) {
+            Text(
+                text = context.resources.getString(R.string.logout_button)
+            )
+        }
+
         Divider(color = Color.Black)
 
         val onPopupDismissed = { showPopUp.value = false }
         Utility.LoadingComponent(
+            popUpStringContent,
             showPopUp,
             onPopupDismissed,
             obtainingData,
@@ -129,8 +156,8 @@ fun indexRegisters() {
             if (showPopupDelete) {
                 DeleteRegistroDialog(
                     registro = registro,
-                    registros = registros.value,
-                    delRegistro = { it -> registros.value = it },
+                    registros = registros,
+                    delRegistros = registros.value.toMutableList(),
                     show = showPopupDelete,
                     dismiss = { b -> showPopupDelete = b },
                     context = context
@@ -145,8 +172,8 @@ fun indexRegisters() {
 @Composable
 fun DeleteRegistroDialog(
     registro: Registro,
-    registros: List<Registro>,
-    delRegistro: (List<Registro>) -> Unit,
+    registros: MutableState<List<Registro>>,
+    delRegistros: MutableList<Registro>,
     show: Boolean,
     dismiss: (Boolean) -> Unit,
     context: Context
@@ -156,9 +183,27 @@ fun DeleteRegistroDialog(
         text = { Text(context.resources.getString(R.string.delete_registro_dialog)) },
         confirmButton = {
             Button(onClick = {
-                //TODO: why does this delete the last item instead of the one referenced?
+                /* Finds index of the selected element */
+                var deletedRegisterIndex: Int = -1
+                Log.e("idDeletedRegistro", registro.id.toString())
+                for (index in 0 until delRegistros.size) {
+                    Log.e("registroDeleted - actualIndex", "${registro.id} - ${delRegistros[index].id}")
+                    if (delRegistros[index].id == registro.id) {
+                        Log.d("match", "match! ${registro.id} - ${delRegistros[index].id}")
+                        deletedRegisterIndex = index
+                        break
+                    }
+                }
+
+                /* Deletes the element from registros list */
+                delRegistros.removeAt(deletedRegisterIndex)
+
+                /* Assigns modified MutableList to registros*/
+                registros.value = delRegistros
+
+                /* Deletes the registro from backend*/
                 ApiConnection.deleteRegistro(registro.id)
-                delRegistro(registros.minus(registro))
+
                 dismiss(false)
             }) {
                 Text(context.resources.getString(R.string.confirm))
