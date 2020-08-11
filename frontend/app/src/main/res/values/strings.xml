@@ -15,10 +15,14 @@
     <string name="email_input_label">Enter your email</string>
     <string name="password_input_label">Enter your password</string>
     <string name="login_button">Login</string>
+    <string name="login_placeholder">Logging…</string>
+    <string name="logout_button">Logout</string>
+    <string name="logout_placeholder">Logging off…</string>
 
     <!-- CRUD buttons string resources -->
     <string name="fetch_registers_btn">Fetch registers</string>
     <string name="post_register_btn">Create register</string>
+    <string name="post_placeholder">Creating register…</string>
     <string name="delete_registro_dialog">Remove the selected register?</string>
     <string name="confirm">Yes</string>
     <string name="cancel">No</string>

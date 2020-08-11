@@ -80,7 +80,14 @@ fun PostRegistros() {
             }
 
             val onPopupDismissed = { showPopUp.value = false }
-            Utility.LoadingComponent(showPopUp, onPopupDismissed, sendingData, registroResponse, context)
+            Utility.LoadingComponent(
+                context.resources.getString(R.string.post_placeholder),
+                showPopUp,
+                onPopupDismissed,
+                sendingData,
+                registroResponse,
+                context
+            )
 
         }
     }

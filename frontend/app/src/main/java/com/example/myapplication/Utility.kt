@@ -24,6 +24,7 @@ class Utility {
         @Suppress("CascadeIf")
         @Composable
         fun LoadingComponent(
+            popUpText: String,
             showPopup: MutableState<Boolean>,
             onPopupDismissed: () -> Unit,
             obtainingData: MutableState<Boolean>,
@@ -48,7 +49,7 @@ class Utility {
                                         0.dp
                                     )
                                 )
-                                Text(text = context.resources.getString(R.string.obtaining_data_ph))
+                                Text(text = popUpText)
                             }
                         },
                         confirmButton = { }
