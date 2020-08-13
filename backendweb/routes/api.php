@@ -30,6 +30,7 @@ Route::middleware(['auth:api'])->group(function () {
         'registro' => 'Api\RegistroController',
         'departamento' => 'Api\DepartamentoController'
     ]);
+    Route::get('/persona/buscarPersonaPorRut/{rut}', 'Api\PersonaController@buscarPersonaPorRut');
 });
 
 // When it wants to test http request use this to avoid the middleware and comment the Route:middleware above.
