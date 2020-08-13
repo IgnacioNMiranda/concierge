@@ -24,9 +24,7 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                Surface {
-                    LoginPreview()
-                }
+                LoginPreview()
             }
         }
     }
@@ -40,7 +38,8 @@ fun LoginPreview() {
 
     Column(
         modifier = Modifier.padding(16.dp) + Modifier.fillMaxWidth() + Modifier.fillMaxHeight(),
-        horizontalGravity = Alignment.CenterHorizontally
+        horizontalGravity = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
         var emailTextValue by state { TextFieldValue("") }

@@ -25,11 +25,9 @@ class SplashActivity : AppCompatActivity() {
         if (authToken != null) {
             val intent = Intent(applicationContext, MainActivity::class.java)
             applicationContext.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            finish()
         } else {
             val intent = Intent(applicationContext, Login::class.java)
             applicationContext.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            finish()
         }
     }
 }

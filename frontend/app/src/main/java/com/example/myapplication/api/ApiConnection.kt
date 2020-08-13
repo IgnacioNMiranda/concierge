@@ -65,7 +65,10 @@ class ApiConnection {
 
                         /* Calls the main activity after login. */
                         val intent = Intent(context, MainActivity::class.java)
-                        context.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
+                        context.startActivity(intent)
+                    } else {
+                        sendingData.value = false
+                        loginResponse.value = false
                     }
                 }
 
