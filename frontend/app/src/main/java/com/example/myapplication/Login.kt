@@ -1,33 +1,22 @@
 package com.example.myapplication
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.*
-import androidx.core.graphics.toColor
 import androidx.ui.core.Alignment
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.Modifier
 import androidx.ui.core.setContent
-import androidx.ui.foundation.Border
 import androidx.ui.foundation.Text
-import androidx.ui.foundation.TextField
-import androidx.ui.graphics.Color
 import androidx.ui.input.ImeAction
 import androidx.ui.input.KeyboardType
 import androidx.ui.input.PasswordVisualTransformation
 import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.*
 import androidx.ui.material.*
-import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
-import com.example.myapplication.api.ApiAdapter
 import com.example.myapplication.api.ApiConnection
-import com.example.myapplication.model.User
-import com.example.myapplication.modelResponse.AuthResponse
 import com.example.myapplication.ui.MyApplicationTheme
 
 class Login : AppCompatActivity() {
@@ -39,24 +28,6 @@ class Login : AppCompatActivity() {
                     LoginPreview()
                 }
             }
-        }
-
-        ApiAdapter.setContext(applicationContext)
-
-        /*applicationContext.getSharedPreferences(
-            "CONCIERGE_APP",
-            Context.MODE_PRIVATE
-        ).edit().clear().apply()*/
-
-        val authToken = applicationContext.getSharedPreferences(
-            "CONCIERGE_APP",
-            Context.MODE_PRIVATE
-        ).getString("AUTH_TOKEN", null)
-
-        if (authToken != null) {
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            applicationContext.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            finish()
         }
     }
 }
