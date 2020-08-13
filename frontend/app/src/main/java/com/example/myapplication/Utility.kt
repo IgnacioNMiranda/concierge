@@ -24,10 +24,11 @@ class Utility {
         @Suppress("CascadeIf")
         @Composable
         fun LoadingComponent(
+            popUpText: String,
             showPopup: MutableState<Boolean>,
             onPopupDismissed: () -> Unit,
             obtainingData: MutableState<Boolean>,
-            registrosResponse: MutableState<Boolean>,
+            receivedResponse: MutableState<Boolean>,
             context: Context
         ) {
             var text: String
@@ -48,13 +49,13 @@ class Utility {
                                         0.dp
                                     )
                                 )
-                                Text(text = context.resources.getString(R.string.obtaining_data_ph))
+                                Text(text = popUpText)
                             }
                         },
                         confirmButton = { }
                     )
                     return
-                } else if (!registrosResponse.value) {
+                } else if (!receivedResponse.value) {
                     text = context.resources.getString(R.string.server_connection_failed)
                 } else {
                     text = context.resources.getString(R.string.server_connection_success)

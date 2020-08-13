@@ -26,6 +26,12 @@ interface ConciergeApi {
     fun login(@Body user: User): Call<AuthResponse>
 
     /**
+     * Does the logout of an specific [user], revoking its auth token.0
+     */
+    @GET("logout")
+    fun logout(): Call<AuthResponse>
+
+    /**
      * Get a list of all [Registro]s.
      *
      * @return a [Call] that can be used to retrieve a [RegistroResponse].
