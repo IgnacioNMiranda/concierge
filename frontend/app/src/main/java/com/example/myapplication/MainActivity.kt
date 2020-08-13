@@ -4,6 +4,7 @@ package com.example.myapplication
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +18,14 @@ import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Add
+import androidx.ui.material.icons.filled.Menu
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
 import com.example.myapplication.model.Registro
 import com.example.myapplication.ui.MyApplicationTheme
-import com.example.myapplication.ui.shapes
+import com.example.myapplication.ui.primaryColor
+import com.example.myapplication.ui.primaryDarkColor
 import kotlinx.coroutines.*
 
 
@@ -48,9 +51,57 @@ fun indexRegisters() {
 
     val context = ContextAmbient.current
 
+    /* Used to show loading components*/
+    var popUpStringContent by state { "" }
+    val showPopUp: MutableState<Boolean> = state { false }
+    val receivedResponse: MutableState<Boolean> = state { false }
+    val obtainingData: MutableState<Boolean> = state { false }
+
     val fabShape = RoundedCornerShape(50)
+    var drawerExpanded by state { ScaffoldState(DrawerState.Closed) }
+    val menuIcon = @Composable {
+        IconButton(onClick = { drawerExpanded = ScaffoldState(DrawerState.Opened) }) {
+            Icon(asset = Icons.Filled.Menu)
+        }
+    }
     Scaffold(
-        floatingActionButton = {
+        scaffoldState = drawerExpanded,
+        topBar = {
+            TopAppBar(title = {
+                Text(
+                    context.resources.getString(R.string.app_name)
+                )
+            }, navigationIcon = {
+                menuIcon.invoke()
+            })
+        }, drawerContent = {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Button(
+                    onClick = {
+                        popUpStringContent =
+                            context.resources.getString(R.string.logout_placeholder)
+                        receivedResponse.value = false
+                        obtainingData.value = true
+                        showPopUp.value = true
+
+                        ApiConnection.logout(
+                            context,
+                            receivedResponse,
+                            obtainingData
+                        )
+                    },
+                    modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp) + Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(50)
+                ) {
+                    Text(
+                        text = context.resources.getString(R.string.logout_button)
+                    )
+                }
+
+                Divider()
+            }
+        }
+        , floatingActionButton = {
             FloatingActionButton(
                 onClick = {},
                 // We specify the rounded shape.
@@ -66,27 +117,24 @@ fun indexRegisters() {
         },
         floatingActionButtonPosition = Scaffold.FabPosition.End,
         bodyContent = {
-            var popUpStringContent = ""
+
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
 
                 val registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
                 val baseState by state { mutableListOf<Registro>() }
-                val showPopUp: MutableState<Boolean> = state { false }
-                val registrosResponse: MutableState<Boolean> = state { false }
-                val obtainingData: MutableState<Boolean> = state { false }
                 Button(
                     onClick = {
                         popUpStringContent = context.resources.getString(R.string.obtaining_data_ph)
                         registros.value = baseState
                         showPopUp.value = true
-                        registrosResponse.value = false
+                        receivedResponse.value = false
                         obtainingData.value = true
 
                         ApiConnection.fetchRegistros(
                             registros,
-                            registrosResponse,
+                            receivedResponse,
                             obtainingData
                         )
                     },
@@ -97,31 +145,7 @@ fun indexRegisters() {
                     )
                 }
 
-                val showPopUpLogout: MutableState<Boolean> = state { false }
-                val logoutResponse: MutableState<Boolean> = state { false }
-                val logoutState: MutableState<Boolean> = state { false }
-                Button(
-                    onClick = {
-                        popUpStringContent =
-                            context.resources.getString(R.string.logout_placeholder)
-                        showPopUpLogout.value = true
-                        logoutResponse.value = false
-                        logoutState.value = true
-
-                        ApiConnection.logout(
-                            context,
-                            logoutResponse,
-                            logoutState
-                        )
-                    },
-                    modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
-                ) {
-                    Text(
-                        text = context.resources.getString(R.string.logout_button)
-                    )
-                }
-
-                Divider(color = Color.Black)
+                Divider()
 
                 val onPopupDismissed = { showPopUp.value = false }
                 Utility.LoadingComponent(
@@ -129,7 +153,7 @@ fun indexRegisters() {
                     showPopUp,
                     onPopupDismissed,
                     obtainingData,
-                    registrosResponse,
+                    receivedResponse,
                     context
                 )
 

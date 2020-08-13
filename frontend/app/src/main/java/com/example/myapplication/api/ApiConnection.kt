@@ -4,6 +4,7 @@ package com.example.myapplication.api
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.MutableState
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
@@ -82,7 +83,7 @@ class ApiConnection {
         fun logout(
             context: Context,
             logoutResponse: MutableState<Boolean>,
-            sendingData: MutableState<Boolean>
+            logoutState: MutableState<Boolean>
         ) {
             /* Obtains the authToken. */
             val authToken = context.getSharedPreferences(
@@ -100,7 +101,7 @@ class ApiConnection {
                 ) {
                     // It checks if status ~ 200
                     if (response.isSuccessful) {
-                        sendingData.value = false
+                        logoutState.value = false
                         logoutResponse.value = true
 
                         /* Deletes the authToken from SharedPreferences */
@@ -113,11 +114,14 @@ class ApiConnection {
                         /* Returns to login activity. */
                         val intent = Intent(context, Login::class.java)
                         context.startActivity(intent)
+                    } else {
+                        logoutState.value = false
+                        logoutResponse.value = true
                     }
                 }
 
                 override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
-                    sendingData.value = false
+                    logoutState.value = false
                     logoutResponse.value = false
                 }
             })
