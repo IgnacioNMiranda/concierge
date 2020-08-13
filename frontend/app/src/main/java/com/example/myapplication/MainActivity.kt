@@ -3,39 +3,26 @@
 package com.example.myapplication
 
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.compose.*
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.toColor
 import androidx.ui.core.*
 import androidx.ui.foundation.*
 import androidx.ui.foundation.lazy.LazyColumnItems
-import androidx.ui.foundation.selection.selectable
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
-import androidx.ui.graphics.ImageAsset
-import androidx.ui.graphics.SolidColor
-import androidx.ui.graphics.imageFromResource
 import androidx.ui.layout.*
 import androidx.ui.material.*
-import androidx.ui.material.icons.Icons
-import androidx.ui.material.icons.filled.Edit
-import androidx.ui.material.icons.filled.Favorite
-import androidx.ui.res.imageResource
-import androidx.ui.res.loadImageResource
-import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
 import com.example.myapplication.model.Registro
 import com.example.myapplication.ui.MyApplicationTheme
+import com.example.myapplication.ui.shapes
 import kotlinx.coroutines.*
+
 
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,6 +77,19 @@ fun indexRegisters() {
             )
         }
 
+        Button(
+            onClick = {
+                val intent = Intent(context, PostRegistro::class.java)
+                context.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            },
+            modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
+        ) {
+            Text(
+                text = context.resources.getString(R.string.create_register)
+            )
+
+        }
+
         val showPopUpLogout: MutableState<Boolean> = state { false }
         val logoutResponse: MutableState<Boolean> = state { false }
         val logoutState: MutableState<Boolean> = state { false }
@@ -142,7 +142,7 @@ fun indexRegisters() {
                     secondaryText = "${registro.parentesco} - rut: ${registro.persona?.rut} - numero: ${registro.departamento?.numero}"
                 )
             }
-            /*
+/*
             if (showPopupEdit) {
                 EditRegistroDialog(
                     registro = registro,
@@ -152,7 +152,7 @@ fun indexRegisters() {
                 )
             }
 
-             */
+ */
             if (showPopupDelete) {
                 DeleteRegistroDialog(
                     registro = registro,
@@ -187,7 +187,10 @@ fun DeleteRegistroDialog(
                 var deletedRegisterIndex: Int = -1
                 Log.e("idDeletedRegistro", registro.id.toString())
                 for (index in 0 until delRegistros.size) {
-                    Log.e("registroDeleted - actualIndex", "${registro.id} - ${delRegistros[index].id}")
+                    Log.e(
+                        "registroDeleted - actualIndex",
+                        "${registro.id} - ${delRegistros[index].id}"
+                    )
                     if (delRegistros[index].id == registro.id) {
                         Log.d("match", "match! ${registro.id} - ${delRegistros[index].id}")
                         deletedRegisterIndex = index
@@ -216,7 +219,6 @@ fun DeleteRegistroDialog(
         }
     )
 }
-
 /*
 @Composable
 fun EditRegistroDialog(
@@ -235,51 +237,56 @@ fun EditRegistroDialog(
     var isShippingCompany by state { false };
     var update by state { false }
 
-    MyApplicationTheme {
-        Dialog(
-            onCloseRequest = { dismiss(false) },
-            children = {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    RadioGroup(
-                        options = relOptions,
-                        selectedOption = relSelection,
-                        onSelectedChange = { str -> relSelection = str }
-                    )
-
-                    Row {
-                        Checkbox(
-                            checked = false,
-                            onCheckedChange = { b -> isShippingCompany = b },
-                            enabled = relSelection.equals(relOptions[2])
+    Dialog(
+        onCloseRequest = { dismiss(false) },
+        children = {
+            MyApplicationTheme {
+                Surface(shape = shapes.small) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        RadioGroup(
+                            options = relOptions,
+                            selectedOption = relSelection,
+                            onSelectedChange = { str -> relSelection = str }
                         )
-                        Text(text = context.resources.getString(R.string.is_shipping_company))
-                    }
 
-                    Row {
-                        Button(onClick = { update = true }) {
-                            Text(context.resources.getString(R.string.update))
+                        Row {
+                            Checkbox(
+                                checked = false,
+                                onCheckedChange = {b -> isShippingCompany = b},
+                                enabled = relSelection.equals(relOptions[2])
+                            )
+                            Text(text = context.resources.getString(R.string.is_shipping_company))
                         }
-                        Button(onClick = {
-                            update = false
-                            dismiss(false)
-                        }) {
-                            Text(context.resources.getString(R.string.not_update))
+
+                        Row {
+                            Button(onClick = { update = true }) {
+                                Text(context.resources.getString(R.string.update))
+                            }
+                            Button(onClick = {
+                                update = false
+                                dismiss(false)
+                            }) {
+                                Text(context.resources.getString(R.string.not_update))
+                            }
                         }
                     }
                 }
             }
-        )
-    }
+        }
+    )
 
     if (update) {
         when (relSelection) {
-            context.resources.getString(R.string.relation_family) -> registro.parentesco = "Familiar"
+            context.resources.getString(R.string.relation_family) -> registro.parentesco =
+                "Familiar"
             context.resources.getString(R.string.relation_ext) -> registro.parentesco = "Externo"
-            context.resources.getString(R.string.relation_company) -> registro.parentesco = "Empresa"
+            context.resources.getString(R.string.relation_company) -> registro.parentesco =
+                "Empresa"
         }
         registro.empresaEntrega = isShippingCompany
 
         ApiConnection.updateRegistro(registro)
     }
 }
+
  */

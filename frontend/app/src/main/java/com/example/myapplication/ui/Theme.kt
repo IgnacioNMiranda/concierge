@@ -21,15 +21,6 @@ private val LightColorPalette = lightColorPalette(
     secondaryVariant = secondaryLightColor,
     onPrimary = primaryTextColor,
     onSecondary = secondaryTextColor
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
 
 @Composable
@@ -46,7 +37,8 @@ fun MyApplicationTheme(
     MaterialTheme(
         colors = colors,
         typography = typography,
-        shapes = shapes,
-        content = content
-    )
+        shapes = shapes
+    ) {
+        content()
+    }
 }

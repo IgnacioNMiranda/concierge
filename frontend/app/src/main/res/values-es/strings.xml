@@ -32,5 +32,6 @@
     <string name="is_shipping_company">Es empresa de encomiendas</string>
     <string name="update">Actualizar</string>
     <string name="not_update">Cancelar</string>
+    <string name="create_register">Crear un registro</string>
 
 </resources>

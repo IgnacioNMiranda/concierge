@@ -32,5 +32,6 @@
     <string name="is_shipping_company">is shipping company</string>
     <string name="update">Update</string>
     <string name="not_update">Abort</string>
+    <string name="create_register">Create a register</string>
 
 </resources>
