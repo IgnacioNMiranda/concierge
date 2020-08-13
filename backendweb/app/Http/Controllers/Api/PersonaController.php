@@ -24,6 +24,20 @@ class PersonaController extends Controller
     }
 
     /**
+     * Search for rut given by parameter and that returns the [Persona]
+     *
+     * @param String $rut
+     * @return Response
+     */
+    public function buscarPersonaPorRut(String $rut)
+    {
+        return response([
+            'message' => 'Found Successfully',
+            'persona' => new PersonaResource(Persona::where('rut',$rut)),
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param PersonaRequest $request
