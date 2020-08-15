@@ -174,4 +174,13 @@ interface ConciergeApi {
      */
     @DELETE("persona/{persona}")
     fun deletePersona(@Path("persona") id: Long? = null): Call<PersonaResponse>
+
+    /**
+     * Get a [Persona] from the backend.
+     *
+     * @param rut The Rut of the [Persona] to retrieve.
+     * @return a [Call] that can be used to retrieve a [PersonaResponse].
+     */
+    @GET("persona/buscarPersonaPorRut/{rut}")
+    fun getPersonaPorRut(@Body rut: String): Call<PersonaResponse>
 }
