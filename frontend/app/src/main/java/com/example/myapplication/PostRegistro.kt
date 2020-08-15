@@ -40,13 +40,14 @@ fun PostRegistros() {
     ) {
 
         /* TODO: implementation of radioGroup for 'parentesco', input rut, apartment number and radioGroup for 'empresaEntrega'*/
-        var textValue by state { TextFieldValue("Enter your text here") }
-        TextField(value = textValue,
+        var textValue by state { TextFieldValue("") }
+        OutlinedTextField(value = textValue,
             modifier = Modifier.padding(16.dp) + Modifier.fillMaxWidth(),
             // Update value of textValue with the latest value of the text field
             onValueChange = {
                 textValue = it
-            }
+            },
+            label = { Text("Enter your text here") }
         )
 
         val showPopUp: MutableState<Boolean> = state { false }
