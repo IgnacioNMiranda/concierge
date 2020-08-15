@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Concierge</string>
     <string name="app_title">Conserjería</string>
+    <string name="title_activity_sign_up">Registro</string>
     <string name="title_activity_login">Iniciar sesión</string>
     <string name="title_activity_post_registros">Crear registro</string>
     <string name="title_activity_delete_registro">Borrar registro</string>
@@ -14,19 +15,22 @@
     <string name="server_connection_success">Operación realizada exitosamente.</string>
 
     <!-- Auth string resources -->
-    <!-- Person too -->
-    <string name="email_input_label">Ingresa tu email</string>
-    <string name="password_input_label">Ingresa tu contraseña</string>
+    <string name="dont_have_an_account">¿No tienes una cuenta?</string>
+    <string name="email_input_label">Email</string>
+    <string name="password_input_label">Contraseña</string>
+    <string name="password_confirmation_input_label">Confirmación de contraseña</string>
+    <string name="sign_up_button">Registrarse</string>
+    <string name="sign_up_placeholder">Registrando…</string>
     <string name="login_button">Iniciar sesión</string>
     <string name="login_placeholder">Iniciando sesión…</string>
     <string name="logout_button">Cerrar sesión</string>
     <string name="logout_placeholder">Cerrando sesión…</string>
 
     <!-- Person string resources -->
-    <string name="rut_input_label">Ingresa tu RUT</string>
-    <string name="name_input_label">Ingresa tu nombre</string>
-    <string name="phone_input_label">Ingresa tu número de teléfono</string>
-    <string name="dept_input_label">Ingresa tu número de departamento</string>
+    <string name="rut_input_label">RUT</string>
+    <string name="name_input_label">Nombre</string>
+    <string name="phone_input_label">Número de teléfono</string>
+    <string name="dept_input_label">Número de departamento</string>
 
     <!-- CRUD buttons string resources -->
     <string name="fetch_registers_btn">Obtener registros</string>

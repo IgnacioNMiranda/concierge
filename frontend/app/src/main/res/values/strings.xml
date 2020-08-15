@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Concierge</string>
     <string name="app_title">Concierge service</string>
+    <string name="title_activity_sign_up">Sign Up</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_post_registros">Create register</string>
     <string name="title_activity_delete_registro">Delete register</string>
@@ -14,19 +15,22 @@
     <string name="server_connection_success">The operation was completed successfully.</string>
 
     <!-- Auth string resources -->
-    <!-- Person too -->
-    <string name="email_input_label">Enter your email</string>
-    <string name="password_input_label">Enter your password</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="email_input_label">Email</string>
+    <string name="password_input_label">Password</string>
+    <string name="password_confirmation_input_label">Confirm your password</string>
+    <string name="sign_up_button">Sign up</string>
+    <string name="sign_up_placeholder">Registering…</string>
     <string name="login_button">Login</string>
     <string name="login_placeholder">Logging…</string>
     <string name="logout_button">Logout</string>
     <string name="logout_placeholder">Logging off…</string>
 
     <!-- Person string resources -->
-    <string name="rut_input_label">Enter your RUT</string>
-    <string name="name_input_label">Enter your name</string>
-    <string name="phone_input_label">Enter your phone number</string>
-    <string name="dept_input_label">Enter your department number</string>
+    <string name="rut_input_label">RUT</string>
+    <string name="name_input_label">Name</string>
+    <string name="phone_input_label">Phone number</string>
+    <string name="dept_input_label">Apartment number</string>
 
     <!-- CRUD buttons string resources -->
     <string name="fetch_registers_btn">Fetch registers</string>
@@ -45,5 +49,6 @@
     <string name="not_update">Abort</string>
     <string name="create_register">Create a register</string>
     <string name="create_persona">Create a person</string>
+
 
 </resources>

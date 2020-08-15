@@ -1,3 +1,5 @@
+@file:Suppress("ArrayInDataClass")
+
 package com.example.myapplication.modelResponse
 
 import com.example.myapplication.model.User
@@ -15,5 +17,6 @@ data class AuthResponse(
     var message: String? = null,
     var user: User? = null,
     var token: String? = null,
-    var token_expires_at: Date? = null
+    var token_expires_at: Date? = null,
+    var validation_errors: Array<Any>? = null
 )

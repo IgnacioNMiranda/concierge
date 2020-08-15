@@ -20,6 +20,12 @@ import retrofit2.http.*
 interface ConciergeApi {
 
     /**
+     * Does the register of an specific [user] and returns auth token.
+     */
+    @POST("register")
+    fun register(@Body user: User): Call<AuthResponse>
+    
+    /**
      * Does the login of an specific [user] and returns auth token.
      */
     @POST("login")

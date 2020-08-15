@@ -1,9 +1,11 @@
 package com.example.myapplication.api
 
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.MutableState
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
@@ -17,6 +19,7 @@ import com.example.myapplication.modelResponse.RegistroResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Response.error
 
 
 /**
@@ -34,6 +37,58 @@ class ApiConnection {
          * Singleton that allows the connection with restful api.
          */
         private val request = ApiAdapter.buildService(ConciergeApi::class.java)
+
+        /**
+         * Registers a user in the system, generates the auth token and storages it.
+         */
+        fun register(
+            context: Context,
+            registerResponse: MutableState<Boolean>,
+            sendingData: MutableState<Boolean>,
+            name: String,
+            email: String,
+            password: String,
+            password_confirmation: String
+        ) {
+            val user = User(name, email, password, password_confirmation)
+            val call = request.register(user)
+
+            /** Async call */
+            call.enqueue(object : Callback<AuthResponse> {
+                override fun onResponse(
+                    call: Call<AuthResponse>,
+                    response: Response<AuthResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        sendingData.value = false
+                        registerResponse.value = true
+
+                        /* Stores the authToken on SharedPreferences */
+                        val prefs: SharedPreferences =
+                            context.getSharedPreferences("CONCIERGE_APP", Context.MODE_PRIVATE)
+                        prefs.edit().apply {
+                            putString("AUTH_TOKEN", response.body()?.token)
+                        }.apply()
+
+                        /* Calls the main activity after register. */
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(intent)
+
+                    } else {
+                        Log.e("error", response.body()?.validation_errors.toString())
+                        sendingData.value = false
+                        registerResponse.value = false
+                    }
+                }
+
+                override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    sendingData.value = false
+                    registerResponse.value = false
+                }
+            })
+        }
 
         /**
          * Makes the login of a user, generates the auth token and storages it.
@@ -68,6 +123,7 @@ class ApiConnection {
 
                         /* Calls the main activity after login. */
                         val intent = Intent(context, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
                         sendingData.value = false
@@ -115,6 +171,7 @@ class ApiConnection {
 
                         /* Returns to login activity. */
                         val intent = Intent(context, Login::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
                         logoutState.value = false
