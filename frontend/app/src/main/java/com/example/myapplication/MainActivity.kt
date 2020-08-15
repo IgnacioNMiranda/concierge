@@ -121,6 +121,17 @@ fun indexRegisters() {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
+                Button(
+                    onClick = {
+                        val intent = Intent(context, PostPersona::class.java)
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
+                ) {
+                    Text(
+                        text = context.resources.getString(R.string.post_person_btn)
+                    )
+                }
 
                 val registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
                 val baseState by state { mutableListOf<Registro>() }

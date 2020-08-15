@@ -5,6 +5,8 @@
     <string name="title_activity_login">Iniciar sesión</string>
     <string name="title_activity_post_registros">Crear registro</string>
     <string name="title_activity_delete_registro">Borrar registro</string>
+    <string name="title_activity_post_personas">Crear persona</string>
+    <string name="title_activity_delete_persona">Borrar persona</string>
 
     <!-- LoadingComponent string resources -->
     <string name="obtaining_data_ph">Obteniendo datos…</string>
@@ -12,6 +14,7 @@
     <string name="server_connection_success">Operación realizada exitosamente.</string>
 
     <!-- Auth string resources -->
+    <!-- Person too -->
     <string name="email_input_label">Ingresa tu email</string>
     <string name="password_input_label">Ingresa tu contraseña</string>
     <string name="login_button">Iniciar sesión</string>
@@ -19,10 +22,18 @@
     <string name="logout_button">Cerrar sesión</string>
     <string name="logout_placeholder">Cerrando sesión…</string>
 
+    <!-- Person string resources -->
+    <string name="rut_input_label">Ingresa tu RUT</string>
+    <string name="name_input_label">Ingresa tu nombre</string>
+    <string name="phone_input_label">Ingresa tu número de teléfono</string>
+    <string name="dept_input_label">Ingresa tu número de departamento</string>
+
     <!-- CRUD buttons string resources -->
     <string name="fetch_registers_btn">Obtener registros</string>
     <string name="post_register_btn">Registrar visita</string>
+    <string name="post_person_btn">Crear persona</string>
     <string name="post_placeholder">Registrando visita…</string>
+    <string name="post_placeholder_person">Creando persona...</string>
     <string name="delete_registro_dialog">Borrar el registro?</string>
     <string name="confirm">Sí</string>
     <string name="cancel">No</string>
@@ -33,5 +44,6 @@
     <string name="update">Actualizar</string>
     <string name="not_update">Cancelar</string>
     <string name="create_register">Crear un registro</string>
+    <string name="create_persona">Crear una persona</string>
 
 </resources>

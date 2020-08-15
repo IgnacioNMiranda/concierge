@@ -4,13 +4,15 @@ package com.example.myapplication.api
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.MutableState
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
+import com.example.myapplication.model.Departamento
+import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
 import com.example.myapplication.model.User
 import com.example.myapplication.modelResponse.AuthResponse
+import com.example.myapplication.modelResponse.PersonaResponse
 import com.example.myapplication.modelResponse.RegistroResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -231,6 +233,70 @@ class ApiConnection {
                     throw Exception(e)
                 }
             })
+        }
+
+        /*
+        fun getPersonaPorRut(rut: String) {
+            val call = request.getPersonaPorRut(rut)
+
+            call.enqueue(object : Callback<PersonaResponse> {
+                override fun onResponse(
+                    call: Call<PersonaResponse>,
+                    response: Response<PersonaResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        // TODO: not yet implemented
+                    }
+                }
+
+                override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                    throw Exception(e)
+                }
+            })
+        }
+        */
+        fun createPersona(
+                context: Context,
+                personaResponse: MutableState<Boolean>,
+                obtainingData: MutableState<Boolean>,
+                rut: String,
+                nombre: String,
+                fono: String,
+                email: String,
+                depto: String
+        ) {
+            try {
+                val departamento = Departamento(null, depto.toInt());
+                val persona = Persona(null, rut, nombre, fono, email, departamento.id, departamento);
+                val call = request.createPersona(persona);
+
+                call.enqueue(object: Callback<PersonaResponse> {
+                    override fun onResponse(
+                            call: Call<PersonaResponse>,
+                            response: Response<PersonaResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            obtainingData.value = false;
+                            personaResponse.value = true;
+
+                            /* Returns to the same activity (persona). */
+                            val intent = Intent(context, MainActivity::class.java)
+                            context.startActivity(intent)
+
+                        } else {
+                            obtainingData.value = false;
+                            personaResponse.value = false;
+                        }
+                    }
+
+                    override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                        throw Exception(e);
+                    }
+                });
+
+            } catch (e: NumberFormatException) {
+                e.message;
+            }
         }
 
     }
