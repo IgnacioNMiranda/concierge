@@ -292,6 +292,40 @@ class ApiConnection {
             })
         }
 
+        /**
+         * Retrieves all the database 'personas' asynchronously.
+         */
+        fun fetchPersonas(
+            personas: MutableState<List<Persona>>,
+            personasResponse: MutableState<Boolean>,
+            obtainingData: MutableState<Boolean>
+        ) {
+            val call = request.fetchPersonas()
+
+            /** Async call */
+            call.enqueue(object : Callback<PersonaResponse> {
+                override fun onResponse(
+                    call: Call<PersonaResponse>,
+                    response: Response<PersonaResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        obtainingData.value = false
+                        personasResponse.value = true
+                        personas.value = response.body()?.personas?.toList()!!
+                    } else {
+                        obtainingData.value = false
+                        personasResponse.value = false
+                    }
+                }
+
+                override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                    obtainingData.value = false
+                    personasResponse.value = false
+                }
+            })
+        }
+
         /*
         fun getPersonaPorRut(rut: String) {
             val call = request.getPersonaPorRut(rut)
@@ -313,24 +347,25 @@ class ApiConnection {
         }
         */
         fun createPersona(
-                context: Context,
-                personaResponse: MutableState<Boolean>,
-                obtainingData: MutableState<Boolean>,
-                rut: String,
-                nombre: String,
-                fono: String,
-                email: String,
-                depto: String
+            context: Context,
+            personaResponse: MutableState<Boolean>,
+            obtainingData: MutableState<Boolean>,
+            rut: String,
+            nombre: String,
+            fono: String,
+            email: String,
+            depto: String
         ) {
             try {
                 val departamento = Departamento(null, depto.toInt());
-                val persona = Persona(null, rut, nombre, fono, email, departamento.id, departamento);
+                val persona =
+                    Persona(null, rut, nombre, fono, email, departamento.id, departamento);
                 val call = request.createPersona(persona);
 
-                call.enqueue(object: Callback<PersonaResponse> {
+                call.enqueue(object : Callback<PersonaResponse> {
                     override fun onResponse(
-                            call: Call<PersonaResponse>,
-                            response: Response<PersonaResponse>
+                        call: Call<PersonaResponse>,
+                        response: Response<PersonaResponse>
                     ) {
                         if (response.isSuccessful) {
                             obtainingData.value = false;
