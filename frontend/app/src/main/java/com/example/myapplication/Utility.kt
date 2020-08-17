@@ -1,17 +1,22 @@
 package com.example.myapplication
 
 import android.content.Context
-import androidx.compose.Composable
-import androidx.compose.MutableState
+import android.content.Intent
+import androidx.compose.*
 import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
+import androidx.ui.foundation.Icon
 import androidx.ui.foundation.Text
 import androidx.ui.layout.Row
 import androidx.ui.layout.absolutePadding
 import androidx.ui.layout.fillMaxWidth
-import androidx.ui.material.AlertDialog
-import androidx.ui.material.Button
-import androidx.ui.material.CircularProgressIndicator
+import androidx.ui.layout.padding
+import androidx.ui.material.*
+import androidx.ui.material.icons.Icons
+import androidx.ui.material.icons.filled.Build
+import androidx.ui.material.icons.filled.Home
+import androidx.ui.material.icons.filled.List
+import androidx.ui.material.icons.filled.Person
 import androidx.ui.unit.dp
 
 class Utility {
@@ -75,6 +80,40 @@ class Utility {
                         )
                     }
                 )
+            }
+        }
+
+
+        @Composable
+        fun BottomNavigationBar(context: Context, bottomBarState: MutableState<Int>) {
+            val listItems = listOf(
+                context.resources.getString(R.string.visits_label),
+                context.resources.getString(R.string.people_label)
+            )
+            val listIcons = listOf(Icons.Filled.Home, Icons.Filled.Person)
+
+            // BottomNavigation is a component placed at the bottom of the screen that represents primary
+            // destinations in your application.
+            BottomNavigation(modifier = Modifier.absolutePadding(0.dp, 16.dp, 0.dp, 0.dp)) {
+                listItems.forEachIndexed { index, label ->
+
+                    // BottomNavigationItem represents a singular primary destination in the application.
+                    BottomNavigationItem(
+                        icon = {
+                            Icon(asset = listIcons[index])
+                        },
+                        text = {
+                            Text(text = label)
+                        },
+                        // Update the selected index when the BottomNavigationItem is clicked
+                        selected = bottomBarState.value == index,
+                        onSelected = {
+                            if (bottomBarState.value != index) {
+                                bottomBarState.value = index
+                            }
+                        }
+                    )
+                }
             }
         }
     }

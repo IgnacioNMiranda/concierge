@@ -14,6 +14,10 @@
     <string name="server_connection_failed">Fallo del servidor. Intente nuevamente.</string>
     <string name="server_connection_success">Operación realizada exitosamente.</string>
 
+    <!-- Bottombar string resources -->
+    <string name="visits_label">Visitas</string>
+    <string name="people_label">Personas</string>
+
     <!-- Auth string resources -->
     <string name="dont_have_an_account">¿No tienes una cuenta?</string>
     <string name="email_input_label">Email</string>
@@ -34,10 +38,11 @@
 
     <!-- CRUD buttons string resources -->
     <string name="fetch_registers_btn">Obtener registros</string>
+    <string name="fetch_people_btn">Obtener personas</string>
     <string name="post_register_btn">Registrar visita</string>
     <string name="post_person_btn">Crear persona</string>
     <string name="post_placeholder">Registrando visita…</string>
-    <string name="post_placeholder_person">Creando persona...</string>
+    <string name="post_placeholder_person">Creando persona…</string>
     <string name="delete_registro_dialog">Borrar el registro?</string>
     <string name="confirm">Sí</string>
     <string name="cancel">No</string>

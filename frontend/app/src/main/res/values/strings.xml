@@ -14,6 +14,10 @@
     <string name="server_connection_failed">Connection to server failed. Try again.</string>
     <string name="server_connection_success">The operation was completed successfully.</string>
 
+    <!-- Bottombar string resources -->
+    <string name="visits_label">Visits</string>
+    <string name="people_label">People</string>
+
     <!-- Auth string resources -->
     <string name="dont_have_an_account">Don\'t have an account?</string>
     <string name="email_input_label">Email</string>
@@ -34,6 +38,7 @@
 
     <!-- CRUD buttons string resources -->
     <string name="fetch_registers_btn">Fetch registers</string>
+    <string name="fetch_people_btn">Fetch people</string>
     <string name="post_register_btn">Create register</string>
     <string name="post_person_btn">Create person</string>
     <string name="post_placeholder">Creating register…</string>
