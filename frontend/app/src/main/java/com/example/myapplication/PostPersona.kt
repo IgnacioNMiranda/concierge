@@ -70,7 +70,7 @@ fun PostPersonas() {
             },
             label = { Text(context.resources.getString(R.string.email_input_label)) }
         )
-
+        /*
         var deptTextValue by state { TextFieldValue("") }
         OutlinedTextField(value = deptTextValue,
             modifier = Modifier.padding(16.dp) + Modifier.fillMaxWidth(),
@@ -78,7 +78,7 @@ fun PostPersonas() {
                 deptTextValue = it
             },
             label = { Text(context.resources.getString(R.string.dept_input_label)) }
-        )
+        )*/
 
         var showPopUp: MutableState<Boolean> = state { false }
         var personaResponse: MutableState<Boolean> = state { false }
@@ -96,8 +96,8 @@ fun PostPersonas() {
                     rutTextValue.text,
                     nameTextValue.text,
                     phoneTextValue.text,
-                    emailTextValue.text,
-                    deptTextValue.text
+                    emailTextValue.text
+                    //deptTextValue.text
                 )
             },
             modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
