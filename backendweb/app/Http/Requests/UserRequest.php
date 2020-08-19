@@ -52,24 +52,27 @@ class UserRequest extends FormRequest
     {
         return [
             'name.required' => 'El campo nombre es obligatorio.',
-            'name.min' => 'El campo nombre debe tener mínimo 3 caracteres.',
-            'name.max' => 'EL campo nombre no debe tener más de 255 caracteres.',
-            'email.email' => 'El campo email debe ser válido.',
+            'name.min' => 'El campo nombre debe tener minimo 3 caracteres.',
+            'name.max' => 'EL campo nombre no debe tener mas de 255 caracteres.',
+            'email.email' => 'El campo email debe ser valido.',
             'email.required' => 'El campo email es obligatorio.',
             'email.unique' => 'Ya existe un usuario con este correo.',
             'password.required' => 'La contrasenia es obligatoria.',
-            'password.min' => 'La contrasenia debe tener mínimo 8 caracteres.',
-            'password.max' => 'La contrasenia no debe tener más de 255 caracteres.',
+            'password.min' => 'La contrasenia debe tener minimo 8 caracteres.',
+            'password.max' => 'La contrasenia no debe tener mas de 255 caracteres.',
             'password.confirmed' => 'Debe confirmar la contrasenia.',
         ];
     }
 
     public function failedValidation(Validator $validator)
     {
-        $errors = $validator->errors()->getMessageBag()->toArray(); // Array of errors.
+        $errors = $validator->errors(); // Array of errors.
+
+        $json = $errors->toJson();
 
         return response([
-           'validation_errors' => $errors
+            'message' => 'validation error',
+           'validation_errors' => $json
         ]);
     }
 }

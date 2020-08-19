@@ -18,5 +18,5 @@ data class AuthResponse(
     var user: User? = null,
     var token: String? = null,
     var token_expires_at: Date? = null,
-    var validation_errors: Array<Any>? = null
+    var validation_errors: String? = null
 )

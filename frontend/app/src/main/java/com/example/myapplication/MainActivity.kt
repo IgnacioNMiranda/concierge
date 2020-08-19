@@ -4,9 +4,7 @@ package com.example.myapplication
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
-import android.provider.Contacts
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.*
@@ -14,7 +12,6 @@ import androidx.ui.core.*
 import androidx.ui.foundation.*
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
 import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
@@ -26,8 +23,6 @@ import com.example.myapplication.api.ApiConnection
 import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
 import com.example.myapplication.ui.MyApplicationTheme
-import com.example.myapplication.ui.primaryColor
-import com.example.myapplication.ui.primaryDarkColor
 import kotlinx.coroutines.*
 
 
@@ -145,6 +140,7 @@ fun mainScreen() {
                     receivedResponse,
                     obtainingData
                 )
+
             } else if (bottomBarState.value == 1) {
                 PeopleScreen(
                     context,
