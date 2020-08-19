@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.compose.MutableState
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
+import com.example.myapplication.PostPersona
 import com.example.myapplication.model.Departamento
 import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
@@ -353,13 +354,12 @@ class ApiConnection {
             rut: String,
             nombre: String,
             fono: String,
-            email: String,
-            depto: String
+            email: String
+            //depto: String
         ) {
-            try {
-                val departamento = Departamento(null, depto.toInt());
-                val persona =
-                    Persona(null, rut, nombre, fono, email, departamento.id, departamento);
+            //try {
+                var depto_id = ((Math.random()*40) + 1).toLong()
+                val persona = Persona(null, rut, nombre, fono, email, depto_id, null);
                 val call = request.createPersona(persona);
 
                 call.enqueue(object : Callback<PersonaResponse> {
@@ -373,6 +373,7 @@ class ApiConnection {
 
                             /* Returns to the same activity (persona). */
                             val intent = Intent(context, MainActivity::class.java)
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             context.startActivity(intent)
 
                         } else {
@@ -382,13 +383,15 @@ class ApiConnection {
                     }
 
                     override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                        obtainingData.value = false;
+                        personaResponse.value = false;
                         throw Exception(e);
                     }
                 });
 
-            } catch (e: NumberFormatException) {
-                e.message;
-            }
+            //} catch (e: NumberFormatException) {
+              //  e.message;
+            //}
         }
 
     }
