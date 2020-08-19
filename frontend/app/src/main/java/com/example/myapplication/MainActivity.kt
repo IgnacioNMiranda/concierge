@@ -419,7 +419,7 @@ fun PeopleScreen(
             ) {
                 ListItem(
                     text = persona.nombre.toString(),
-                    secondaryText = "RUT: ${persona.nombre} - telefono: ${persona.telefono}"
+                    secondaryText = "RUT: ${persona.rut} - telefono: ${persona.telefono}"
                 )
             }
         }
