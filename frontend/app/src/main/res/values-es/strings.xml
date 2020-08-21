@@ -54,5 +54,7 @@
     <string name="not_update">Cancelar</string>
     <string name="create_register">Crear un registro</string>
     <string name="create_persona">Crear una persona</string>
+    <string name="insert_rut">Ingresar RUT</string>
+    <string name="insert_dept">Ingresar número de departamento</string>
 
 </resources>
