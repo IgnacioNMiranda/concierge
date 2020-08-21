@@ -86,11 +86,13 @@ fun PostRegistros() {
         val showPopUp: MutableState<Boolean> = state { false }
         val registroResponse: MutableState<Boolean> = state { false }
         val sendingData: MutableState<Boolean> = state { false }
+        val popUpStringContent: MutableState<String> = state { "" }
         Button(
             onClick = {
                 showPopUp.value = true
                 registroResponse.value = false
                 sendingData.value = true
+                popUpStringContent.value = context.resources.getString(R.string.post_placeholder)
 
                 // Use backend values for parentesco
                 when (relSelection) {
@@ -108,7 +110,8 @@ fun PostRegistros() {
                     relSelection,
                     isShippingCompany,
                     rutPersona.text,
-                    numeroDept.text.toInt()
+                    numeroDept.text.toInt(),
+                    popUpStringContent
                 )
             },
             modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
@@ -120,7 +123,7 @@ fun PostRegistros() {
 
         val onPopupDismissed = { showPopUp.value = false }
         Utility.LoadingComponent(
-            context.resources.getString(R.string.post_placeholder),
+            popUpStringContent.value,
             showPopUp,
             onPopupDismissed,
             sendingData,
