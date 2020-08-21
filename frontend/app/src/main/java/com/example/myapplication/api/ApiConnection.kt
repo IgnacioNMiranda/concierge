@@ -47,6 +47,7 @@ class ApiConnection {
             context: Context,
             registerResponse: MutableState<Boolean>,
             sendingData: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             name: String,
             email: String,
             password: String,
@@ -86,7 +87,8 @@ class ApiConnection {
                         popUpStringContent.value = Utility.AuthErrors(json)
 
                         sendingData.value = false
-                        registerResponse.value = false
+                        registerResponse.value = true
+                        invalidFieldsResponse.value = true
                     }
                 }
 
@@ -106,6 +108,7 @@ class ApiConnection {
             context: Context,
             loginResponse: MutableState<Boolean>,
             sendingData: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             email: String,
             password: String,
             popUpStringContent: MutableState<String>
@@ -142,7 +145,8 @@ class ApiConnection {
                         popUpStringContent.value = Utility.AuthErrors(json)
 
                         sendingData.value = false
-                        loginResponse.value = false
+                        loginResponse.value = true
+                        invalidFieldsResponse.value = true
                     }
                 }
 
@@ -192,7 +196,7 @@ class ApiConnection {
                         context.startActivity(intent)
                     } else {
                         logoutState.value = false
-                        logoutResponse.value = true
+                        logoutResponse.value = false
                     }
                 }
 
@@ -242,12 +246,18 @@ class ApiConnection {
             context: Context,
             registroResponse: MutableState<Boolean>,
             obtainingData: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             parentesco: String,
             empresaEntrega: Boolean,
             rutPersona: String,
             numDept: String,
             popUpStringContent: MutableState<String>
         ) {
+
+            var numeroDeptoAux = numDept.toIntOrNull()
+            if (numeroDeptoAux == null) {
+                numeroDeptoAux = 0
+            }
 
             val reg = Registro(
                 null,
@@ -259,16 +269,8 @@ class ApiConnection {
                 null,
                 null
             )
-            var numDepartamento: Int = 0
-            try {
-                numDepartamento = numDept.toInt()
-            }  catch (e: NumberFormatException) {
-                popUpStringContent.value = context.resources.getString(R.string.invalid_numDept)
-                obtainingData.value = false
-                registroResponse.value = false
-                return
-            }
-            val call = request.createRegistro(reg, rutPersona, numDepartamento)
+
+            val call = request.createRegistro(reg, rutPersona, numeroDeptoAux)
 
             /** Async call */
             call.enqueue(object : Callback<RegistroResponse> {
@@ -291,7 +293,8 @@ class ApiConnection {
                         popUpStringContent.value = Utility.RegistroErrors(json)
 
                         obtainingData.value = false
-                        registroResponse.value = false
+                        registroResponse.value = true
+                        invalidFieldsResponse.value = true
                     }
                 }
 
@@ -378,29 +381,11 @@ class ApiConnection {
             })
         }
 
-        fun findPersonaByRut(rut: String, persona: MutableState<Persona?>) {
-            val call = request.findPersonaByRut(rut)
-
-            call.enqueue(object : Callback<PersonaResponse> {
-                override fun onResponse(
-                    call: Call<PersonaResponse>,
-                    response: Response<PersonaResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        persona.value = response.body()?.persona
-                    }
-                }
-
-                override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
-                    throw Exception(e)
-                }
-            })
-        }
-
         fun createPersona(
             context: Context,
             personaResponse: MutableState<Boolean>,
             obtainingData: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             rut: String,
             nombre: String,
             fono: String,
@@ -436,13 +421,12 @@ class ApiConnection {
                         popUpStringContent.value = Utility.PersonaErrors(json)
 
                         obtainingData.value = false
-                        personaResponse.value = false
+                        personaResponse.value = true
+                        invalidFieldsResponse.value = true
                     }
                 }
 
                 override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
-                    //popUpStringContent.value =
-                        //context.resources.getString(R.string.server_connection_failed)
                     obtainingData.value = false
                     personaResponse.value = false
                 }

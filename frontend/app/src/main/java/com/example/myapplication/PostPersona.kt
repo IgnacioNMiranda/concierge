@@ -83,12 +83,14 @@ fun PostPersonas() {
         val showPopUp: MutableState<Boolean> = state { false }
         val personaResponse: MutableState<Boolean> = state { false }
         val sendingData: MutableState<Boolean> = state { false }
+        val invalidFieldsResponse: MutableState<Boolean> = state { false }
         val popUpStringContent: MutableState<String> = state { "" }
         Button(
             onClick = {
                 showPopUp.value = true
                 personaResponse.value = false
                 sendingData.value = true
+                invalidFieldsResponse.value = false
                 popUpStringContent.value =
                     context.resources.getString(R.string.post_placeholder_person)
 
@@ -96,6 +98,7 @@ fun PostPersonas() {
                     context,
                     personaResponse,
                     sendingData,
+                    invalidFieldsResponse,
                     rutTextValue.text,
                     nameTextValue.text,
                     phoneTextValue.text,
@@ -118,6 +121,7 @@ fun PostPersonas() {
             onPopupDismissed,
             sendingData,
             personaResponse,
+            invalidFieldsResponse,
             context
         )
 

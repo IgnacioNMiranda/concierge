@@ -101,6 +101,7 @@ fun SignUpPreview() {
         val showPopUp: MutableState<Boolean> = state { false }
         val registerResponse: MutableState<Boolean> = state { false }
         val sendingData: MutableState<Boolean> = state { false }
+        val invalidFieldsResponse: MutableState<Boolean> = state { false }
         val popUpStringContent: MutableState<String> = state { "" }
         Button(
             onClick = {
@@ -113,6 +114,7 @@ fun SignUpPreview() {
                     context,
                     registerResponse,
                     sendingData,
+                    invalidFieldsResponse,
                     nameTextValue.text,
                     emailTextValue.text,
                     pwTextValue.text,
@@ -134,6 +136,7 @@ fun SignUpPreview() {
             onPopupDismissed,
             sendingData,
             registerResponse,
+            invalidFieldsResponse,
             context
         )
 

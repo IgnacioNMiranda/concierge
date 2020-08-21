@@ -156,11 +156,14 @@ class Utility {
             onPopupDismissed: () -> Unit,
             obtainingData: MutableState<Boolean>,
             receivedResponse: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             context: Context
         ) {
+            val successText: String = context.resources.getString(R.string.server_connection_success)
+            val failedText: String = context.resources.getString(R.string.server_connection_failed)
             var text: String
             if (showPopup.value) {
-                if (obtainingData.value) {
+                if (obtainingData.value and !receivedResponse.value) {
                     AlertDialog(
                         onCloseRequest = onPopupDismissed,
                         text = {
@@ -182,10 +185,12 @@ class Utility {
                         confirmButton = { }
                     )
                     return
-                } else if (!receivedResponse.value) {
+                } else if (!obtainingData.value and receivedResponse.value and invalidFieldsResponse.value) {
                     text = popUpText
+                } else if (!obtainingData.value and receivedResponse.value and !invalidFieldsResponse.value) {
+                    text = successText
                 } else {
-                    text = context.resources.getString(R.string.server_connection_success)
+                    text = failedText
                 }
 
                 AlertDialog(
