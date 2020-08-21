@@ -187,8 +187,8 @@ interface ConciergeApi {
      * @param rut The Rut of the [Persona] to retrieve.
      * @return a [Call] that can be used to retrieve a [PersonaResponse].
      */
-    @GET("persona/buscarPersonaPorRut")
-    fun getPersonaPorRut(@Body rut: String): Call<PersonaResponse>
+    @POST("persona/buscarPersonaPorRut")
+    fun findPersonaByRut(@Body rut: String): Call<PersonaResponse>
 
     /**
      * Get a [Departamento] from the backend.
@@ -196,6 +196,6 @@ interface ConciergeApi {
      * @param numero The numero of the [Departamento] to retrieve.
      * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
      */
-    //@GET("persona/")
-    fun findByNumber(@Body numero: Int): Call<PersonaResponse>
+    @POST("departamento/findByNumber")
+    fun findByNumber(@Body numero: Int): Call<DepartamentoResponse>
 }
