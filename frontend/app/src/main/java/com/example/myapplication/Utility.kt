@@ -16,6 +16,7 @@ import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Home
 import androidx.ui.material.icons.filled.Person
 import androidx.ui.unit.dp
+import org.json.JSONArray
 import org.json.JSONObject
 
 class Utility {
@@ -30,13 +31,20 @@ class Utility {
             return JSONObject(jsonValue)
         }
 
+        private fun GetJsonObjectIfExists(key: String, json: JSONObject): JSONArray {
+            if (json.has(key)) {
+                return json.getJSONArray(key)
+            }
+            return JSONArray()
+        }
+
         /**
-         * Obtains all the validation error messages of register operation.
+         * Obtains all the validation error messages of auth operations.
          */
-        fun RegisterErrors(json: JSONObject): String {
-            val nameMessages = json.getJSONArray("name")
-            val emailMessages = json.getJSONArray("email")
-            val passwordMessages = json.getJSONArray("password")
+        fun AuthErrors(json: JSONObject): String {
+            val nameMessages = GetJsonObjectIfExists("name", json)
+            val emailMessages = GetJsonObjectIfExists("email", json)
+            val passwordMessages = GetJsonObjectIfExists("password", json)
 
             var errors = ""
             for (i in 0 until nameMessages.length()) {
@@ -55,33 +63,14 @@ class Utility {
         }
 
         /**
-         * Obtains all the validation error messages of register operation.
-         */
-        fun LoginErrors(json: JSONObject): String {
-            val emailMessages = json.getJSONArray("email")
-            val passwordMessages = json.getJSONArray("password")
-
-            var errors = ""
-            for (i in 0 until emailMessages.length()) {
-                errors += emailMessages[i]
-                errors += "\n"
-            }
-            for (i in 0 until passwordMessages.length()) {
-                errors += passwordMessages[i]
-                errors += "\n"
-            }
-            return errors
-        }
-
-        /**
          * Obtains all the validation error messages of operations related to Persona model.
          */
         fun PersonaErrors(json: JSONObject): String {
-            val rutMessages = json.getJSONArray("rut")
-            val nameMessages = json.getJSONArray("nombre")
-            val phoneMessages = json.getJSONArray("telefono")
-            val emailMessages = json.getJSONArray("email")
-            val apartmentIdMessages = json.getJSONArray("departamento_id")
+            val rutMessages = GetJsonObjectIfExists("rut", json)
+            val nameMessages = GetJsonObjectIfExists("nombre", json)
+            val phoneMessages = GetJsonObjectIfExists("telefono", json)
+            val emailMessages = GetJsonObjectIfExists("email", json)
+            val apartmentIdMessages = GetJsonObjectIfExists("departamento_id", json)
 
             var errors = ""
             for (i in 0 until rutMessages.length()) {
@@ -108,10 +97,10 @@ class Utility {
         }
 
         fun RegistroErrors(json: JSONObject): String {
-            val dateMessages = json.getJSONArray("fecha")
-            val relationshipMessages = json.getJSONArray("parentesco")
-            val personIdMessages = json.getJSONArray("persona_id")
-            val apartmentIdMessages = json.getJSONArray("departamento_id")
+            val dateMessages = GetJsonObjectIfExists("fecha", json)
+            val relationshipMessages = GetJsonObjectIfExists("parentesco", json)
+            val personIdMessages = GetJsonObjectIfExists("persona_id", json)
+            val apartmentIdMessages = GetJsonObjectIfExists("departamento_id", json)
 
             var errors = ""
             for (i in 0 until dateMessages.length()) {
@@ -134,7 +123,7 @@ class Utility {
         }
 
         fun DepartamentoErrors(json: JSONObject): String {
-            val numberMessages = json.getJSONArray("numero")
+            val numberMessages = GetJsonObjectIfExists("numero", json)
 
             var errors = ""
             for (i in 0 until numberMessages.length()) {

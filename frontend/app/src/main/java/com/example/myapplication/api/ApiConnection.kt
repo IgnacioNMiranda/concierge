@@ -79,7 +79,7 @@ class ApiConnection {
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
-                        popUpStringContent.value = Utility.RegisterErrors(json)
+                        popUpStringContent.value = Utility.AuthErrors(json)
 
                         sendingData.value = false
                         registerResponse.value = false
@@ -133,7 +133,7 @@ class ApiConnection {
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
-                        popUpStringContent.value = Utility.LoginErrors(json)
+                        popUpStringContent.value = Utility.AuthErrors(json)
 
                         sendingData.value = false
                         loginResponse.value = false
