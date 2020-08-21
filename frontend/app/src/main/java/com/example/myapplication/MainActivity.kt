@@ -4,7 +4,6 @@ package com.example.myapplication
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,6 @@ import androidx.ui.core.*
 import androidx.ui.foundation.*
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
 import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
@@ -22,10 +20,9 @@ import androidx.ui.material.icons.filled.Menu
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
+import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
 import com.example.myapplication.ui.MyApplicationTheme
-import com.example.myapplication.ui.primaryColor
-import com.example.myapplication.ui.primaryDarkColor
 import kotlinx.coroutines.*
 
 
@@ -38,24 +35,35 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun App() {
     MyApplicationTheme {
-        indexRegisters()
+        mainScreen()
     }
 }
 
 @Composable
-fun indexRegisters() {
+fun mainScreen() {
 
     val context = ContextAmbient.current
 
     /* Used to show loading components*/
-    var popUpStringContent by state { "" }
+    val popUpStringContent: MutableState<String> = state { "" }
     val showPopUp: MutableState<Boolean> = state { false }
     val receivedResponse: MutableState<Boolean> = state { false }
     val obtainingData: MutableState<Boolean> = state { false }
+
+    /* State of bottomBar*/
+    val bottomBarState: MutableState<Int> = state { 0 }
+
+    /* list for postActivities*/
+    val postsList =
+        listOf(Intent(context, PostRegistro::class.java), Intent(context, PostPersona::class.java))
+
+    /* lists that storage data from fetch actions.*/
+    val registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
+    val personas: MutableState<List<Persona>> = state { emptyList<Persona>() }
 
     val fabShape = RoundedCornerShape(50)
     var drawerExpanded by state { ScaffoldState(DrawerState.Closed) }
@@ -64,6 +72,7 @@ fun indexRegisters() {
             Icon(asset = Icons.Filled.Menu)
         }
     }
+
     Scaffold(
         scaffoldState = drawerExpanded,
         topBar = {
@@ -78,7 +87,7 @@ fun indexRegisters() {
             Column(modifier = Modifier.padding(16.dp)) {
                 Button(
                     onClick = {
-                        popUpStringContent =
+                        popUpStringContent.value =
                             context.resources.getString(R.string.logout_placeholder)
                         receivedResponse.value = false
                         obtainingData.value = true
@@ -90,7 +99,12 @@ fun indexRegisters() {
                             obtainingData
                         )
                     },
-                    modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp) + Modifier.fillMaxWidth(),
+                    modifier = Modifier.absolutePadding(
+                        0.dp,
+                        0.dp,
+                        0.dp,
+                        10.dp
+                    ) + Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(50)
                 ) {
                     Text(
@@ -108,7 +122,7 @@ fun indexRegisters() {
                 shape = fabShape
             ) {
                 IconButton(onClick = {
-                    val intent = Intent(context, PostRegistro::class.java)
+                    val intent = postsList[bottomBarState.value]
                     context.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 }) {
                     Icon(asset = Icons.Filled.Add)
@@ -117,90 +131,44 @@ fun indexRegisters() {
         },
         floatingActionButtonPosition = Scaffold.FabPosition.End,
         bodyContent = {
-
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-
-                val registros: MutableState<List<Registro>> = state { emptyList<Registro>() }
-                val baseState by state { mutableListOf<Registro>() }
-                Button(
-                    onClick = {
-                        popUpStringContent = context.resources.getString(R.string.obtaining_data_ph)
-                        registros.value = baseState
-                        showPopUp.value = true
-                        receivedResponse.value = false
-                        obtainingData.value = true
-
-                        ApiConnection.fetchRegistros(
-                            registros,
-                            receivedResponse,
-                            obtainingData
-                        )
-                    },
-                    modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
-                ) {
-                    Text(
-                        text = context.resources.getString(R.string.fetch_registers_btn)
-                    )
-                }
-
-                Divider()
-
-                val onPopupDismissed = { showPopUp.value = false }
-                Utility.LoadingComponent(
+            if (bottomBarState.value == 0) {
+                VisitsScreen(
+                    context,
+                    registros,
                     popUpStringContent,
                     showPopUp,
-                    onPopupDismissed,
-                    obtainingData,
                     receivedResponse,
-                    context
+                    obtainingData
                 )
 
-                var showPopupEdit by state { false }
-                var showPopupDelete by state { false }
-                LazyColumnItems(
-                    items = registros.value,
-                    modifier = Modifier.padding(0.dp)
-                ) { registro ->
-                    Card(
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
-                            .clickable(onClick = { showPopupEdit = true },
-                                onLongClick = { showPopupDelete = true })
-                    ) {
-                        ListItem(
-                            text = registro.fecha.toString(),
-                            secondaryText = "${registro.parentesco} - rut: ${registro.persona?.rut} - numero: ${registro.departamento?.numero}"
-                        )
-                    }
+            } else if (bottomBarState.value == 1) {
+                PeopleScreen(
+                    context,
+                    personas,
+                    popUpStringContent,
+                    showPopUp,
+                    receivedResponse,
+                    obtainingData
+                )
+            }
 
-                    /*if (showPopupEdit) {
-                        EditRegistroDialog(
-                        registro = registro,
-                        show = showPopupEdit,
-                        dismiss = { b -> showPopupEdit = b },
-                        context = context
-                    )
-                    }*/
+            val onPopupDismissed = { showPopUp.value = false }
+            Utility.LoadingComponent(
+                popUpStringContent.value,
+                showPopUp,
+                onPopupDismissed,
+                obtainingData,
+                receivedResponse,
+                context
+            )
 
-                    if (showPopupDelete) {
-                        DeleteRegistroDialog(
-                            registro = registro,
-                            registros = registros,
-                            delRegistros = registros.value.toMutableList(),
-                            show = showPopupDelete,
-                            dismiss = { b -> showPopupDelete = b },
-                            context = context
-                        )
-                    }
-                }
-
+        },
+        bottomBar = {
+            Column {
+                Utility.BottomNavigationBar(context, bottomBarState)
             }
         }
     )
-
-
 }
 
 @Composable
@@ -324,3 +292,137 @@ fun EditRegistroDialog(
 }
 
  */
+
+@Composable
+fun VisitsScreen(
+    context: Context,
+    registros: MutableState<List<Registro>>,
+    popUpStringContent: MutableState<String>,
+    showPopUp: MutableState<Boolean>,
+    receivedResponse: MutableState<Boolean>,
+    obtainingData: MutableState<Boolean>
+) {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+
+        val baseState by state { mutableListOf<Registro>() }
+        Button(
+            onClick = {
+                popUpStringContent.value = context.resources.getString(R.string.obtaining_data_ph)
+                registros.value = baseState
+                showPopUp.value = true
+                receivedResponse.value = false
+                obtainingData.value = true
+
+                ApiConnection.fetchRegistros(
+                    registros,
+                    receivedResponse,
+                    obtainingData
+                )
+            },
+            modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
+        ) {
+            Text(
+                text = context.resources.getString(R.string.fetch_registers_btn)
+            )
+        }
+
+        Divider()
+
+        var showPopupEdit by state { false }
+        var showPopupDelete by state { false }
+        LazyColumnItems(
+            items = registros.value,
+            modifier = Modifier.absolutePadding(0.dp, 8.dp, 0.dp, 8.dp)
+        ) { registro ->
+            Card(
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
+                    .clickable(onClick = { showPopupEdit = true },
+                        onLongClick = { showPopupDelete = true })
+            ) {
+                ListItem(
+                    text = registro.fecha.toString(),
+                    secondaryText = "${registro.parentesco} - rut: ${registro.persona?.rut} - numero: ${registro.departamento?.numero}"
+                )
+            }
+
+            /*if (showPopupEdit) {
+                EditRegistroDialog(
+                registro = registro,
+                show = showPopupEdit,
+                dismiss = { b -> showPopupEdit = b },
+                context = context
+            )
+            }*/
+
+            if (showPopupDelete) {
+                DeleteRegistroDialog(
+                    registro = registro,
+                    registros = registros,
+                    delRegistros = registros.value.toMutableList(),
+                    show = showPopupDelete,
+                    dismiss = { b -> showPopupDelete = b },
+                    context = context
+                )
+            }
+        }
+
+    }
+}
+
+@Composable
+fun PeopleScreen(
+    context: Context,
+    personas: MutableState<List<Persona>>,
+    popUpStringContent: MutableState<String>,
+    showPopUp: MutableState<Boolean>,
+    receivedResponse: MutableState<Boolean>,
+    obtainingData: MutableState<Boolean>
+) {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+
+        val baseState by state { mutableListOf<Persona>() }
+        Button(
+            onClick = {
+                popUpStringContent.value = context.resources.getString(R.string.obtaining_data_ph)
+                personas.value = baseState
+                showPopUp.value = true
+                receivedResponse.value = false
+                obtainingData.value = true
+
+                ApiConnection.fetchPersonas(
+                    personas,
+                    receivedResponse,
+                    obtainingData
+                )
+            },
+            modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
+        ) {
+            Text(
+                text = context.resources.getString(R.string.fetch_people_btn)
+            )
+        }
+
+        Divider()
+
+        LazyColumnItems(
+            items = personas.value,
+            modifier = Modifier.absolutePadding(0.dp, 8.dp, 0.dp, 8.dp)
+        ) { persona ->
+            Card(
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.absolutePadding(0.dp, 4.dp, 0.dp, 4.dp)
+            ) {
+                ListItem(
+                    text = persona.nombre.toString(),
+                    secondaryText = "RUT: ${persona.rut} - telefono: ${persona.telefono}"
+                )
+            }
+        }
+
+    }
+}

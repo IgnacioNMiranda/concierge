@@ -20,13 +20,19 @@ import retrofit2.http.*
 interface ConciergeApi {
 
     /**
+     * Does the register of an specific [user] and returns auth token.
+     */
+    @POST("register")
+    fun register(@Body user: User): Call<AuthResponse>
+    
+    /**
      * Does the login of an specific [user] and returns auth token.
      */
     @POST("login")
     fun login(@Body user: User): Call<AuthResponse>
 
     /**
-     * Does the logout of an specific [user], revoking its auth token.0
+     * Does the logout of an specific [User], revoking its auth token.0
      */
     @GET("logout")
     fun logout(): Call<AuthResponse>
@@ -174,4 +180,37 @@ interface ConciergeApi {
      */
     @DELETE("persona/{persona}")
     fun deletePersona(@Path("persona") id: Long? = null): Call<PersonaResponse>
+
+    /**
+     * Get a [Persona] from the backend.
+     *
+     * @param rut The Rut of the [Persona] to retrieve.
+     * @return a [Call] that can be used to retrieve a [PersonaResponse].
+     */
+    @POST("persona/buscarPersonaPorRut")
+    fun findPersonaByRut(@Body rut: String): Call<PersonaResponse>
+
+    /**
+     * Get a [Departamento] from the backend.
+     *
+     * @param numero The numero of the [Departamento] to retrieve.
+     * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
+     */
+    @POST("departamento/findByNumber")
+    fun findByNumber(@Body numero: Int): Call<DepartamentoResponse>
+
+    /**
+     * Create a [Registro] using a [Persona]'s RUT and a [Departamento]'s number.
+     *
+     * @param registro The [Registro] to insert.
+     * @param rut The RUT of the [Persona] to associate.
+     * @param numDept The number of the [Departamento] to associate.
+     * @return a [Call] that can be used to retrieve a [RegistroResponse].
+     */
+    @POST("registro")
+    fun createRegistro(
+        @Body registro: Registro,
+        @Query("rut") rut: String,
+        @Query("numDept") numDept: Int
+    ): Call<RegistroResponse>
 }

@@ -1,10 +1,9 @@
-<?php
+<?php /** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\UserLoginRequest;
-use App\Http\Requests\User\UserRegisterRequest;
+use App\Http\Requests\UserRequest;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,10 +16,10 @@ class AuthController extends Controller
 {
     /**
      * Register a user into the system.
-     * @param UserRegisterRequest $request
+     * @param UserRequest $request
      * @return Response
      */
-    public function register(UserRegisterRequest $request)
+    public function register(UserRequest $request)
     {
         $data = $request->all();
 
@@ -40,10 +39,10 @@ class AuthController extends Controller
 
     /**
      * Do the login, returning the access token.
-     * @param UserLoginRequest $request
+     * @param UserRequest $request
      * @return Response
      */
-    public function login(UserLoginRequest $request) {
+    public function login(UserRequest $request) {
         $data = $request->all();
 
         if (!auth()->attempt($data)) {

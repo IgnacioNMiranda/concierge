@@ -4,14 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.*
 import androidx.ui.core.*
-import androidx.ui.foundation.Border
 import androidx.ui.foundation.Text
-import androidx.ui.foundation.TextField
-import androidx.ui.graphics.Color
 import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.*
 import androidx.ui.material.*
-import androidx.ui.text.style.TextOverflow
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
@@ -39,28 +35,83 @@ fun PostRegistros() {
         horizontalGravity = Alignment.CenterHorizontally
     ) {
 
-        /* TODO: implementation of radioGroup for 'parentesco', input rut, apartment number and radioGroup for 'empresaEntrega'*/
-        var textValue by state { TextFieldValue("Enter your text here") }
-        TextField(value = textValue,
+        var rutPersona by state { TextFieldValue("") }
+        var numeroDept by state { TextFieldValue("") }
+
+        val relOptions = listOf<String>(
+            context.resources.getString(R.string.relation_family),
+            context.resources.getString(R.string.relation_ext),
+            context.resources.getString(R.string.relation_company)
+        )
+        var relSelection by state { context.resources.getString(R.string.relation_ext) }
+        var isShippingCompany by state { false }
+
+        /* TODO: Automatic formatting of RUT */
+        OutlinedTextField(value = rutPersona,
             modifier = Modifier.padding(16.dp) + Modifier.fillMaxWidth(),
             // Update value of textValue with the latest value of the text field
             onValueChange = {
-                textValue = it
-            }
+                rutPersona = it
+            },
+            label = { Text(context.resources.getString(R.string.insert_rut)) }
         )
+
+        OutlinedTextField(value = numeroDept,
+            modifier = Modifier.padding(16.dp) + Modifier.fillMaxWidth(),
+            // Update value of textValue with the latest value of the text field
+            onValueChange = {
+                numeroDept = it
+            },
+            label = { Text(context.resources.getString(R.string.insert_dept)) }
+        )
+
+        RadioGroup(
+            options = relOptions,
+            selectedOption = relSelection,
+            onSelectedChange = { str -> relSelection = str }
+        )
+
+        Row {
+            Checkbox(
+                checked = isShippingCompany,
+                onCheckedChange = { isShippingCompany = !isShippingCompany },
+                enabled = relSelection.equals(relOptions[2])
+            )
+            Text(text = context.resources.getString(R.string.is_shipping_company))
+        }
+
+        // Keep checking if both are true for potential send
+        isShippingCompany = relSelection.equals(relOptions[2]) && isShippingCompany
 
         val showPopUp: MutableState<Boolean> = state { false }
         val registroResponse: MutableState<Boolean> = state { false }
         val sendingData: MutableState<Boolean> = state { false }
+        val popUpStringContent: MutableState<String> = state { "" }
         Button(
             onClick = {
                 showPopUp.value = true
                 registroResponse.value = false
                 sendingData.value = true
+                popUpStringContent.value = context.resources.getString(R.string.post_placeholder)
+
+                // Use backend values for parentesco
+                when (relSelection) {
+                    context.resources.getString(R.string.relation_family) -> relSelection =
+                        "Familiar"
+                    context.resources.getString(R.string.relation_ext) -> relSelection = "Externo"
+                    context.resources.getString(R.string.relation_company) -> relSelection =
+                        "Empresa"
+                }
 
                 ApiConnection.createRegistro(
+                    context,
                     registroResponse,
-                    sendingData
+                    sendingData,
+                    relSelection,
+                    isShippingCompany,
+                    rutPersona.text,
+                    numeroDept.text.toInt(),
+                    popUpStringContent
                 )
             },
             modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
@@ -72,7 +123,7 @@ fun PostRegistros() {
 
         val onPopupDismissed = { showPopUp.value = false }
         Utility.LoadingComponent(
-            context.resources.getString(R.string.post_placeholder),
+            popUpStringContent.value,
             showPopUp,
             onPopupDismissed,
             sendingData,

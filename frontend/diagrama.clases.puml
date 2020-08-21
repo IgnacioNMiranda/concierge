@@ -1,6 +1,7 @@
 @startuml
 
 class Departamento {
+    - id: Long
     - numero: int
     + Departamento(numero: int)
 }
@@ -12,10 +13,12 @@ class DepartamentoResponse {
 }
 
 class Persona {
+    - id: Long
     - rut: String
     - nombre: String
     - telefono: String
     - email: String
+    - departamento_id: Long
     - departamento: Departamento
 }
 
@@ -26,13 +29,14 @@ class PersonaResponse {
 }
 
 class Registro {
+    - id: Long
     - fecha: Date
     - parentesco: String
     - empresaEntrega: Boolean
-    - persona: Persona
-    - departamento: Departamento
     - persona_id: Long
     - departamento_id: Long
+    - persona: Persona
+    - departamento: Departamento
 
     + Registro(fecha: Date, parentesco: String, empresaEntrega: Boolean, persona: Persona,
      departamento: Departamento, persona_id: Long, departamento_id: Long)
@@ -44,23 +48,59 @@ class RegistroResponse {
     - registros: Collection<Registro>
 }
 
+class User {
+    - name: String
+    - email: String
+    - password: String
+    - password_confirmation: String
+}
+
+class AuthResponse {
+    - error: String
+    - message: String
+    - user: User
+    - token: String
+    - token_expires_at: Date
+}
+
 Class ApiAdapter << (S,#FF7700) Singleton >> {
+    - context: Context
     - client: OKHttpClient
     - retrofit: Retrofit
+    + setContext(context: Context): Unit
     + buildService(service: T): T
 }
 
 Class ApiConnection implements ConciergeApi {
     - request: ApiAdapter
-    + fetchRegistros(): Call<RegistroResponse>
+    + register(context: Context,registerResponse: MutableState<Boolean>, sendingData: MutableState<Boolean>,name: String,email: String,password: String,password_confirmation: String,popUpStringContent: MutableState<String>): void
+    + login(context: Context,loginResponse: MutableState<Boolean>,sendingData: MutableState<Boolean>,email: String,password: String,popUpStringContent: MutableState<String>): void
+    + logout(context: Context, logoutResponse: MutableState<Boolean>, logoutState: MutableState<Boolean>): void
+    + fetchRegistros(registros: MutableState<List<Registro>>,registrosResponse: MutableState<Boolean>,obtainingData: MutableState<Boolean>): void
+    + createRegistro(registroResponse: MutableState<Boolean>, obtainingData: MutableState<Boolean>): void
+    + fetchPersonas(personas: MutableState<List<Persona>>, personasResponse: MutableState<Boolean>, obtainingData: MutableState<Boolean>): void
+    + createPersona(): void
 }
 
 interface ConciergeApi {
+    + register(user: User): Call<AuthResponse>
+    + login(user: User): Call<AuthResponse>
+    + logout(): Call<AuthResponse>
     + fetchRegistros(): Call<RegistroResponse>
     + createRegistro(registro: Registro): Call<RegistroResponse>
-    + readRegistro(Departamento_id: Long): Call<RegistroResponse>
+    + readRegistro(id: Long): Call<RegistroResponse>
     + updateRegistro(id: Long, registro: Registro): Call<RegistroResponse>
     + deleteRegistro(id: Long): Call<RegistroResponse>
+    + fetchDepartamentos(): Call<DepartamentoResponse>
+    + createDepartamento(departamento: Departamento): Call<DepartamentoResponse>
+    + readDepartamento(id: Long): Call<DepartamentoResponse>
+    + updateDepartamento(id: Long, departamento: Departamento): Call<DepartamentoResponse>
+    + deleteDepartamento(id: Long): Call<DepartamentoResponse>
+    + fetchPersonas(): Call<PersonaResponse>
+    + createPersonas(persona: Persona): Call<PersonaResponse>
+    + readPersonas(id: Long): Call<PersonaResponse>
+    + updatePersonas(id: Long, persona: Persona): Call<PersonaResponse>
+    + deletePersonas(id: Long): Call<PersonaResponse>
 }
 
 ApiConnection -right-> ApiAdapter : connected to

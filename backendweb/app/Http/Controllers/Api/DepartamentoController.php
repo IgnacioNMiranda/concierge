@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
 
 namespace App\Http\Controllers\Api;
 
@@ -11,6 +11,17 @@ use Illuminate\Http\Response;
 
 class DepartamentoController extends Controller
 {
+    /**
+     * Finds an apartment based on the number and returns a Departamento model.
+     *
+     * @param $numero
+     * @return Departamento
+     */
+    public function findByNumber($numero)
+    {
+        return Departamento::where('numero', $numero)->firstOrFail();
+    }
+
     /**
      * Display a listing of the resource.
      *

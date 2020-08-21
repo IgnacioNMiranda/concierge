@@ -1,6 +1,9 @@
+@file:Suppress("ArrayInDataClass")
+
 package com.example.myapplication.modelResponse
 
 import com.example.myapplication.model.User
+import com.google.gson.JsonArray
 import java.util.*
 
 /**

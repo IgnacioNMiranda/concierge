@@ -8,13 +8,18 @@ import android.util.Log
 import androidx.compose.MutableState
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
+import com.example.myapplication.Utility
+import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
 import com.example.myapplication.model.User
 import com.example.myapplication.modelResponse.AuthResponse
+import com.example.myapplication.modelResponse.PersonaResponse
 import com.example.myapplication.modelResponse.RegistroResponse
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 
 /**
@@ -34,6 +39,63 @@ class ApiConnection {
         private val request = ApiAdapter.buildService(ConciergeApi::class.java)
 
         /**
+         * Registers a user in the system, generates the auth token and storages it.
+         */
+        fun register(
+            context: Context,
+            registerResponse: MutableState<Boolean>,
+            sendingData: MutableState<Boolean>,
+            name: String,
+            email: String,
+            password: String,
+            password_confirmation: String,
+            popUpStringContent: MutableState<String>
+        ) {
+            val user = User(name, email, password, password_confirmation)
+            val call = request.register(user)
+
+            /** Async call */
+            call.enqueue(object : Callback<AuthResponse> {
+                override fun onResponse(
+                    call: Call<AuthResponse>,
+                    response: Response<AuthResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        sendingData.value = false
+                        registerResponse.value = true
+
+                        /* Stores the authToken on SharedPreferences */
+                        val prefs: SharedPreferences =
+                            context.getSharedPreferences("CONCIERGE_APP", Context.MODE_PRIVATE)
+                        prefs.edit().apply {
+                            putString("AUTH_TOKEN", response.body()?.token)
+                        }.apply()
+
+                        /* Calls the main activity after register. */
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(intent)
+
+                    } else {
+                        val json: JSONObject =
+                            Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
+
+                        popUpStringContent.value = Utility.AuthErrors(json)
+
+                        sendingData.value = false
+                        registerResponse.value = false
+                    }
+                }
+
+                override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    sendingData.value = false
+                    registerResponse.value = false
+                }
+            })
+        }
+
+        /**
          * Makes the login of a user, generates the auth token and storages it.
          */
         fun login(
@@ -41,7 +103,8 @@ class ApiConnection {
             loginResponse: MutableState<Boolean>,
             sendingData: MutableState<Boolean>,
             email: String,
-            password: String
+            password: String,
+            popUpStringContent: MutableState<String>
         ) {
             val user = User(null, email, password)
             val call = request.login(user)
@@ -66,8 +129,14 @@ class ApiConnection {
 
                         /* Calls the main activity after login. */
                         val intent = Intent(context, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
+                        val json: JSONObject =
+                            Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
+
+                        popUpStringContent.value = Utility.AuthErrors(json)
+
                         sendingData.value = false
                         loginResponse.value = false
                     }
@@ -113,6 +182,7 @@ class ApiConnection {
 
                         /* Returns to login activity. */
                         val intent = Intent(context, Login::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
                         logoutState.value = false
@@ -162,13 +232,28 @@ class ApiConnection {
             })
         }
 
-
         fun createRegistro(
+            context: Context,
             registroResponse: MutableState<Boolean>,
-            obtainingData: MutableState<Boolean>
+            obtainingData: MutableState<Boolean>,
+            parentesco: String,
+            empresaEntrega: Boolean,
+            rutPersona: String,
+            numDepartamento: Int,
+            popUpStringContent: MutableState<String>
         ) {
-            /*
-            val call = request.createRegistro()
+
+            val reg = Registro(
+                null,
+                Calendar.getInstance().time,
+                parentesco,
+                empresaEntrega,
+                null,
+                null,
+                null,
+                null
+            )
+            val call = request.createRegistro(reg, rutPersona, numDepartamento)
 
             /** Async call */
             call.enqueue(object : Callback<RegistroResponse> {
@@ -180,15 +265,28 @@ class ApiConnection {
                     if (response.isSuccessful) {
                         obtainingData.value = false
                         registroResponse.value = true
+
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(intent)
+                    } else {
+                        Log.e("error", response.errorBody()?.string()!!)
+                        val json: JSONObject =
+                            Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
+
+                        popUpStringContent.value = Utility.RegistroErrors(json)
+
+                        obtainingData.value = false
+                        registroResponse.value = false
                     }
                 }
 
                 override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
                     obtainingData.value = false
                     registroResponse.value = false
+                    throw Exception(e)
                 }
             })
-            */
         }
 
         fun deleteRegistro(id: Long?) {
@@ -231,6 +329,106 @@ class ApiConnection {
                     throw Exception(e)
                 }
             })
+        }
+
+        /**
+         * Retrieves all the database 'personas' asynchronously.
+         */
+        fun fetchPersonas(
+            personas: MutableState<List<Persona>>,
+            personasResponse: MutableState<Boolean>,
+            obtainingData: MutableState<Boolean>
+        ) {
+            val call = request.fetchPersonas()
+
+            /** Async call */
+            call.enqueue(object : Callback<PersonaResponse> {
+                override fun onResponse(
+                    call: Call<PersonaResponse>,
+                    response: Response<PersonaResponse>
+                ) {
+                    // It checks if status ~ 200
+                    if (response.isSuccessful) {
+                        obtainingData.value = false
+                        personasResponse.value = true
+                        personas.value = response.body()?.personas?.toList()!!
+                    } else {
+                        obtainingData.value = false
+                        personasResponse.value = false
+                    }
+                }
+
+                override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                    obtainingData.value = false
+                    personasResponse.value = false
+                }
+            })
+        }
+
+        fun findPersonaByRut(rut: String, persona: MutableState<Persona?>) {
+            val call = request.findPersonaByRut(rut)
+
+            call.enqueue(object : Callback<PersonaResponse> {
+                override fun onResponse(
+                    call: Call<PersonaResponse>,
+                    response: Response<PersonaResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        persona.value = response.body()?.persona
+                    }
+                }
+
+                override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                    throw Exception(e)
+                }
+            })
+        }
+
+        fun createPersona(
+            context: Context,
+            personaResponse: MutableState<Boolean>,
+            obtainingData: MutableState<Boolean>,
+            rut: String,
+            nombre: String,
+            fono: String,
+            email: String
+            //depto: String
+        ) {
+            //try {
+            var depto_id = ((Math.random() * 40) + 1).toLong()
+            val persona = Persona(null, rut, nombre, fono, email, depto_id, null)
+            val call = request.createPersona(persona)
+
+            call.enqueue(object : Callback<PersonaResponse> {
+                override fun onResponse(
+                    call: Call<PersonaResponse>,
+                    response: Response<PersonaResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        obtainingData.value = false
+                        personaResponse.value = true
+
+                        /* Returns to the same activity (persona). */
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(intent)
+
+                    } else {
+                        obtainingData.value = false
+                        personaResponse.value = false
+                    }
+                }
+
+                override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                    obtainingData.value = false
+                    personaResponse.value = false
+                    throw Exception(e)
+                }
+            })
+
+            //} catch (e: NumberFormatException) {
+            //  e.message
+            //}
         }
 
     }
