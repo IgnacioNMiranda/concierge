@@ -30,8 +30,8 @@ class RegistroRequest extends FormRequest
         return [
             'fecha' => 'required|before_or_equal:now',
             'parentesco' => 'required|in:Familiar,Externo,Empresa',
-            'persona_id' => 'required|exists:personas,id',
-            'departamento_id' => 'required|exists:departamentos,id',
+            'persona_id' => 'exists:personas,id',
+            'departamento_id' => 'exists:departamentos,id',
         ];
     }
 
