@@ -32,6 +32,8 @@ class RegistroRequest extends FormRequest
             'parentesco' => 'required|in:Familiar,Externo,Empresa',
             'persona_id' => 'exists:personas,id',
             'departamento_id' => 'exists:departamentos,id',
+            'rut' => 'cl_rut|min:8|max:9|exists:personas,rut',
+            'numDept' => 'exists:departamentos,numero',
         ];
     }
 
@@ -40,7 +42,6 @@ class RegistroRequest extends FormRequest
      *
      * @return array
      */
-    /*
     public function messages()
     {
         return [
@@ -48,12 +49,17 @@ class RegistroRequest extends FormRequest
             'fecha.before_or_equal' => 'La fecha no puede ser futura.',
             'parentesco.required' => 'El campo parentesco es obligatorio.',
             'parentesco.in' => 'El campo parentesco sólo puede ser Familiar, Externo o Empresa.',
-            'persona_id.required' => 'El campo persona_id es obligatorio.',
+            //'persona_id.required' => 'El campo persona_id es obligatorio.',
             'persona_id.exists' => 'La persona ingresada no existe.',
-            'departamento_id.required' => 'El campo departamento_id es obligatorio.',
+            //'departamento_id.required' => 'El campo departamento_id es obligatorio.',
             'departamento_id.exists' => 'El departamento ingresado no existe.',
+            'rut.cl_rut' => 'El rut ingresado no es valido.',
+            'rut.min' => 'El campo rut debe tener mínimo 8 caracteres.',
+            'rut.max' => 'EL campo rut no debe tener más de 9 caracteres.',
+            'rut.exists' => 'El rut ingresado no existe',
+            'numDept.exists' => 'El departamento ingresado no existe.',
         ];
-    }*/
+    }
 
     /**
      * Instead of throws a 500 error, makes a response with the error messages.
