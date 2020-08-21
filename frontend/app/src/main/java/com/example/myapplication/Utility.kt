@@ -70,7 +70,7 @@ class Utility {
             val nameMessages = GetJsonObjectIfExists("nombre", json)
             val phoneMessages = GetJsonObjectIfExists("telefono", json)
             val emailMessages = GetJsonObjectIfExists("email", json)
-            val apartmentIdMessages = GetJsonObjectIfExists("departamento_id", json)
+            val apartmentNumberMessages = GetJsonObjectIfExists("numeroDepartamento", json)
 
             var errors = ""
             for (i in 0 until rutMessages.length()) {
@@ -89,8 +89,8 @@ class Utility {
                 errors += emailMessages[i]
                 errors += "\n"
             }
-            for (i in 0 until apartmentIdMessages.length()) {
-                errors += apartmentIdMessages[i]
+            for (i in 0 until apartmentNumberMessages.length()) {
+                errors += apartmentNumberMessages[i]
                 errors += "\n"
             }
             return errors
@@ -171,7 +171,6 @@ class Utility {
                     )
                     return
                 } else if (!receivedResponse.value) {
-                    //text = context.resources.getString(R.string.server_connection_failed)
                     text = popUpText
                 } else {
                     text = context.resources.getString(R.string.server_connection_success)

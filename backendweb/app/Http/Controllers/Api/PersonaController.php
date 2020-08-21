@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Departamento;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PersonaRequest;
 use App\Http\Resources\PersonaResource;
@@ -24,31 +25,32 @@ class PersonaController extends Controller
     }
 
     /**
-     * Search for rut given by parameter and that returns the [Persona]
-     *
-     * @param String $rut
-     * @return Response
-     */
-    public function buscarPersonaPorRut(String $rut)
-    {
-        return response([
-            'message' => 'Found Successfully',
-            'persona' => new PersonaResource(Persona::where('rut',$rut)),
-        ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param PersonaRequest $request
      * @return Response
+     * @noinspection PhpUndefinedMethodInspection
+     * @noinspection PhpUndefinedFieldInspection
      */
     public function store(PersonaRequest $request)
     {
-        $data = $request->all();
+        $persona = null;
 
-        /** @noinspection PhpUndefinedMethodInspection */
-        $persona = Persona::create($data);
+        if ($request->has('numeroDepartamento')) {
+            $numeroDepartamento = $request->numeroDepartamento;
+            $departamento = Departamento::where('numero', $numeroDepartamento)->firstOrFail();
+
+            $persona = Persona::create([
+                'rut' => $request->input('rut'),
+                'nombre' => $request->input('nombre'),
+                'telefono' => $request->input('telefono'),
+                'email' => $request->input('email'),
+                'departamento_id' => $departamento->id
+            ]);
+        } else {
+            $data = $request->all();
+            $persona = Persona::create($data);
+        }
 
         return response([
             'message' => 'Created Successfully',

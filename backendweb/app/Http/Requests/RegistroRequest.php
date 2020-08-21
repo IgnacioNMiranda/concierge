@@ -40,7 +40,7 @@ class RegistroRequest extends FormRequest
      *
      * @return array
      */
-    /*
+
     public function messages()
     {
         return [
@@ -53,7 +53,7 @@ class RegistroRequest extends FormRequest
             'departamento_id.required' => 'El campo departamento_id es obligatorio.',
             'departamento_id.exists' => 'El departamento ingresado no existe.',
         ];
-    }*/
+    }
 
     /**
      * Instead of throws a 500 error, makes a response with the error messages.

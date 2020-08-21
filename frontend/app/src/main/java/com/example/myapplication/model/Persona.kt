@@ -42,5 +42,10 @@ data class Persona(
     /**
      * Backend's own apartment reference.
      */
-    var departamento: Departamento? = null
+    var departamento: Departamento? = null,
+
+    /**
+     * Obtained in PostPersona and used to obtain the [departamento_id].
+     */
+    var numeroDepartamento: Int? = null
 )

@@ -38,7 +38,7 @@ fun PostRegistros() {
         var rutPersona by state { TextFieldValue("") }
         var numeroDept by state { TextFieldValue("") }
 
-        val relOptions = listOf<String>(
+        val relOptions = listOf(
             context.resources.getString(R.string.relation_family),
             context.resources.getString(R.string.relation_ext),
             context.resources.getString(R.string.relation_company)

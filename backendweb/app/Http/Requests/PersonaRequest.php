@@ -35,6 +35,7 @@ class PersonaRequest extends FormRequest
                     'telefono' => 'max:50',
                     'email' => 'email:rfc,dns|required|max:255|unique:personas,email',
                     'departamento_id' => 'exists:departamentos,id',
+                    'numeroDepartamento' => 'exists:departamentos,numero'
                 ];
             case "PATCH":
                 return [
@@ -43,6 +44,7 @@ class PersonaRequest extends FormRequest
                     'telefono' => 'max:50',
                     'email' => 'email:rfc,dns|required|max:255|unique:personas,email,' . $this->persona->id,
                     'departamento_id' => 'exists:departamentos,id',
+                    'numeroDepartamento' => 'exists:departamentos,numero'
                 ];
         }
 

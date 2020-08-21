@@ -70,7 +70,7 @@ fun PostPersonas() {
             },
             label = { Text(context.resources.getString(R.string.email_input_label)) }
         )
-        /*
+
         var deptTextValue by state { TextFieldValue("") }
         OutlinedTextField(value = deptTextValue,
             modifier = Modifier.padding(16.dp) + Modifier.fillMaxWidth(),
@@ -78,16 +78,19 @@ fun PostPersonas() {
                 deptTextValue = it
             },
             label = { Text(context.resources.getString(R.string.dept_input_label)) }
-        )*/
+        )
 
-        var showPopUp: MutableState<Boolean> = state { false }
-        var personaResponse: MutableState<Boolean> = state { false }
-        var sendingData: MutableState<Boolean> = state { false }
+        val showPopUp: MutableState<Boolean> = state { false }
+        val personaResponse: MutableState<Boolean> = state { false }
+        val sendingData: MutableState<Boolean> = state { false }
+        val popUpStringContent: MutableState<String> = state { "" }
         Button(
             onClick = {
                 showPopUp.value = true
                 personaResponse.value = false
                 sendingData.value = true
+                popUpStringContent.value =
+                    context.resources.getString(R.string.post_placeholder_person)
 
                 ApiConnection.createPersona(
                     context,
@@ -96,8 +99,9 @@ fun PostPersonas() {
                     rutTextValue.text,
                     nameTextValue.text,
                     phoneTextValue.text,
-                    emailTextValue.text
-                    //deptTextValue.text
+                    emailTextValue.text,
+                    deptTextValue.text,
+                    popUpStringContent
                 )
             },
             modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
@@ -109,7 +113,7 @@ fun PostPersonas() {
 
         val onPopupDismissed = { showPopUp.value = false }
         Utility.LoadingComponent(
-            context.resources.getString(R.string.post_placeholder_person),
+            popUpStringContent.value,
             showPopUp,
             onPopupDismissed,
             sendingData,
