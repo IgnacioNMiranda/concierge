@@ -4,6 +4,7 @@ package com.example.myapplication.api
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.MutableState
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
@@ -233,13 +234,13 @@ class ApiConnection {
 
         fun createRegistro(
             context: Context,
-            //registro: MutableState<Registro>,
             registroResponse: MutableState<Boolean>,
             obtainingData: MutableState<Boolean>,
             parentesco: String,
             empresaEntrega: Boolean,
             rutPersona: String,
-            numDepartamento: Int
+            numDepartamento: Int,
+            popUpStringContent: MutableState<String>
         ) {
 
             val reg = Registro(
@@ -262,7 +263,6 @@ class ApiConnection {
                 ) {
                     // It checks if status ~ 200
                     if (response.isSuccessful) {
-                        //registro.value = response.body()!!.registro!!
                         obtainingData.value = false
                         registroResponse.value = true
 
@@ -270,6 +270,12 @@ class ApiConnection {
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
+                        Log.e("error", response.errorBody()?.string()!!)
+                        val json: JSONObject =
+                            Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
+
+                        popUpStringContent.value = Utility.RegistroErrors(json)
+
                         obtainingData.value = false
                         registroResponse.value = false
                     }
