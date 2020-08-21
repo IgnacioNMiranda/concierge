@@ -1,7 +1,8 @@
+@file:Suppress("FunctionName")
+
 package com.example.myapplication
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.*
 import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
@@ -10,18 +11,138 @@ import androidx.ui.foundation.Text
 import androidx.ui.layout.Row
 import androidx.ui.layout.absolutePadding
 import androidx.ui.layout.fillMaxWidth
-import androidx.ui.layout.padding
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
-import androidx.ui.material.icons.filled.Build
 import androidx.ui.material.icons.filled.Home
-import androidx.ui.material.icons.filled.List
 import androidx.ui.material.icons.filled.Person
 import androidx.ui.unit.dp
+import org.json.JSONObject
 
 class Utility {
 
     companion object {
+
+        /**
+         * Parse to JSONObject a json object formatted in string.
+         */
+        fun ValidationErrorsToJsonObject(errorBody: String): JSONObject {
+            val jsonValue = errorBody.replace("\\", "").substring(1, errorBody.length - 1)
+            return JSONObject(jsonValue)
+        }
+
+        /**
+         * Obtains all the validation error messages of register operation.
+         */
+        fun RegisterErrors(json: JSONObject): String {
+            val nameMessages = json.getJSONArray("name")
+            val emailMessages = json.getJSONArray("email")
+            val passwordMessages = json.getJSONArray("password")
+
+            var errors = ""
+            for (i in 0 until nameMessages.length()) {
+                errors += nameMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until emailMessages.length()) {
+                errors += emailMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until passwordMessages.length()) {
+                errors += passwordMessages[i]
+                errors += "\n"
+            }
+            return errors
+        }
+
+        /**
+         * Obtains all the validation error messages of register operation.
+         */
+        fun LoginErrors(json: JSONObject): String {
+            val emailMessages = json.getJSONArray("email")
+            val passwordMessages = json.getJSONArray("password")
+
+            var errors = ""
+            for (i in 0 until emailMessages.length()) {
+                errors += emailMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until passwordMessages.length()) {
+                errors += passwordMessages[i]
+                errors += "\n"
+            }
+            return errors
+        }
+
+        /**
+         * Obtains all the validation error messages of operations related to Persona model.
+         */
+        fun PersonaErrors(json: JSONObject): String {
+            val rutMessages = json.getJSONArray("rut")
+            val nameMessages = json.getJSONArray("nombre")
+            val phoneMessages = json.getJSONArray("telefono")
+            val emailMessages = json.getJSONArray("email")
+            val apartmentIdMessages = json.getJSONArray("departamento_id")
+
+            var errors = ""
+            for (i in 0 until rutMessages.length()) {
+                errors += rutMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until nameMessages.length()) {
+                errors += nameMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until phoneMessages.length()) {
+                errors += phoneMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until emailMessages.length()) {
+                errors += emailMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until apartmentIdMessages.length()) {
+                errors += apartmentIdMessages[i]
+                errors += "\n"
+            }
+            return errors
+        }
+
+        fun RegistroErrors(json: JSONObject): String {
+            val dateMessages = json.getJSONArray("fecha")
+            val relationshipMessages = json.getJSONArray("parentesco")
+            val personIdMessages = json.getJSONArray("persona_id")
+            val apartmentIdMessages = json.getJSONArray("departamento_id")
+
+            var errors = ""
+            for (i in 0 until dateMessages.length()) {
+                errors += dateMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until relationshipMessages.length()) {
+                errors += relationshipMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until personIdMessages.length()) {
+                errors += personIdMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until apartmentIdMessages.length()) {
+                errors += apartmentIdMessages[i]
+                errors += "\n"
+            }
+            return errors
+        }
+
+        fun DepartamentoErrors(json: JSONObject): String {
+            val numberMessages = json.getJSONArray("numero")
+
+            var errors = ""
+            for (i in 0 until numberMessages.length()) {
+                errors += numberMessages[i]
+                errors += "\n"
+            }
+            return errors
+        }
 
         /**
          * Shows a popup with a CircularProgressIndicator during a server request.
@@ -61,7 +182,8 @@ class Utility {
                     )
                     return
                 } else if (!receivedResponse.value) {
-                    text = context.resources.getString(R.string.server_connection_failed)
+                    //text = context.resources.getString(R.string.server_connection_failed)
+                    text = popUpText
                 } else {
                     text = context.resources.getString(R.string.server_connection_success)
                 }

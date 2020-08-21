@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class PersonaRequest extends FormRequest
 {
@@ -52,6 +54,7 @@ class PersonaRequest extends FormRequest
      *
      * @return array
      */
+    /*
     public function messages()
     {
         return [
@@ -69,7 +72,7 @@ class PersonaRequest extends FormRequest
             'email.unique' => 'Ya existe una persona con este correo.',
             'departamento_id.exists' => 'El departamento ingresado no existe.',
         ];
-    }
+    }*/
 
     /**
      * Prepare the data for validation.
@@ -83,5 +86,19 @@ class PersonaRequest extends FormRequest
         $this->merge([
             'rut' => strtolower($this->rut),
         ]);
+    }
+
+    /**
+     * Instead of throws a 500 error, makes a response with the error messages.
+     * @param Validator $validator
+     * @throws HttpResponseException
+     */
+    public function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors(); // Array of errors.
+
+        throw new HttpResponseException(response([
+            $errors
+        ], 422));
     }
 }

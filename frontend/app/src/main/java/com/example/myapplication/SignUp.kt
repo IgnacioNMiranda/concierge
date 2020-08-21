@@ -14,9 +14,7 @@ import androidx.ui.input.PasswordVisualTransformation
 import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.*
 import androidx.ui.material.Button
-import androidx.ui.material.MaterialTheme
 import androidx.ui.material.OutlinedTextField
-import androidx.ui.material.Surface
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.example.myapplication.api.ApiConnection
@@ -103,11 +101,13 @@ fun SignUpPreview() {
         val showPopUp: MutableState<Boolean> = state { false }
         val registerResponse: MutableState<Boolean> = state { false }
         val sendingData: MutableState<Boolean> = state { false }
+        val popUpStringContent: MutableState<String> = state { "" }
         Button(
             onClick = {
                 showPopUp.value = true
                 registerResponse.value = false
                 sendingData.value = true
+                popUpStringContent.value = context.resources.getString(R.string.sign_up_placeholder)
 
                 ApiConnection.register(
                     context,
@@ -116,7 +116,8 @@ fun SignUpPreview() {
                     nameTextValue.text,
                     emailTextValue.text,
                     pwTextValue.text,
-                    pwConfirmationTextValue.text
+                    pwConfirmationTextValue.text,
+                    popUpStringContent
                 )
             },
             modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
@@ -128,7 +129,7 @@ fun SignUpPreview() {
 
         val onPopupDismissed = { showPopUp.value = false }
         Utility.LoadingComponent(
-            context.resources.getString(R.string.sign_up_placeholder),
+            popUpStringContent.value,
             showPopUp,
             onPopupDismissed,
             sendingData,

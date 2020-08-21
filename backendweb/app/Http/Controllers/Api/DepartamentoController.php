@@ -17,8 +17,9 @@ class DepartamentoController extends Controller
      * @param $numero
      * @return Departamento
      */
-    public function findByNumber($numero) {
-        return Departamento::where('numero',$numero)->firstOrFail();
+    public function findByNumber($numero)
+    {
+        return Departamento::where('numero', $numero)->firstOrFail();
     }
 
     /**

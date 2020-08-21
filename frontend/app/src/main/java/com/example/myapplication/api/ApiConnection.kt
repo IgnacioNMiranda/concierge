@@ -1,26 +1,23 @@
 package com.example.myapplication.api
 
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.MutableState
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
-import com.example.myapplication.PostPersona
-import com.example.myapplication.model.Departamento
+import com.example.myapplication.Utility
 import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
 import com.example.myapplication.model.User
 import com.example.myapplication.modelResponse.AuthResponse
 import com.example.myapplication.modelResponse.PersonaResponse
 import com.example.myapplication.modelResponse.RegistroResponse
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Response.error
 
 
 /**
@@ -49,7 +46,8 @@ class ApiConnection {
             name: String,
             email: String,
             password: String,
-            password_confirmation: String
+            password_confirmation: String,
+            popUpStringContent: MutableState<String>
         ) {
             val user = User(name, email, password, password_confirmation)
             val call = request.register(user)
@@ -78,7 +76,11 @@ class ApiConnection {
                         context.startActivity(intent)
 
                     } else {
-                        Log.e("error", response.body()?.validation_errors.toString())
+                        val json: JSONObject =
+                            Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
+
+                        popUpStringContent.value = Utility.RegisterErrors(json)
+
                         sendingData.value = false
                         registerResponse.value = false
                     }
@@ -99,7 +101,8 @@ class ApiConnection {
             loginResponse: MutableState<Boolean>,
             sendingData: MutableState<Boolean>,
             email: String,
-            password: String
+            password: String,
+            popUpStringContent: MutableState<String>
         ) {
             val user = User(null, email, password)
             val call = request.login(user)
@@ -127,6 +130,11 @@ class ApiConnection {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
+                        val json: JSONObject =
+                            Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
+
+                        popUpStringContent.value = Utility.LoginErrors(json)
+
                         sendingData.value = false
                         loginResponse.value = false
                     }
@@ -358,39 +366,39 @@ class ApiConnection {
             //depto: String
         ) {
             //try {
-                var depto_id = ((Math.random()*40) + 1).toLong()
-                val persona = Persona(null, rut, nombre, fono, email, depto_id, null);
-                val call = request.createPersona(persona);
+            var depto_id = ((Math.random() * 40) + 1).toLong()
+            val persona = Persona(null, rut, nombre, fono, email, depto_id, null);
+            val call = request.createPersona(persona);
 
-                call.enqueue(object : Callback<PersonaResponse> {
-                    override fun onResponse(
-                        call: Call<PersonaResponse>,
-                        response: Response<PersonaResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            obtainingData.value = false;
-                            personaResponse.value = true;
+            call.enqueue(object : Callback<PersonaResponse> {
+                override fun onResponse(
+                    call: Call<PersonaResponse>,
+                    response: Response<PersonaResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        obtainingData.value = false;
+                        personaResponse.value = true;
 
-                            /* Returns to the same activity (persona). */
-                            val intent = Intent(context, MainActivity::class.java)
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                            context.startActivity(intent)
+                        /* Returns to the same activity (persona). */
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(intent)
 
-                        } else {
-                            obtainingData.value = false;
-                            personaResponse.value = false;
-                        }
-                    }
-
-                    override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                    } else {
                         obtainingData.value = false;
                         personaResponse.value = false;
-                        throw Exception(e);
                     }
-                });
+                }
+
+                override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                    obtainingData.value = false;
+                    personaResponse.value = false;
+                    throw Exception(e);
+                }
+            });
 
             //} catch (e: NumberFormatException) {
-              //  e.message;
+            //  e.message;
             //}
         }
 

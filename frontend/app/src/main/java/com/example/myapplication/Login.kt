@@ -37,6 +37,12 @@ fun LoginPreview() {
 
     val context = ContextAmbient.current
 
+    /* Used to show loading components*/
+    val showPopUp: MutableState<Boolean> = state { false }
+    val loginResponse: MutableState<Boolean> = state { false }
+    val sendingData: MutableState<Boolean> = state { false }
+    val popUpStringContent: MutableState<String> = state { "" }
+
     Column(
         modifier = Modifier.padding(16.dp) + Modifier.fillMaxWidth() + Modifier.fillMaxHeight(),
         horizontalGravity = Alignment.CenterHorizontally,
@@ -71,21 +77,20 @@ fun LoginPreview() {
             label = { Text(context.resources.getString(R.string.password_input_label)) }
         )
 
-        val showPopUp: MutableState<Boolean> = state { false }
-        val loginResponse: MutableState<Boolean> = state { false }
-        val sendingData: MutableState<Boolean> = state { false }
         Button(
             onClick = {
                 showPopUp.value = true
                 loginResponse.value = false
                 sendingData.value = true
+                popUpStringContent.value = context.resources.getString(R.string.login_placeholder)
 
                 ApiConnection.login(
                     context,
                     loginResponse,
                     sendingData,
                     emailTextValue.text,
-                    pwTextValue.text
+                    pwTextValue.text,
+                    popUpStringContent
                 )
             },
             modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
@@ -97,7 +102,7 @@ fun LoginPreview() {
 
         val onPopupDismissed = { showPopUp.value = false }
         Utility.LoadingComponent(
-            context.resources.getString(R.string.login_placeholder),
+            popUpStringContent.value,
             showPopUp,
             onPopupDismissed,
             sendingData,

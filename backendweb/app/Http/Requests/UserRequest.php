@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use HttpRequestException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserRequest extends FormRequest
 {
@@ -43,11 +45,13 @@ class UserRequest extends FormRequest
         return [];
     }
 
+
     /**
      * Get the validation messages that apply to the request.
      *
      * @return array
      */
+    /*
     public function messages()
     {
         return [
@@ -62,17 +66,19 @@ class UserRequest extends FormRequest
             'password.max' => 'La contrasenia no debe tener mas de 255 caracteres.',
             'password.confirmed' => 'Debe confirmar la contrasenia.',
         ];
-    }
+    }*/
 
+    /**
+     * Instead of throws a 500 error, makes a response with the error messages.
+     * @param Validator $validator
+     * @throws HttpResponseException
+     */
     public function failedValidation(Validator $validator)
     {
         $errors = $validator->errors(); // Array of errors.
 
-        $json = $errors->toJson();
-
-        return response([
-            'message' => 'validation error',
-           'validation_errors' => $json
-        ]);
+        throw new HttpResponseException(response([
+            $errors
+        ], 422));
     }
 }

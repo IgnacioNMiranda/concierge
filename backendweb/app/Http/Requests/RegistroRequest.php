@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RegistroRequest extends FormRequest
 {
@@ -36,6 +40,7 @@ class RegistroRequest extends FormRequest
      *
      * @return array
      */
+    /*
     public function messages()
     {
         return [
@@ -48,5 +53,19 @@ class RegistroRequest extends FormRequest
             'departamento_id.required' => 'El campo departamento_id es obligatorio.',
             'departamento_id.exists' => 'El departamento ingresado no existe.',
         ];
+    }*/
+
+    /**
+     * Instead of throws a 500 error, makes a response with the error messages.
+     * @param Validator $validator
+     * @throws HttpResponseException
+     */
+    public function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors(); // Array of errors.
+
+        throw new HttpResponseException(response([
+            $errors
+        ], 422));
     }
 }
