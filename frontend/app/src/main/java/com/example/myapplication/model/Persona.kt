@@ -45,7 +45,7 @@ data class Persona(
     var departamento: Departamento? = null,
 
     /**
-     * Obtained in PostPersona and used to obtain the [departamento_id].
+     * Obtained in PostPersona activity and used to obtain the [departamento_id].
      */
     var numeroDepartamento: Int? = null
 )

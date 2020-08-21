@@ -81,6 +81,7 @@ class ApiConnection {
                         context.startActivity(intent)
 
                     } else {
+                        /* Obtain the error messages and asigns it to popUpStringContent to displays it on UI*/
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
@@ -122,7 +123,7 @@ class ApiConnection {
                     call: Call<AuthResponse>,
                     response: Response<AuthResponse>
                 ) {
-                    // It checks if status ~ 200
+                    /* It checks if status ~ 200 */
                     if (response.isSuccessful) {
                         sendingData.value = false
                         loginResponse.value = true
@@ -139,6 +140,7 @@ class ApiConnection {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
+                        /* Obtain the error messages and asigns it to popUpStringContent to displays it on UI*/
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
@@ -287,6 +289,7 @@ class ApiConnection {
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
+                        /* Obtain the error messages and asigns it to popUpStringContent to displays it on UI*/
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
@@ -413,8 +416,8 @@ class ApiConnection {
                         val intent = Intent(context, MainActivity::class.java)
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
-
                     } else {
+                        /* Obtain the error messages and asigns it to popUpStringContent to displays it on UI*/
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 

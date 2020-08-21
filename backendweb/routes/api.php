@@ -25,7 +25,6 @@ Route::get('/logout', 'Api\AuthController@logout')->middleware('auth:api');
 
 // Api routes.
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/persona/buscarPersonaPorRut', 'Api\PersonaController@buscarPersonaPorRut');
     Route::apiResources([
         'persona' => 'Api\PersonaController',
         'registro' => 'Api\RegistroController',
