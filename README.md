@@ -23,6 +23,3 @@
 - Alex Orquera Rivera (alex.orquera@alumnos.ucn.cl)
 - Ignacio Miranda Figueroa (ignacio.miranda01@alumnos.ucn.cl)
 - Julio Cerna Medina (julio.cerna@alumnos.ucn.cl)
-
-## TODO
-- There're errors on create registers and create people funcionalities. App crashes and it needs to clean the cache and storage to works again.
