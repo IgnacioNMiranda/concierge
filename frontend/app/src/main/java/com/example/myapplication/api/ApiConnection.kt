@@ -245,7 +245,7 @@ class ApiConnection {
             parentesco: String,
             empresaEntrega: Boolean,
             rutPersona: String,
-            numDepartamento: Int,
+            numDept: String,
             popUpStringContent: MutableState<String>
         ) {
 
@@ -259,6 +259,15 @@ class ApiConnection {
                 null,
                 null
             )
+            var numDepartamento: Int = 0
+            try {
+                numDepartamento = numDept.toInt()
+            }  catch (e: NumberFormatException) {
+                popUpStringContent.value = context.resources.getString(R.string.invalid_numDept)
+                obtainingData.value = false
+                registroResponse.value = false
+                return
+            }
             val call = request.createRegistro(reg, rutPersona, numDepartamento)
 
             /** Async call */
@@ -289,7 +298,6 @@ class ApiConnection {
                 override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
                     obtainingData.value = false
                     registroResponse.value = false
-                    throw Exception(e)
                 }
             })
         }

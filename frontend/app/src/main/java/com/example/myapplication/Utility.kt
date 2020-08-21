@@ -99,8 +99,10 @@ class Utility {
         fun RegistroErrors(json: JSONObject): String {
             val dateMessages = GetJsonObjectIfExists("fecha", json)
             val relationshipMessages = GetJsonObjectIfExists("parentesco", json)
-            val personIdMessages = GetJsonObjectIfExists("persona_id", json)
-            val apartmentIdMessages = GetJsonObjectIfExists("departamento_id", json)
+            //val personIdMessages = GetJsonObjectIfExists("persona_id", json)
+            val personRutMessages = GetJsonObjectIfExists("rut", json)
+            //val apartmentIdMessages = GetJsonObjectIfExists("departamento_id", json)
+            val apartmentNumMessages = GetJsonObjectIfExists("numDept", json)
 
             var errors = ""
             for (i in 0 until dateMessages.length()) {
@@ -111,12 +113,22 @@ class Utility {
                 errors += relationshipMessages[i]
                 errors += "\n"
             }
+            /*
             for (i in 0 until personIdMessages.length()) {
                 errors += personIdMessages[i]
                 errors += "\n"
             }
             for (i in 0 until apartmentIdMessages.length()) {
                 errors += apartmentIdMessages[i]
+                errors += "\n"
+            }
+             */
+            for (i in 0 until apartmentNumMessages.length()) {
+                errors += apartmentNumMessages[i]
+                errors += "\n"
+            }
+            for (i in 0 until personRutMessages.length()) {
+                errors += personRutMessages[i]
                 errors += "\n"
             }
             return errors

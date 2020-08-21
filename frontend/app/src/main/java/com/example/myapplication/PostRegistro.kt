@@ -110,7 +110,7 @@ fun PostRegistros() {
                     relSelection,
                     isShippingCompany,
                     rutPersona.text,
-                    numeroDept.text.toInt(),
+                    numeroDept.text,
                     popUpStringContent
                 )
             },
