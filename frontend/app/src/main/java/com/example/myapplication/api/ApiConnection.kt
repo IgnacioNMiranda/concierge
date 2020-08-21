@@ -18,6 +18,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 
 /**
@@ -230,13 +231,28 @@ class ApiConnection {
             })
         }
 
-
         fun createRegistro(
+            context: Context,
+            //registro: MutableState<Registro>,
             registroResponse: MutableState<Boolean>,
-            obtainingData: MutableState<Boolean>
+            obtainingData: MutableState<Boolean>,
+            parentesco: String,
+            empresaEntrega: Boolean,
+            rutPersona: String,
+            numDepartamento: Int
         ) {
-            /*
-            val call = request.createRegistro()
+
+            val reg = Registro(
+                null,
+                Calendar.getInstance().time,
+                parentesco,
+                empresaEntrega,
+                null,
+                null,
+                null,
+                null
+            )
+            val call = request.createRegistro(reg, rutPersona, numDepartamento)
 
             /** Async call */
             call.enqueue(object : Callback<RegistroResponse> {
@@ -246,17 +262,25 @@ class ApiConnection {
                 ) {
                     // It checks if status ~ 200
                     if (response.isSuccessful) {
+                        //registro.value = response.body()!!.registro!!
                         obtainingData.value = false
                         registroResponse.value = true
+
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(intent)
+                    } else {
+                        obtainingData.value = false
+                        registroResponse.value = false
                     }
                 }
 
                 override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
                     obtainingData.value = false
                     registroResponse.value = false
+                    throw Exception(e)
                 }
             })
-            */
         }
 
         fun deleteRegistro(id: Long?) {
@@ -335,9 +359,8 @@ class ApiConnection {
             })
         }
 
-        /*
-        fun getPersonaPorRut(rut: String) {
-            val call = request.getPersonaPorRut(rut)
+        fun findPersonaByRut(rut: String, persona: MutableState<Persona?>) {
+            val call = request.findPersonaByRut(rut)
 
             call.enqueue(object : Callback<PersonaResponse> {
                 override fun onResponse(
@@ -345,7 +368,7 @@ class ApiConnection {
                     response: Response<PersonaResponse>
                 ) {
                     if (response.isSuccessful) {
-                        // TODO: not yet implemented
+                        persona.value = response.body()?.persona
                     }
                 }
 
@@ -354,7 +377,7 @@ class ApiConnection {
                 }
             })
         }
-        */
+
         fun createPersona(
             context: Context,
             personaResponse: MutableState<Boolean>,
@@ -367,8 +390,8 @@ class ApiConnection {
         ) {
             //try {
             var depto_id = ((Math.random() * 40) + 1).toLong()
-            val persona = Persona(null, rut, nombre, fono, email, depto_id, null);
-            val call = request.createPersona(persona);
+            val persona = Persona(null, rut, nombre, fono, email, depto_id, null)
+            val call = request.createPersona(persona)
 
             call.enqueue(object : Callback<PersonaResponse> {
                 override fun onResponse(
@@ -376,8 +399,8 @@ class ApiConnection {
                     response: Response<PersonaResponse>
                 ) {
                     if (response.isSuccessful) {
-                        obtainingData.value = false;
-                        personaResponse.value = true;
+                        obtainingData.value = false
+                        personaResponse.value = true
 
                         /* Returns to the same activity (persona). */
                         val intent = Intent(context, MainActivity::class.java)
@@ -385,20 +408,20 @@ class ApiConnection {
                         context.startActivity(intent)
 
                     } else {
-                        obtainingData.value = false;
-                        personaResponse.value = false;
+                        obtainingData.value = false
+                        personaResponse.value = false
                     }
                 }
 
                 override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
-                    obtainingData.value = false;
-                    personaResponse.value = false;
-                    throw Exception(e);
+                    obtainingData.value = false
+                    personaResponse.value = false
+                    throw Exception(e)
                 }
-            });
+            })
 
             //} catch (e: NumberFormatException) {
-            //  e.message;
+            //  e.message
             //}
         }
 

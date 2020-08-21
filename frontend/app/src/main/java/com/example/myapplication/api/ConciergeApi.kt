@@ -32,7 +32,7 @@ interface ConciergeApi {
     fun login(@Body user: User): Call<AuthResponse>
 
     /**
-     * Does the logout of an specific [user], revoking its auth token.0
+     * Does the logout of an specific [User], revoking its auth token.0
      */
     @GET("logout")
     fun logout(): Call<AuthResponse>
@@ -187,8 +187,8 @@ interface ConciergeApi {
      * @param rut The Rut of the [Persona] to retrieve.
      * @return a [Call] that can be used to retrieve a [PersonaResponse].
      */
-    @GET("persona/buscarPersonaPorRut")
-    fun getPersonaPorRut(@Body rut: String): Call<PersonaResponse>
+    @POST("persona/buscarPersonaPorRut")
+    fun findPersonaByRut(@Body rut: String): Call<PersonaResponse>
 
     /**
      * Get a [Departamento] from the backend.
@@ -196,6 +196,21 @@ interface ConciergeApi {
      * @param numero The numero of the [Departamento] to retrieve.
      * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
      */
-    //@GET("persona/")
-    fun findByNumber(@Body numero: Int): Call<PersonaResponse>
+    @POST("departamento/findByNumber")
+    fun findByNumber(@Body numero: Int): Call<DepartamentoResponse>
+
+    /**
+     * Create a [Registro] using a [Persona]'s RUT and a [Departamento]'s number.
+     *
+     * @param registro The [Registro] to insert.
+     * @param rut The RUT of the [Persona] to associate.
+     * @param numDept The number of the [Departamento] to associate.
+     * @return a [Call] that can be used to retrieve a [RegistroResponse].
+     */
+    @POST("registro")
+    fun createRegistro(
+        @Body registro: Registro,
+        @Query("rut") rut: String,
+        @Query("numDept") numDept: Int
+    ): Call<RegistroResponse>
 }

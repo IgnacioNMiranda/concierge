@@ -35,21 +35,32 @@ class RegistroController extends Controller
      */
     public function store(RegistroRequest $request)
     {
-        $datos = $request->all();
 
-        $registro = Registro::create($datos);
+        if ($request->has(['rut', 'numDept'])) {
+            error_log($request->getQueryString());
+            // Registro doesn't include any of its relations, just the date, parentesco and empresaEntrega
+            $dept = Departamento::where('numero', $request->query('numDept'))->first();
+            $persona = Persona::where('rut', $request->query('rut'))->first();
+        } else {
+            // Searches the apartment based on the id received on Request.
+            $dept = Departamento::find($request->get('departamento_id'));
 
-        // Searches the apartment based on the id received on Request.
-        $dept = Departamento::find($request->get('departamento_id'));
+            // Searches the apartment based on the id received on Request.
+            $persona = Persona::find($request->get('persona_id'));
+
+        }
+        $registro = Registro::create([
+            'fecha' => $request->input('fecha'),
+            'parentesco' => $request->input('parentesco'),
+            'empresaEntrega' => $request->input('empresaEntrega'),
+            'persona_id' => $persona->id,
+            'departamento_id' => $dept->id
+        ]);
 
         // Creates the relation 1-n with the apartment.
-        $registro->departamento()->associate($dept);
-
-        // Searches the apartment based on the id received on Request.
-        $dept = Persona::find($request->get('persona_id'));
-
+        //$registro->departamento()->associate($dept);
         // Creates the relation n-n with the people that visits the apartment.
-        $registro->persona()->associate($dept);
+        //$registro->persona()->associate($persona);
 
         $registro->save();
 
