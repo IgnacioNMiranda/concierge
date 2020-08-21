@@ -9,10 +9,17 @@
   - GRadle v6.5.
   - JUnit v5.7.0.
   - GSon v2.8.6.
-  - SLF4J v.1.8.0 + Logback v1.3.0.
-  - ORMLite v5.1 + SQLite v3.31.1.
-  - Javalin v3.8.0.
 - PHP:
   - PHP v7.4.7.
   - Jetbrains Intellij 2020 2 EAP + PHP Plugin.
   - Laravel v7.2.5.
+- Android:
+  - Jetpack Compose
+  - Retrofit
+  - OkHttp3
+- Database:
+  - SQLite v3.31.1.
+## Authors
+- Alex Orquera Rivera (alex.orquera@alumnos.ucn.cl)
+- Ignacio Miranda Figueroa (ignacio.miranda01@alumnos.ucn.cl)
+- Julio Cerna Medina (julio.cerna@alumnos.ucn.cl)
