@@ -6,8 +6,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.MutableState
+import androidx.core.text.isDigitsOnly
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
+import com.example.myapplication.R
 import com.example.myapplication.Utility
 import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
@@ -89,6 +91,8 @@ class ApiConnection {
                 }
 
                 override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    popUpStringContent.value =
+                        context.resources.getString(R.string.server_connection_failed)
                     sendingData.value = false
                     registerResponse.value = false
                 }
@@ -143,6 +147,8 @@ class ApiConnection {
                 }
 
                 override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    popUpStringContent.value =
+                        context.resources.getString(R.string.server_connection_failed)
                     sendingData.value = false
                     loginResponse.value = false
                 }
@@ -270,7 +276,6 @@ class ApiConnection {
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
-                        Log.e("error", response.errorBody()?.string()!!)
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
@@ -391,12 +396,15 @@ class ApiConnection {
             rut: String,
             nombre: String,
             fono: String,
-            email: String
-            //depto: String
+            email: String,
+            numeroDepto: String,
+            popUpStringContent: MutableState<String>
         ) {
-            //try {
-            var depto_id = ((Math.random() * 40) + 1).toLong()
-            val persona = Persona(null, rut, nombre, fono, email, depto_id, null)
+            var numeroDeptoAux = numeroDepto.toIntOrNull()
+            if (numeroDeptoAux == null) {
+                numeroDeptoAux = 0
+            }
+            val persona = Persona(null, rut, nombre, fono, email, null, null, numeroDeptoAux)
             val call = request.createPersona(persona)
 
             call.enqueue(object : Callback<PersonaResponse> {
@@ -414,21 +422,23 @@ class ApiConnection {
                         context.startActivity(intent)
 
                     } else {
+                        val json: JSONObject =
+                            Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
+
+                        popUpStringContent.value = Utility.PersonaErrors(json)
+
                         obtainingData.value = false
                         personaResponse.value = false
                     }
                 }
 
                 override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
+                    //popUpStringContent.value =
+                        //context.resources.getString(R.string.server_connection_failed)
                     obtainingData.value = false
                     personaResponse.value = false
-                    throw Exception(e)
                 }
             })
-
-            //} catch (e: NumberFormatException) {
-            //  e.message
-            //}
         }
 
     }
