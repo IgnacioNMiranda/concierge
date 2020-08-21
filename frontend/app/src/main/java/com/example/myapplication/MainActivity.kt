@@ -53,6 +53,7 @@ fun mainScreen() {
     val showPopUp: MutableState<Boolean> = state { false }
     val receivedResponse: MutableState<Boolean> = state { false }
     val obtainingData: MutableState<Boolean> = state { false }
+    val invalidFieldsResponse: MutableState<Boolean> = state { false }
 
     /* State of bottomBar*/
     val bottomBarState: MutableState<Int> = state { 0 }
@@ -91,6 +92,7 @@ fun mainScreen() {
                             context.resources.getString(R.string.logout_placeholder)
                         receivedResponse.value = false
                         obtainingData.value = true
+                        invalidFieldsResponse.value = false
                         showPopUp.value = true
 
                         ApiConnection.logout(
@@ -138,7 +140,8 @@ fun mainScreen() {
                     popUpStringContent,
                     showPopUp,
                     receivedResponse,
-                    obtainingData
+                    obtainingData,
+                    invalidFieldsResponse
                 )
 
             } else if (bottomBarState.value == 1) {
@@ -148,7 +151,8 @@ fun mainScreen() {
                     popUpStringContent,
                     showPopUp,
                     receivedResponse,
-                    obtainingData
+                    obtainingData,
+                    invalidFieldsResponse
                 )
             }
 
@@ -159,6 +163,7 @@ fun mainScreen() {
                 onPopupDismissed,
                 obtainingData,
                 receivedResponse,
+                invalidFieldsResponse,
                 context
             )
 
@@ -300,7 +305,8 @@ fun VisitsScreen(
     popUpStringContent: MutableState<String>,
     showPopUp: MutableState<Boolean>,
     receivedResponse: MutableState<Boolean>,
-    obtainingData: MutableState<Boolean>
+    obtainingData: MutableState<Boolean>,
+    invalidFieldsResponse: MutableState<Boolean>
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
@@ -314,6 +320,7 @@ fun VisitsScreen(
                 showPopUp.value = true
                 receivedResponse.value = false
                 obtainingData.value = true
+                invalidFieldsResponse.value = false
 
                 ApiConnection.fetchRegistros(
                     registros,
@@ -379,7 +386,8 @@ fun PeopleScreen(
     popUpStringContent: MutableState<String>,
     showPopUp: MutableState<Boolean>,
     receivedResponse: MutableState<Boolean>,
-    obtainingData: MutableState<Boolean>
+    obtainingData: MutableState<Boolean>,
+    invalidFieldsResponse: MutableState<Boolean>
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
@@ -393,6 +401,7 @@ fun PeopleScreen(
                 showPopUp.value = true
                 receivedResponse.value = false
                 obtainingData.value = true
+                invalidFieldsResponse.value = false
 
                 ApiConnection.fetchPersonas(
                     personas,

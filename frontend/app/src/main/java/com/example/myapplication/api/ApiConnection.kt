@@ -6,8 +6,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.MutableState
+import androidx.core.text.isDigitsOnly
 import com.example.myapplication.Login
 import com.example.myapplication.MainActivity
+import com.example.myapplication.R
 import com.example.myapplication.Utility
 import com.example.myapplication.model.Persona
 import com.example.myapplication.model.Registro
@@ -45,6 +47,7 @@ class ApiConnection {
             context: Context,
             registerResponse: MutableState<Boolean>,
             sendingData: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             name: String,
             email: String,
             password: String,
@@ -78,17 +81,21 @@ class ApiConnection {
                         context.startActivity(intent)
 
                     } else {
+                        /* Obtain the error messages and asigns it to popUpStringContent to displays it on UI*/
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
                         popUpStringContent.value = Utility.AuthErrors(json)
 
                         sendingData.value = false
-                        registerResponse.value = false
+                        registerResponse.value = true
+                        invalidFieldsResponse.value = true
                     }
                 }
 
                 override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    popUpStringContent.value =
+                        context.resources.getString(R.string.server_connection_failed)
                     sendingData.value = false
                     registerResponse.value = false
                 }
@@ -102,6 +109,7 @@ class ApiConnection {
             context: Context,
             loginResponse: MutableState<Boolean>,
             sendingData: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             email: String,
             password: String,
             popUpStringContent: MutableState<String>
@@ -115,7 +123,7 @@ class ApiConnection {
                     call: Call<AuthResponse>,
                     response: Response<AuthResponse>
                 ) {
-                    // It checks if status ~ 200
+                    /* It checks if status ~ 200 */
                     if (response.isSuccessful) {
                         sendingData.value = false
                         loginResponse.value = true
@@ -132,17 +140,21 @@ class ApiConnection {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
+                        /* Obtain the error messages and asigns it to popUpStringContent to displays it on UI*/
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
                         popUpStringContent.value = Utility.AuthErrors(json)
 
                         sendingData.value = false
-                        loginResponse.value = false
+                        loginResponse.value = true
+                        invalidFieldsResponse.value = true
                     }
                 }
 
                 override fun onFailure(call: Call<AuthResponse>, e: Throwable) {
+                    popUpStringContent.value =
+                        context.resources.getString(R.string.server_connection_failed)
                     sendingData.value = false
                     loginResponse.value = false
                 }
@@ -186,7 +198,7 @@ class ApiConnection {
                         context.startActivity(intent)
                     } else {
                         logoutState.value = false
-                        logoutResponse.value = true
+                        logoutResponse.value = false
                     }
                 }
 
@@ -236,12 +248,18 @@ class ApiConnection {
             context: Context,
             registroResponse: MutableState<Boolean>,
             obtainingData: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             parentesco: String,
             empresaEntrega: Boolean,
             rutPersona: String,
-            numDepartamento: Int,
+            numDept: String,
             popUpStringContent: MutableState<String>
         ) {
+
+            var numeroDeptoAux = numDept.toIntOrNull()
+            if (numeroDeptoAux == null) {
+                numeroDeptoAux = 0
+            }
 
             val reg = Registro(
                 null,
@@ -253,7 +271,8 @@ class ApiConnection {
                 null,
                 null
             )
-            val call = request.createRegistro(reg, rutPersona, numDepartamento)
+
+            val call = request.createRegistro(reg, rutPersona, numeroDeptoAux)
 
             /** Async call */
             call.enqueue(object : Callback<RegistroResponse> {
@@ -270,21 +289,21 @@ class ApiConnection {
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     } else {
-                        Log.e("error", response.errorBody()?.string()!!)
+                        /* Obtain the error messages and asigns it to popUpStringContent to displays it on UI*/
                         val json: JSONObject =
                             Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
 
                         popUpStringContent.value = Utility.RegistroErrors(json)
 
                         obtainingData.value = false
-                        registroResponse.value = false
+                        registroResponse.value = true
+                        invalidFieldsResponse.value = true
                     }
                 }
 
                 override fun onFailure(call: Call<RegistroResponse>, e: Throwable) {
                     obtainingData.value = false
                     registroResponse.value = false
-                    throw Exception(e)
                 }
             })
         }
@@ -365,38 +384,23 @@ class ApiConnection {
             })
         }
 
-        fun findPersonaByRut(rut: String, persona: MutableState<Persona?>) {
-            val call = request.findPersonaByRut(rut)
-
-            call.enqueue(object : Callback<PersonaResponse> {
-                override fun onResponse(
-                    call: Call<PersonaResponse>,
-                    response: Response<PersonaResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        persona.value = response.body()?.persona
-                    }
-                }
-
-                override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
-                    throw Exception(e)
-                }
-            })
-        }
-
         fun createPersona(
             context: Context,
             personaResponse: MutableState<Boolean>,
             obtainingData: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             rut: String,
             nombre: String,
             fono: String,
-            email: String
-            //depto: String
+            email: String,
+            numeroDepto: String,
+            popUpStringContent: MutableState<String>
         ) {
-            //try {
-            var depto_id = ((Math.random() * 40) + 1).toLong()
-            val persona = Persona(null, rut, nombre, fono, email, depto_id, null)
+            var numeroDeptoAux = numeroDepto.toIntOrNull()
+            if (numeroDeptoAux == null) {
+                numeroDeptoAux = 0
+            }
+            val persona = Persona(null, rut, nombre, fono, email, null, null, numeroDeptoAux)
             val call = request.createPersona(persona)
 
             call.enqueue(object : Callback<PersonaResponse> {
@@ -412,23 +416,24 @@ class ApiConnection {
                         val intent = Intent(context, MainActivity::class.java)
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
-
                     } else {
+                        /* Obtain the error messages and asigns it to popUpStringContent to displays it on UI*/
+                        val json: JSONObject =
+                            Utility.ValidationErrorsToJsonObject(response.errorBody()?.string()!!)
+
+                        popUpStringContent.value = Utility.PersonaErrors(json)
+
                         obtainingData.value = false
-                        personaResponse.value = false
+                        personaResponse.value = true
+                        invalidFieldsResponse.value = true
                     }
                 }
 
                 override fun onFailure(call: Call<PersonaResponse>, e: Throwable) {
                     obtainingData.value = false
                     personaResponse.value = false
-                    throw Exception(e)
                 }
             })
-
-            //} catch (e: NumberFormatException) {
-            //  e.message
-            //}
         }
 
     }

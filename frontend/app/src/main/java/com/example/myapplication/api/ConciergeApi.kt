@@ -182,24 +182,6 @@ interface ConciergeApi {
     fun deletePersona(@Path("persona") id: Long? = null): Call<PersonaResponse>
 
     /**
-     * Get a [Persona] from the backend.
-     *
-     * @param rut The Rut of the [Persona] to retrieve.
-     * @return a [Call] that can be used to retrieve a [PersonaResponse].
-     */
-    @POST("persona/buscarPersonaPorRut")
-    fun findPersonaByRut(@Body rut: String): Call<PersonaResponse>
-
-    /**
-     * Get a [Departamento] from the backend.
-     *
-     * @param numero The numero of the [Departamento] to retrieve.
-     * @return a [Call] that can be used to retrieve a [DepartamentoResponse].
-     */
-    @POST("departamento/findByNumber")
-    fun findByNumber(@Body numero: Int): Call<DepartamentoResponse>
-
-    /**
      * Create a [Registro] using a [Persona]'s RUT and a [Departamento]'s number.
      *
      * @param registro The [Registro] to insert.

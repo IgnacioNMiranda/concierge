@@ -56,6 +56,7 @@
     <string name="create_persona">Create a person</string>
     <string name="insert_rut">Input RUT</string>
     <string name="insert_dept">Input apartment number</string>
+    <string name="invalid_numDept">Invalid number of the apartment</string>
 
 
 </resources>

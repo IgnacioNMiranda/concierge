@@ -41,6 +41,7 @@ fun LoginPreview() {
     val showPopUp: MutableState<Boolean> = state { false }
     val loginResponse: MutableState<Boolean> = state { false }
     val sendingData: MutableState<Boolean> = state { false }
+    val invalidFieldsResponse: MutableState<Boolean> = state { false }
     val popUpStringContent: MutableState<String> = state { "" }
 
     Column(
@@ -82,12 +83,14 @@ fun LoginPreview() {
                 showPopUp.value = true
                 loginResponse.value = false
                 sendingData.value = true
+                invalidFieldsResponse.value = false
                 popUpStringContent.value = context.resources.getString(R.string.login_placeholder)
 
                 ApiConnection.login(
                     context,
                     loginResponse,
                     sendingData,
+                    invalidFieldsResponse,
                     emailTextValue.text,
                     pwTextValue.text,
                     popUpStringContent
@@ -107,6 +110,7 @@ fun LoginPreview() {
             onPopupDismissed,
             sendingData,
             loginResponse,
+            invalidFieldsResponse,
             context
         )
         

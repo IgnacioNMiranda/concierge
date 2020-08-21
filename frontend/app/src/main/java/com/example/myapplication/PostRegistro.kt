@@ -38,7 +38,7 @@ fun PostRegistros() {
         var rutPersona by state { TextFieldValue("") }
         var numeroDept by state { TextFieldValue("") }
 
-        val relOptions = listOf<String>(
+        val relOptions = listOf(
             context.resources.getString(R.string.relation_family),
             context.resources.getString(R.string.relation_ext),
             context.resources.getString(R.string.relation_company)
@@ -75,7 +75,7 @@ fun PostRegistros() {
             Checkbox(
                 checked = isShippingCompany,
                 onCheckedChange = { isShippingCompany = !isShippingCompany },
-                enabled = relSelection.equals(relOptions[2])
+                enabled = relSelection == relOptions[2]
             )
             Text(text = context.resources.getString(R.string.is_shipping_company))
         }
@@ -86,12 +86,14 @@ fun PostRegistros() {
         val showPopUp: MutableState<Boolean> = state { false }
         val registroResponse: MutableState<Boolean> = state { false }
         val sendingData: MutableState<Boolean> = state { false }
+        val invalidFieldsResponse: MutableState<Boolean> = state { false }
         val popUpStringContent: MutableState<String> = state { "" }
         Button(
             onClick = {
                 showPopUp.value = true
                 registroResponse.value = false
                 sendingData.value = true
+                invalidFieldsResponse.value = false
                 popUpStringContent.value = context.resources.getString(R.string.post_placeholder)
 
                 // Use backend values for parentesco
@@ -107,14 +109,15 @@ fun PostRegistros() {
                     context,
                     registroResponse,
                     sendingData,
+                    invalidFieldsResponse,
                     relSelection,
                     isShippingCompany,
                     rutPersona.text,
-                    numeroDept.text.toInt(),
+                    numeroDept.text,
                     popUpStringContent
                 )
             },
-            modifier = Modifier.absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
+            modifier = Modifier.absolutePadding(0.dp, 10.dp, 0.dp, 0.dp)
         ) {
             Text(
                 text = context.resources.getString(R.string.post_register_btn)
@@ -128,6 +131,7 @@ fun PostRegistros() {
             onPopupDismissed,
             sendingData,
             registroResponse,
+            invalidFieldsResponse,
             context
         )
 

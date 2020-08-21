@@ -24,13 +24,16 @@ class Utility {
     companion object {
 
         /**
-         * Parse to JSONObject a json object formatted in string.
+         * It parses to JSONObject a json object formatted in string.
          */
         fun ValidationErrorsToJsonObject(errorBody: String): JSONObject {
             val jsonValue = errorBody.replace("\\", "").substring(1, errorBody.length - 1)
             return JSONObject(jsonValue)
         }
 
+        /**
+         * Returns a jsonObject with an specific [key] if exists.
+         */
         private fun GetJsonObjectIfExists(key: String, json: JSONObject): JSONArray {
             if (json.has(key)) {
                 return json.getJSONArray(key)
@@ -70,7 +73,7 @@ class Utility {
             val nameMessages = GetJsonObjectIfExists("nombre", json)
             val phoneMessages = GetJsonObjectIfExists("telefono", json)
             val emailMessages = GetJsonObjectIfExists("email", json)
-            val apartmentIdMessages = GetJsonObjectIfExists("departamento_id", json)
+            val apartmentNumberMessages = GetJsonObjectIfExists("numeroDepartamento", json)
 
             var errors = ""
             for (i in 0 until rutMessages.length()) {
@@ -89,18 +92,21 @@ class Utility {
                 errors += emailMessages[i]
                 errors += "\n"
             }
-            for (i in 0 until apartmentIdMessages.length()) {
-                errors += apartmentIdMessages[i]
+            for (i in 0 until apartmentNumberMessages.length()) {
+                errors += apartmentNumberMessages[i]
                 errors += "\n"
             }
             return errors
         }
 
+        /**
+         * Obtains all the validation error messages of operations related to Registro model.
+         */
         fun RegistroErrors(json: JSONObject): String {
             val dateMessages = GetJsonObjectIfExists("fecha", json)
             val relationshipMessages = GetJsonObjectIfExists("parentesco", json)
-            val personIdMessages = GetJsonObjectIfExists("persona_id", json)
-            val apartmentIdMessages = GetJsonObjectIfExists("departamento_id", json)
+            val personRutMessages = GetJsonObjectIfExists("rut", json)
+            val apartmentNumMessages = GetJsonObjectIfExists("numDept", json)
 
             var errors = ""
             for (i in 0 until dateMessages.length()) {
@@ -111,17 +117,20 @@ class Utility {
                 errors += relationshipMessages[i]
                 errors += "\n"
             }
-            for (i in 0 until personIdMessages.length()) {
-                errors += personIdMessages[i]
+            for (i in 0 until apartmentNumMessages.length()) {
+                errors += apartmentNumMessages[i]
                 errors += "\n"
             }
-            for (i in 0 until apartmentIdMessages.length()) {
-                errors += apartmentIdMessages[i]
+            for (i in 0 until personRutMessages.length()) {
+                errors += personRutMessages[i]
                 errors += "\n"
             }
             return errors
         }
 
+        /**
+         * Obtains all the validation error messages of operations related to Departamento model.
+         */
         fun DepartamentoErrors(json: JSONObject): String {
             val numberMessages = GetJsonObjectIfExists("numero", json)
 
@@ -144,11 +153,15 @@ class Utility {
             onPopupDismissed: () -> Unit,
             obtainingData: MutableState<Boolean>,
             receivedResponse: MutableState<Boolean>,
+            invalidFieldsResponse: MutableState<Boolean>,
             context: Context
         ) {
+            val successText: String = context.resources.getString(R.string.server_connection_success)
+            val failedText: String = context.resources.getString(R.string.server_connection_failed)
             var text: String
             if (showPopup.value) {
-                if (obtainingData.value) {
+                if (obtainingData.value and !receivedResponse.value) {
+                    /* While the request to the server is being done.*/
                     AlertDialog(
                         onCloseRequest = onPopupDismissed,
                         text = {
@@ -170,11 +183,15 @@ class Utility {
                         confirmButton = { }
                     )
                     return
-                } else if (!receivedResponse.value) {
-                    //text = context.resources.getString(R.string.server_connection_failed)
+                } else if (!obtainingData.value and receivedResponse.value and invalidFieldsResponse.value) {
+                    /* Request is done and the response contains error messages related to fields.*/
                     text = popUpText
+                } else if (!obtainingData.value and receivedResponse.value and !invalidFieldsResponse.value) {
+                    /* Request is done and the response was successful.*/
+                    text = successText
                 } else {
-                    text = context.resources.getString(R.string.server_connection_success)
+                    /* Server is down and the response was failure.*/
+                    text = failedText
                 }
 
                 AlertDialog(
@@ -195,6 +212,9 @@ class Utility {
         }
 
 
+        /**
+         *  Bottom navigation bar of the main activity.
+         */
         @Composable
         fun BottomNavigationBar(context: Context, bottomBarState: MutableState<Int>) {
             val listItems = listOf(

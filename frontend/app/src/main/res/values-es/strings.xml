@@ -56,5 +56,6 @@
     <string name="create_persona">Crear una persona</string>
     <string name="insert_rut">Ingresar RUT</string>
     <string name="insert_dept">Ingresar número de departamento</string>
+    <string name="invalid_numDept">El número de departamento ingresado es inválido</string>
 
 </resources>

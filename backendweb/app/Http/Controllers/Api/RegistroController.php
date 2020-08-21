@@ -47,7 +47,6 @@ class RegistroController extends Controller
 
             // Searches the apartment based on the id received on Request.
             $persona = Persona::find($request->get('persona_id'));
-
         }
         $registro = Registro::create([
             'fecha' => $request->input('fecha'),
@@ -58,9 +57,9 @@ class RegistroController extends Controller
         ]);
 
         // Creates the relation 1-n with the apartment.
-        //$registro->departamento()->associate($dept);
+        $registro->departamento()->associate($dept);
         // Creates the relation n-n with the people that visits the apartment.
-        //$registro->persona()->associate($persona);
+        $registro->persona()->associate($persona);
 
         $registro->save();
 

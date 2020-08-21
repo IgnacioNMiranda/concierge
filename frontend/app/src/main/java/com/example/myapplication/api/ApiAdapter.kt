@@ -24,6 +24,7 @@ object ApiAdapter : Application() {
      */
     private val client = OkHttpClient.Builder().addInterceptor { chain ->
         val request = chain.request()
+        /* It does not require the auth token in register and login.*/
         if (request.url().encodedPath().equals("/api/register", true) || request.url().encodedPath()
                 .equals("/api/login", true)
         ) {
