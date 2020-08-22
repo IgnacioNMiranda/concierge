@@ -26,10 +26,13 @@ Create a new empty DB file in the `database` folder called `database.sqlite`
 Then, copy the .env.example file to .env and modify the `DB_DATABASE`
 variable so that it directs to an absolute path to the DB file
 
-Finally, for running a development server execute
+Finally, for running a development server using the default base url `http://10.0.2.2:8000/api/` , execute
 
     php artisan serve
 
+If you want to run the server on your ipv4, change the base url attribute of `private val retrofit` on `frontend/app/src/main/java/com/example/myapplication/api/ApiAdapter.kt` to something like this: `http://{yourIpv4}:8000/api/` , and execute 
+    
+    php artisan serve --host 0.0.0.0 --port=8000
  
 ## About Laravel
 
